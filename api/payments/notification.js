@@ -41,6 +41,128 @@ async function dbRequest(path, method = "GET", body) {
   return data;
 }
 
+
+async function setLicenseState(orderId, licenseStatus, licenseId = null) {
+  await dbRequest(
+    "tcs_payment_transactions?order_id=eq." + encodeURIComponent(orderId),
+    "PATCH",
+    { license_status: licenseStatus, ...(licenseId ? { license_id: licenseId } : {}), updated_at: new Date().toISOString() }
+  );
+}
+
+async function finalizeLinkedLicense(orderId) {
+  const transactions = await dbRequest(
+    "tcs_payment_transactions?select=id,order_id,product_id,product_sku,amount_idr,license_request_id,license_status&order_id=eq." +
+    encodeURIComponent(orderId) + "&limit=1"
+  );
+  const transaction = Array.isArray(transactions) ? transactions[0] : null;
+  if (!transaction || !transaction.license_request_id) return;
+  if (transaction.license_status === "issued") return;
+
+  const requestId = transaction.license_request_id;
+  const requests = await dbRequest(
+    "tcs_license_requests?select=id,product_id,product_sku,status,verification_status,payment_status,expires_at,verified_amount_idr&id=eq." +
+    encodeURIComponent(requestId) + "&limit=1"
+  );
+  const request = Array.isArray(requests) ? requests[0] : null;
+  if (!request || request.product_id !== transaction.product_id || request.product_sku !== transaction.product_sku) {
+    await setLicenseState(orderId, "failed");
+    return;
+  }
+
+  if (request.status === "approved") {
+    const licenses = await dbRequest(
+      "tcs_licenses?select=id&request_id=eq." + encodeURIComponent(requestId) + "&limit=1"
+    );
+    const licenseId = Array.isArray(licenses) && licenses[0] ? licenses[0].id : null;
+    await setLicenseState(orderId, licenseId ? "issued" : "failed", licenseId);
+    return;
+  }
+
+  if (request.status !== "pending" || Date.parse(request.expires_at) <= Date.now()) {
+    await setLicenseState(orderId, "failed");
+    return;
+  }
+
+  if (request.verification_status === "pending" && request.payment_status === "unverified") {
+    const now = new Date().toISOString();
+    const verified = await dbRequest(
+      "tcs_license_requests?id=eq." + encodeURIComponent(requestId) + "&status=eq.pending&verification_status=eq.pending",
+      "PATCH",
+      {
+        transaction_reference: orderId,
+        verification_status: "verified",
+        payment_status: "funds_received",
+        verified_amount_idr: Number(transaction.amount_idr),
+        verified_by: "midtrans",
+        verified_at: now,
+        verification_note: "Pembayaran dikonfirmasi melalui notifikasi dan Status API Midtrans."
+      }
+    );
+    if (!Array.isArray(verified) || verified.length === 0) {
+      const refreshed = await dbRequest(
+        "tcs_license_requests?select=id,status,verification_status,payment_status& id=eq." +
+        encodeURIComponent(requestId) + "&limit=1"
+      );
+      const current = Array.isArray(refreshed) ? refreshed[0] : null;
+      if (!current || current.status !== "pending" ||
+          current.verification_status !== "verified" || current.payment_status !== "funds_received") {
+        await setLicenseState(orderId, "failed");
+        return;
+      }
+    } else {
+      await dbRequest("tcs_purchase_verifications", "POST", [{
+        request_id: requestId,
+        product_id: transaction.product_id,
+        product_sku: transaction.product_sku,
+        transaction_reference: orderId,
+        expected_amount_idr: Number(transaction.amount_idr),
+        verified_amount_idr: Number(transaction.amount_idr),
+        payment_status: "funds_received",
+        verification_status: "verified",
+        verified_by: "midtrans",
+        verification_note: "Notifikasi Midtrans dan Status API terverifikasi.",
+        verified_at: now
+      }]);
+      await dbRequest("tcs_license_events", "POST", [{
+        request_id: requestId,
+        product_id: transaction.product_id,
+        event_type: "purchase_verified_midtrans",
+        details: { order_id: orderId, verified_amount_idr: Number(transaction.amount_idr), source: "midtrans_webhook" }
+      }]);
+    }
+  } else if (request.verification_status !== "verified" || request.payment_status !== "funds_received") {
+    await setLicenseState(orderId, "failed");
+    return;
+  }
+
+  const approval = await dbRequest("rpc/tcs_admin_approve_verified_request", "POST", {
+    p_request_id: requestId,
+    p_approved_by: "midtrans_webhook"
+  });
+  if (approval?.ok === true && approval.license_id) {
+    await setLicenseState(orderId, "issued", approval.license_id);
+    return;
+  }
+  if (approval?.error === "inventory_empty") {
+    await setLicenseState(orderId, "awaiting_inventory");
+    return;
+  }
+
+  const refreshed = await dbRequest(
+    "tcs_license_requests?select=id,status& id=eq." + encodeURIComponent(requestId) + "&limit=1"
+  );
+  if (Array.isArray(refreshed) && refreshed[0]?.status === "approved") {
+    const licenses = await dbRequest(
+      "tcs_licenses?select=id&request_id=eq." + encodeURIComponent(requestId) + "&limit=1"
+    );
+    const licenseId = Array.isArray(licenses) && licenses[0] ? licenses[0].id : null;
+    await setLicenseState(orderId, licenseId ? "issued" : "failed", licenseId);
+    return;
+  }
+  await setLicenseState(orderId, "failed");
+}
+
 function mapStatus(status) {
   const value = String(status || "").toLowerCase();
   if (["capture", "settlement", "pending", "deny", "cancel", "expire", "refund", "partial_refund", "challenge"].includes(value)) return value;
@@ -117,6 +239,7 @@ export default async function handler(req, res) {
       console.error("Midtrans notification order not found in TCS", { orderId });
       return send(res, 404, { ok: false, error: "order_not_found" });
     }
+    if (paid) await finalizeLinkedLicense(orderId);
     return send(res, 200, { ok: true, orderId, transactionStatus });
   } catch (error) {
     console.error("TCS Midtrans notification failed", error?.message || "unknown_error");
