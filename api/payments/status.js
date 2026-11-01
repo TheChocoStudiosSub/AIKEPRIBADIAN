@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   if (!base || !key) return send(res, 503, { ok: false, error: "payment_backend_not_configured" });
   try {
     const response = await fetch(base + "/rest/v1/tcs_payment_transactions?select=order_id,product_name,amount_idr,transaction_status,payment_type,paid_at,created_at&order_id=eq." + encodeURIComponent(orderId) + "&limit=1", {
-      headers: { apikey: key, Authorization: "Bearer " + key, Accept: "application/json" },
+      headers: { apikey: key, Accept: "application/json" },
       cache: "no-store",
       signal: AbortSignal.timeout(10000)
     });
