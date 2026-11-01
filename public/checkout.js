@@ -8,6 +8,17 @@ const statusLabels = {
 
 let products = [];
 let snapReady = false;
+const checkoutUrl = new URL(location.href);
+const checkoutProductId = checkoutUrl.searchParams.get("product") || "";
+const licenseRequest = {
+  requestId: checkoutUrl.searchParams.get("requestId") || "",
+  requestToken: checkoutUrl.searchParams.get("requestToken") || ""
+};
+if (licenseRequest.requestId || licenseRequest.requestToken) {
+  checkoutUrl.searchParams.delete("requestId");
+  checkoutUrl.searchParams.delete("requestToken");
+  history.replaceState(null, "", checkoutUrl.pathname + checkoutUrl.search + checkoutUrl.hash);
+}
 
 function showMessage(message, type = "info") {
   const el = $("message");
@@ -36,7 +47,7 @@ function updatePrice() {
 async function loadCatalog() {
   const data = await getJSON("/api/payments/catalog");
   products = data.products || [];
-  const requested = new URLSearchParams(location.search).get("product");
+  const requested = checkoutProductId;
   $("product").innerHTML = products.map((item) =>
     '<option value="' + item.productId.replace(/[^a-z0-9_-]/gi, "") + '">' +
     item.name.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])) +
@@ -71,7 +82,15 @@ async function checkStatus(orderId, attempts = 0) {
     const result = await getJSON("/api/payments/status?orderId=" + encodeURIComponent(orderId));
     const label = statusLabels[result.status] || result.status;
     if (["settlement", "capture"].includes(result.status)) {
-      showMessage("Pembayaran berhasil dikonfirmasi oleh Midtrans. Simpan ID pesanan " + orderId + " untuk referensi.", "success");
+      if (result.licenseStatus === "issued") {
+        showMessage("Pembayaran berhasil dan lisensi telah diterbitkan. Buka kembali aplikasi TCS untuk mengambil lisensi pada perangkat yang mengajukan pembelian.", "success");
+      } else if (result.licenseStatus === "awaiting_inventory") {
+        showMessage("Pembayaran berhasil. Penerbitan lisensi sedang menunggu ketersediaan stok kunci. Jangan melakukan pembayaran ulang.", "warning");
+      } else if (result.licenseStatus === "failed") {
+        showMessage("Pembayaran berhasil, tetapi penerbitan lisensi memerlukan pemeriksaan Owner TCS. Jangan melakukan pembayaran ulang.", "warning");
+      } else {
+        showMessage("Pembayaran berhasil dikonfirmasi oleh Midtrans. Simpan ID pesanan " + orderId + " untuk referensi.", "success");
+      }
       return;
     }
     if (["deny", "cancel", "expire", "refund", "partial_refund", "failure"].includes(result.status)) {
@@ -100,7 +119,8 @@ async function submitCheckout(event) {
         productId: product.productId,
         customerName: $("customerName").value.trim(),
         customerEmail: $("customerEmail").value.trim(),
-        customerPhone: $("customerPhone").value.trim()
+        customerPhone: $("customerPhone").value.trim(),
+        ...(licenseRequest.requestId && licenseRequest.requestToken ? licenseRequest : {})
       })
     });
     showMessage("Pesanan " + result.orderId + " berhasil dibuat. Selesaikan pembayaran pada halaman Midtrans.", "info");
@@ -128,7 +148,10 @@ async function submitCheckout(event) {
       payment_backend_not_configured: "Konfigurasi backend pembayaran belum lengkap.",
       payment_frontend_not_configured: "Client Key Midtrans belum dikonfigurasi.",
       product_price_not_configured: "Harga produk belum ditetapkan oleh Owner.",
-      product_unavailable: "Produk tidak tersedia."
+      product_unavailable: "Produk tidak tersedia.",
+      license_request_not_found: "Permintaan lisensi tidak ditemukan atau tokennya tidak valid.",
+      license_request_product_mismatch: "Permintaan lisensi tidak sesuai dengan produk yang dipilih.",
+      license_request_not_payable: "Permintaan lisensi sudah diproses, kedaluwarsa, atau tidak dapat digunakan untuk pembayaran baru."
     };
     showMessage(messages[error.message] || "Pembayaran belum dapat dibuat. Silakan coba kembali beberapa saat lagi.", "warning");
   } finally {
