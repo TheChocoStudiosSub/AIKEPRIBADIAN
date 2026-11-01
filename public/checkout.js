@@ -10,14 +10,13 @@ let products = [];
 let snapReady = false;
 const checkoutUrl = new URL(location.href);
 const checkoutProductId = checkoutUrl.searchParams.get("product") || "";
+const licenseParams = new URLSearchParams(checkoutUrl.hash.replace(/^#/, ""));
 const licenseRequest = {
-  requestId: checkoutUrl.searchParams.get("requestId") || "",
-  requestToken: checkoutUrl.searchParams.get("requestToken") || ""
+  requestId: licenseParams.get("requestId") || "",
+  requestToken: licenseParams.get("requestToken") || ""
 };
 if (licenseRequest.requestId || licenseRequest.requestToken) {
-  checkoutUrl.searchParams.delete("requestId");
-  checkoutUrl.searchParams.delete("requestToken");
-  history.replaceState(null, "", checkoutUrl.pathname + checkoutUrl.search + checkoutUrl.hash);
+  history.replaceState(null, "", checkoutUrl.pathname + checkoutUrl.search);
 }
 
 function showMessage(message, type = "info") {
