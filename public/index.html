@@ -1632,7 +1632,7 @@
               referenceStatus.textContent = "Pembayaran sudah terverifikasi. Kunci sedang menunggu proses alokasi.";
             }
           } else if (data.status === "rejected") {
-            referenceStatus.textContent = "Permintaan lisensi ditolak. Silakan hubungi The Choco Studios untuk informasi lebih lanjut.";
+            referenceStatus.textContent = "Permintaan lisensi ditolak. " + (data.verificationNote ? "Alasan: " + data.verificationNote : "Silakan hubungi The Choco Studios untuk informasi lebih lanjut.");
             stopPolling();
             sessionStorage.removeItem(STORAGE_KEY);
           } else if (data.status === "expired") {
@@ -1640,7 +1640,7 @@
             stopPolling();
             sessionStorage.removeItem(STORAGE_KEY);
           } else if (data.verificationStatus === "hold") {
-            referenceStatus.textContent = "Permintaan sedang ditahan untuk pemeriksaan tambahan. Belum ada kunci yang dialokasikan.";
+            referenceStatus.textContent = "Permintaan ditahan untuk pemeriksaan tambahan. " + (data.verificationNote ? "Alasan: " + data.verificationNote : "Belum ada kunci yang dialokasikan.");
           } else if (data.verificationStatus === "verified") {
             referenceStatus.textContent = "Pembayaran telah diverifikasi. Permintaan menunggu persetujuan dan alokasi kunci oleh Owner.";
           } else if (data.buyerDetailsReceived) {
