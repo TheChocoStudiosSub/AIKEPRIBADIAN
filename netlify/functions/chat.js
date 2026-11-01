@@ -1,4 +1,5 @@
 import CREATOR_KNOWLEDGE from "../../data/knowledge/creator-profile.json" with { type: "json" };
+import { createHash, pbkdf2Sync, randomBytes, timingSafeEqual } from "node:crypto";
 
 const MODEL_ID = "openai/gpt-oss-20b";
 const MAX_MESSAGE_CHARS = 4000;
@@ -190,36 +191,65 @@ export default async (request) => {
     if (ownerCredentialCandidate) {
       const forwarded = request.headers.get("x-nf-client-connection-ip") ||
         request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-      const authResult = await ownerRpc(env, "tcs_owner_authenticate", {
-        p_credential: message,
+      const verifierResult = await ownerRpc(env, "tcs_owner_get_verifier", {
         p_client_hash: await hash(forwarded)
       });
-      if (!authResult.ok) {
+      if (!verifierResult.ok) {
         return json({
           authAttempt: true,
           reply: "Verifikasi Owner sedang tidak tersedia. Coba lagi beberapa saat."
         }, 503);
       }
-      const authData = authResult.data;
-      if (authData?.ok === true && typeof authData.token === "string") {
-        return json({
-          authAttempt: true,
-          ownerAuth: true,
-          reply: "Identitas Owner berhasil diverifikasi. Sesi Owner aktif selama 8 jam pada browser ini."
-        }, 200, {
-          "Set-Cookie": "tcs_owner_session=" + authData.token + "; Max-Age=28800; Path=/; HttpOnly; Secure; SameSite=Lax"
-        });
-      }
-      if (authData?.error === "rate_limited") {
+
+      const verifier = verifierResult.data;
+      if (verifier?.error === "rate_limited") {
         return json({
           authAttempt: true,
           reply: "Terlalu banyak percobaan verifikasi. Tunggu 15 menit sebelum mencoba kembali."
         }, 429);
       }
+      if (verifier?.ok !== true || !/^[0-9a-f]{32,64}$/i.test(verifier.salt_hex || "") ||
+          !/^[0-9a-f]{64}$/i.test(verifier.credential_hash || "")) {
+        return json({
+          authAttempt: true,
+          reply: "Konfigurasi verifikasi Owner tidak valid."
+        }, 503);
+      }
+
+      const candidateHash = pbkdf2Sync(
+        message,
+        Buffer.from(verifier.salt_hex, "hex"),
+        310000,
+        32,
+        "sha256"
+      );
+      const expectedHash = Buffer.from(verifier.credential_hash, "hex");
+      if (candidateHash.length !== expectedHash.length || !timingSafeEqual(candidateHash, expectedHash)) {
+        return json({
+          authAttempt: true,
+          reply: "Kredensial Owner tidak valid."
+        }, 200);
+      }
+
+      const sessionToken = randomBytes(32).toString("hex");
+      const sessionHash = createHash("sha256").update(sessionToken, "utf8").digest("hex");
+      const sessionResult = await ownerRpc(env, "tcs_owner_create_session", {
+        p_token_hash: sessionHash
+      });
+      if (!sessionResult.ok || sessionResult.data !== true) {
+        return json({
+          authAttempt: true,
+          reply: "Sesi Owner belum dapat dibuat. Silakan coba kembali."
+        }, 503);
+      }
+
       return json({
         authAttempt: true,
-        reply: "Kredensial Owner tidak valid."
-      }, 200);
+        ownerAuth: true,
+        reply: "Identitas Owner berhasil diverifikasi. Sesi Owner aktif selama 8 jam pada browser ini."
+      }, 200, {
+        "Set-Cookie": "tcs_owner_session=" + sessionToken + "; Max-Age=28800; Path=/; HttpOnly; Secure; SameSite=Lax"
+      });
     }
 
     const normalizedMessage = message.toLowerCase().normalize("NFKC");
