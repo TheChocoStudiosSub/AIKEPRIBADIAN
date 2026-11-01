@@ -8,7 +8,7 @@ function send(res, status, payload) {
 
 function env() {
   return {
-    base: String(process.env.TCS_SUPABASE_URL || "").replace(/\\/+$/, ""),
+    base: String(process.env.TCS_SUPABASE_URL || "").replace(/\/+$/, ""),
     key: String(process.env.SUPABASE_SECRET_KEY || ""),
     serverKey: String(process.env.MIDTRANS_SERVER_KEY || ""),
     production: String(process.env.MIDTRANS_IS_PRODUCTION || "false").toLowerCase() === "true"
@@ -58,8 +58,8 @@ export default async function handler(req, res) {
   const statusCode = String(body.status_code || "");
   const grossAmount = String(body.gross_amount || "");
   const signature = String(body.signature_key || "");
-  if (!/^[A-Za-z0-9._~-]{8,50}$/.test(orderId) || !/^\\d{3}$/.test(statusCode) ||
-      !/^\\d+(?:\\.\\d{1,2})?$/.test(grossAmount) || !/^[a-f0-9]{128}$/i.test(signature)) {
+  if (!/^[A-Za-z0-9._~-]{8,50}$/.test(orderId) || !/^\d{3}$/.test(statusCode) ||
+      !/^\d+(?:\.\d{1,2})?$/.test(grossAmount) || !/^[a-f0-9]{128}$/i.test(signature)) {
     return send(res, 400, { ok: false, error: "invalid_notification_fields" });
   }
 
