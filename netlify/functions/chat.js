@@ -76,7 +76,7 @@ function sanitizeHistory(raw) {
 
 
 async function retrieveTcsKnowledge(query, env) {
-  const baseUrl = String(env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\\/+$/, "");
+  const baseUrl = String(env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
   const publishableKey = String(env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "");
   if (!baseUrl || !publishableKey) return [];
 
