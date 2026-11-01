@@ -6,7 +6,7 @@ function send(res, status, payload) {
 
 export default async function handler(req, res) {
   if (req.method !== "GET") return send(res, 405, { ok: false, error: "method_not_allowed" });
-  const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\\/+$/, "");
+  const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\/+$/, "");
   const key = String(process.env.SUPABASE_SECRET_KEY || "");
   if (!base || !key) return send(res, 503, { ok: false, error: "payment_backend_not_configured" });
   try {
