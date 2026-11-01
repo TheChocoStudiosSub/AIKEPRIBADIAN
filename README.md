@@ -22,8 +22,8 @@ The current Choco AI web-app deployment target is a single Vercel project: the s
 - **Pricing:** the web app has no paid plans, subscriptions, or payment flow.
 - **Monetization:** advertising is the intended revenue source. Ad providers may require separate configuration and approval.
 - **AI provider:** Groq is called from the server-side function; configure `GROQ_API_KEY` and optionally `GROQ_MODEL` in Vercel Environment Variables. Do not expose the API key in frontend code.
-- **Current web deployment:** Vercel production project `aikepribadian`, using the `main` branch. Primary URL: `https://aikepribadian-seven.vercel.app/`.
-- **Source repository:** `https://github.com/chocoanakbaik/AIKEPRIBADIAN`.
+- **Current web deployment:** Vercel production project `aikepribadian`, using the `main` branch. Primary URL: `https://choco-ai-independent-seven.vercel.app/`.
+- **Source repository:** `https://github.com/TheChocoStudiosSub/AIKEPRIBADIAN`.
 - **TCS business contact:** `thechocostudio@gmail.com` (business/team identity, not the developer's personal email).
 - **Migration note:** Vercel is the current hosting target for the web chat. The `netlify/functions/chat.js` path remains as a compatibility handler used by the Vercel adapter; its folder name does not mean Netlify is the active web deployment.
 
