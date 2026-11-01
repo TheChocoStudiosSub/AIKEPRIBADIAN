@@ -35,7 +35,7 @@ async function readBody(req) {
 }
 
 function env() {
-  const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\\/+$/, "");
+  const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\/+$/, "");
   const key = String(process.env.SUPABASE_SECRET_KEY || "");
   const serverKey = String(process.env.MIDTRANS_SERVER_KEY || "");
   const production = String(process.env.MIDTRANS_IS_PRODUCTION || "false").toLowerCase() === "true";
@@ -73,7 +73,7 @@ function safeEqualHex(left, right) {
 }
 
 function validEmail(value) {
-  return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value) && value.length <= 254;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.length <= 254;
 }
 
 export default async function handler(req, res) {
