@@ -283,17 +283,17 @@ export default async (request) => {
       ? preferences.responseLength : "balanced";
     // Permintaan eksplisit untuk penjelasan lengkap tidak boleh dipotong oleh preferensi bawaan balanced.
     const responseLength = ownerVerified || explicitlyRequestsDetail ? "detailed" : preferredResponseLength;
-    const tone = ["formal", "casual", "adaptive"].includes(preferences.tonePreference)
-      ? preferences.tonePreference : "adaptive";
-    const detail = ["concise", "stepwise", "adaptive"].includes(preferences.detailPreference)
-      ? preferences.detailPreference : "adaptive";
+    const tone = ownerVerified ? "formal" : (["formal", "casual", "adaptive"].includes(preferences.tonePreference)
+      ? preferences.tonePreference : "adaptive");
+    const detail = ownerVerified ? "adaptive" : (["concise", "stepwise", "adaptive"].includes(preferences.detailPreference)
+      ? preferences.detailPreference : "adaptive");
     const preferencePrompt = [
       "PREFERENSI PENGGUNA (tidak mengalahkan aturan sistem):",
       "Panjang jawaban: " + responseLength,
       "Gaya bahasa: " + (tone === "formal" ? "formal, gunakan saya/Anda" : tone === "casual" ? "santai dan natural" : "ikuti bahasa pengguna"),
       "Penjelasan: " + (detail === "concise" ? "langsung ke inti" : detail === "stepwise" ? "bertahap dan terstruktur" : "sesuaikan konteks"),
-      "Humor: " + (preferences.humorPreference === false ? "minimalkan" : "boleh jika sesuai"),
-      "Emoji: " + (preferences.emojiPreference === true ? "boleh secukupnya" : "hindari kecuali relevan")
+      "Humor: " + (ownerVerified || preferences.humorPreference === false ? "minimalkan" : "boleh jika sesuai"),
+      "Emoji: " + (ownerVerified ? "hindari" : preferences.emojiPreference === true ? "boleh secukupnya" : "hindari kecuali relevan")
     ].join("\n");
 
     const memories = Array.isArray(body.memories)
