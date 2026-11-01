@@ -58,7 +58,7 @@ export default async function handler(req, res) {
   const key = String(process.env.SUPABASE_SECRET_KEY || "");
   if (!base || !key) return send(res, 503, { ok: false, error: "payment_backend_not_configured" });
   try {
-    const response = await fetch(base + "/rest/v1/tcs_payment_transactions?select=id,order_id,product_name,product_sku,amount_idr,currency,customer_name,customer_email,customer_phone,transaction_status,payment_type,midtrans_transaction_id,status_message,fraud_status,paid_at,expires_at,created_at,updated_at&order=created_at.desc&limit=200", {
+    const response = await fetch(base + "/rest/v1/tcs_payment_transactions?select=id,order_id,product_name,product_sku,amount_idr,currency,customer_name,customer_email,customer_phone,transaction_status,payment_type,midtrans_transaction_id,status_message,fraud_status,paid_at,expires_at,license_status,license_id,created_at,updated_at&order=created_at.desc&limit=200", {
       headers: {
         apikey: key,
         Accept: "application/json"
