@@ -1753,13 +1753,15 @@
 
       if (!message || busy) return;
 
+      const isOwnerCredentialCandidate = /^[A-Za-z0-9._~-]{8,200}$/.test(message);
       busy = true;
       send.disabled = true;
       welcome.style.display = "none";
 
-      updateRecentTitle(message);
-
-      addMessage(message, "user");
+      if (!isOwnerCredentialCandidate) {
+        updateRecentTitle(message);
+        addMessage(message, "user");
+      }
       input.value = "";
       resizeInput();
 
@@ -1787,6 +1789,11 @@
         }
 
         waiting.remove();
+
+        if (data.authAttempt === true) {
+          await revealReply(typeof data.reply === "string" ? data.reply : "Verifikasi Owner selesai.");
+          return;
+        }
 
         if (!response.ok) {
           addMessage(
