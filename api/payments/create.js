@@ -1,4 +1,4 @@
-import { randomBytes } from "node:crypto";
+import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 
 function send(res, status, payload) {
   res.setHeader("Cache-Control", "no-store, max-age=0");
@@ -66,6 +66,12 @@ function clean(value, max) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
 
+function safeEqualHex(left, right) {
+  const a = Buffer.from(String(left || ""), "hex");
+  const b = Buffer.from(String(right || ""), "hex");
+  return a.length === b.length && a.length > 0 && timingSafeEqual(a, b);
+}
+
 function validEmail(value) {
   return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(value) && value.length <= 254;
 }
@@ -88,9 +94,14 @@ export default async function handler(req, res) {
   const customerName = clean(body.customerName, 100);
   const customerEmail = clean(body.customerEmail, 254).toLowerCase();
   const customerPhone = clean(body.customerPhone, 30);
+  const requestId = clean(body.requestId, 40);
+  const requestToken = clean(body.requestToken, 200);
+  const hasLicenseRequest = Boolean(requestId || requestToken);
   if (!/^[a-z0-9][a-z0-9_-]{2,99}$/.test(productId) ||
       customerName.length < 2 || !validEmail(customerEmail) ||
-      !/^[+0-9(). -]{8,30}$/.test(customerPhone)) {
+      !/^[+0-9(). -]{8,30}$/.test(customerPhone) ||
+      (hasLicenseRequest && (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestId) ||
+        requestToken.length < 20 || requestToken.length > 200))) {
     return send(res, 400, { ok: false, error: "invalid_checkout_details" });
   }
 
@@ -104,6 +115,41 @@ export default async function handler(req, res) {
     const amount = Number(product.expected_amount_idr);
     if (!Number.isSafeInteger(amount) || amount <= 0 || product.currency !== "IDR") {
       return send(res, 409, { ok: false, error: "product_price_not_configured" });
+    }
+
+    if (hasLicenseRequest) {
+      const requests = await dbRequest(
+        "tcs_license_requests?select=id,product_id,product_sku,request_token_hash,status,verification_status,payment_status,buyer_username,transaction_reference,expires_at&id=eq." +
+        encodeURIComponent(requestId) + "&limit=1"
+      );
+      const licenseRequest = Array.isArray(requests) ? requests[0] : null;
+      const tokenHash = createHash("sha256").update(requestToken, "utf8").digest("hex");
+      if (!licenseRequest || !safeEqualHex(licenseRequest.request_token_hash, tokenHash)) {
+        return send(res, 404, { ok: false, error: "license_request_not_found" });
+      }
+      if (licenseRequest.product_id !== product.product_id || licenseRequest.product_sku !== product.product_sku) {
+        return send(res, 409, { ok: false, error: "license_request_product_mismatch" });
+      }
+      if (licenseRequest.status !== "pending" || licenseRequest.verification_status !== "pending" ||
+          licenseRequest.payment_status !== "unverified" || licenseRequest.buyer_username ||
+          licenseRequest.transaction_reference || Date.parse(licenseRequest.expires_at) <= Date.now()) {
+        return send(res, 409, { ok: false, error: "license_request_not_payable" });
+      }
+      const previous = await dbRequest(
+        "tcs_payment_transactions?select=order_id,snap_token,redirect_url,amount_idr,product_name&license_request_id=eq." +
+        encodeURIComponent(requestId) + "&transaction_status=eq.pending&order=created_at.desc&limit=1"
+      );
+      if (Array.isArray(previous) && previous.length) {
+        return send(res, 200, {
+          ok: true,
+          orderId: previous[0].order_id,
+          token: previous[0].snap_token,
+          redirectUrl: previous[0].redirect_url,
+          amountIdr: Number(previous[0].amount_idr),
+          productName: previous[0].product_name,
+          reused: true
+        });
+      }
     }
 
     const orderId = "TCS-" + Date.now().toString(36).toUpperCase() + "-" +
@@ -152,7 +198,9 @@ export default async function handler(req, res) {
       customer_phone: customerPhone,
       transaction_status: "pending",
       snap_token: snap.token,
-      redirect_url: snap.redirect_url
+      redirect_url: snap.redirect_url,
+      license_request_id: hasLicenseRequest ? requestId : null,
+      license_status: hasLicenseRequest ? "awaiting_payment" : "not_linked"
     });
 
     return send(res, 200, {
