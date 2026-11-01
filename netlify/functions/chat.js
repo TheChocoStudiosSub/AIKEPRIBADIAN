@@ -90,7 +90,14 @@ async function ownerRpc(env, action, payload) {
   const baseUrl = String(env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
   const publishableKey = String(env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "");
   const serverKey = String(env.TCS_OWNER_AUTH_SERVER_KEY || "");
-  if (!baseUrl || !publishableKey || !serverKey) return { ok: false, unavailable: true };
+  if (!baseUrl || !publishableKey || !serverKey) {
+    console.error("Owner RPC configuration missing", {
+      baseUrl: Boolean(baseUrl),
+      publishableKey: Boolean(publishableKey),
+      serverKey: Boolean(serverKey)
+    });
+    return { ok: false, unavailable: true };
+  }
   try {
     const response = await fetch(baseUrl + "/rest/v1/rpc/" + action, {
       method: "POST",
@@ -103,9 +110,14 @@ async function ownerRpc(env, action, payload) {
       body: JSON.stringify({ ...payload, p_server_key: serverKey }),
       signal: AbortSignal.timeout(5000)
     });
-    if (!response.ok) return { ok: false, unavailable: true };
+    if (!response.ok) {
+      const errorBody = (await response.text()).slice(0, 400);
+      console.error("Owner RPC HTTP failure", { action, status: response.status, body: errorBody });
+      return { ok: false, unavailable: true };
+    }
     return { ok: true, data: await response.json() };
-  } catch {
+  } catch (error) {
+    console.error("Owner RPC network failure", { action, error: error?.message || String(error) });
     return { ok: false, unavailable: true };
   }
 }
