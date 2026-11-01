@@ -43,11 +43,14 @@ async function dbRequest(path, method = "GET", body, prefer = "return=representa
 
 
 async function setLicenseState(orderId, licenseStatus, licenseId = null) {
-  await dbRequest(
+  const rows = await dbRequest(
     "tcs_payment_transactions?order_id=eq." + encodeURIComponent(orderId),
     "PATCH",
     { license_status: licenseStatus, ...(licenseId ? { license_id: licenseId } : {}), updated_at: new Date().toISOString() }
   );
+  if (!Array.isArray(rows) || rows.length !== 1) {
+    throw new Error("payment_license_state_update_failed");
+  }
 }
 
 async function finalizeLinkedLicense(orderId) {
