@@ -21,7 +21,7 @@ function safeEqual(a, b) {
   return left.length === right.length && left.length > 0 && timingSafeEqual(left, right);
 }
 
-async function dbRequest(path, method = "GET", body) {
+async function dbRequest(path, method = "GET", body, prefer = "return=representation") {
   const { base, key } = env();
   if (!base || !key) throw new Error("database_not_configured");
   const response = await fetch(base + "/rest/v1/" + path, {
@@ -30,7 +30,7 @@ async function dbRequest(path, method = "GET", body) {
       apikey: key,
       "Content-Type": "application/json",
       Accept: "application/json",
-      Prefer: "return=representation"
+      Prefer: prefer
     },
     cache: "no-store",
     body: body === undefined ? undefined : JSON.stringify(body),
@@ -115,32 +115,43 @@ async function finalizeLinkedLicense(orderId) {
         await setLicenseState(orderId, "failed");
         return;
       }
-    } else {
-      await dbRequest("tcs_purchase_verifications", "POST", [{
-        request_id: requestId,
-        product_id: transaction.product_id,
-        product_sku: transaction.product_sku,
-        transaction_reference: orderId,
-        expected_amount_idr: Number(transaction.amount_idr),
-        verified_amount_idr: Number(transaction.amount_idr),
-        payment_status: "funds_received",
-        verification_status: "verified",
-        verified_by: "midtrans",
-        verification_note: "Notifikasi Midtrans dan Status API terverifikasi.",
-        verified_at: now
-      }]);
-      await dbRequest("tcs_license_events", "POST", [{
-        request_id: requestId,
-        product_id: transaction.product_id,
-        event_type: "purchase_verified_midtrans",
-        details: { order_id: orderId, verified_amount_idr: Number(transaction.amount_idr), source: "midtrans_webhook" }
-      }]);
     }
   } else if (request.verification_status !== "verified" || request.payment_status !== "funds_received" ||
       request.transaction_reference !== orderId || Number(request.verified_amount_idr) !== Number(transaction.amount_idr)) {
     await setLicenseState(orderId, "failed");
     return;
   }
+
+  // Repair audit rows on every retry. Unique conflict targets make webhook replay safe.
+  await dbRequest(
+    "tcs_purchase_verifications?on_conflict=transaction_reference",
+    "POST",
+    [{
+      request_id: requestId,
+      product_id: transaction.product_id,
+      product_sku: transaction.product_sku,
+      transaction_reference: orderId,
+      expected_amount_idr: Number(transaction.amount_idr),
+      verified_amount_idr: Number(transaction.amount_idr),
+      payment_status: "funds_received",
+      verification_status: "verified",
+      verified_by: "midtrans",
+      verification_note: "Notifikasi Midtrans dan Status API terverifikasi.",
+      verified_at: new Date().toISOString()
+    }],
+    "resolution=ignore-duplicates,return=representation"
+  );
+  await dbRequest(
+    "tcs_license_events?on_conflict=request_id",
+    "POST",
+    [{
+      request_id: requestId,
+      product_id: transaction.product_id,
+      event_type: "purchase_verified_midtrans",
+      details: { order_id: orderId, verified_amount_idr: Number(transaction.amount_idr), source: "midtrans_webhook" }
+    }],
+    "resolution=ignore-duplicates,return=representation"
+  );
 
   const verifiedRequests = await dbRequest(
     "tcs_license_requests?select=id,status,verification_status,payment_status,transaction_reference,verified_amount_idr&id=eq." +
