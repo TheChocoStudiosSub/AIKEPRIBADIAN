@@ -79,6 +79,12 @@ async function retrieveTcsKnowledge(query, env) {
   const baseUrl = String(env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
   const publishableKey = String(env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "");
   if (!baseUrl || !publishableKey) return [];
+  const sensitiveTerms = new Set(["password", "passwd", "sandi", "token", "otp", "email", "alamat", "nomor", "nik", "rekening", "kartu", "telepon", "whatsapp"]);
+  const searchQuery = [...new Set(String(query).toLowerCase().normalize("NFKC").match(/[a-z0-9]{3,}/g) || [])]
+    .filter((term) => !sensitiveTerms.has(term))
+    .slice(0, 12)
+    .join(" ");
+  if (!searchQuery) return [];
 
   try {
     const response = await fetch(baseUrl + "/rest/v1/rpc/tcs_public_search_knowledge", {
@@ -89,7 +95,7 @@ async function retrieveTcsKnowledge(query, env) {
         "Content-Type": "application/json"
       },
       cache: "no-store",
-      body: JSON.stringify({ p_query: query.slice(0, 800), p_app_code: null, p_limit: 5 }),
+      body: JSON.stringify({ p_query: searchQuery, p_app_code: null, p_limit: 5 }),
       signal: AbortSignal.timeout(3500)
     });
     if (!response.ok) return [];
