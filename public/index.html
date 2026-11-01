@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080b14">
   <link rel="icon" type="image/png" sizes="512x512" href="/assets/choco-app-icon.png">
+  <link rel="shortcut icon" type="image/png" href="/assets/choco-app-icon.png">
   <link rel="apple-touch-icon" href="/assets/choco-app-icon.png">
   <meta name="description" content="Choco AI, representasi digital Hasby Prasetya Saprudin.">
   <title>Choco AI</title>
@@ -1117,12 +1118,12 @@
     .settings-header h2{margin:3px 0 0;font-size:21px}
     .settings-body{display:grid;gap:19px;padding:23px}
     .setting-field{display:grid;gap:8px;color:#dce3f5;font-size:12px;font-weight:650}
-    .setting-field select{width:100%;padding:11px 12px;border:1px solid rgba(135,148,191,.22);border-radius:10px;background:#171e30;color:#eef2ff}
-    .setting-field small,.setting-toggle small{display:block;color:#8590aa;font-size:11px;font-weight:400;line-height:1.6}
+    .setting-field select{width:100%;min-height:43px;padding:11px 12px;border:1px solid rgba(135,148,191,.32);border-radius:10px;background:#171e30;color:#f4f6ff;font-size:13px;line-height:1.4;color-scheme:dark}.setting-field select option{background:#171e30;color:#f4f6ff}
+    .setting-field small,.setting-toggle small{display:block;color:#b5bfd4;font-size:12px;font-weight:400;line-height:1.65}
     .setting-toggle{display:flex;align-items:center;justify-content:space-between;gap:18px;color:#dce3f5;font-size:12px}
     .setting-toggle input{width:17px;height:17px;accent-color:#8d86ff;flex-shrink:0}
     .settings-footer{display:flex;justify-content:flex-end;padding:0 23px 23px}
-    .settings-header .icon-button{display:grid;place-items:center;line-height:1;font-family:Arial,sans-serif;font-size:22px;padding:0;flex:0 0 37px}
+    .settings-header .icon-button{display:grid;place-items:center;align-content:center;justify-content:center;line-height:1;font-family:Arial,sans-serif;font-size:0;padding:0;flex:0 0 37px;width:37px;height:37px;min-width:37px;text-align:center}.settings-header .icon-button::before{content:"×";display:block;font-size:23px;line-height:1;transform:translateY(-1px)}
     .auth-button.primary{min-height:40px;padding:10px 16px;border:1px solid rgba(130,145,255,.4);border-radius:10px;background:linear-gradient(110deg,#526fe0,#8658cf);color:#fff;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 5px 18px rgba(91,104,220,.2)}
     .auth-button.primary:hover{filter:brightness(1.12)}
     .settings-empty-state{min-height:120px;display:grid;place-items:center;text-align:center;color:#aab4ce;font-size:13px;line-height:1.8;padding:22px}
@@ -1216,7 +1217,7 @@
             <h1 id="welcomeHeading">Selamat datang di <span class="gradient-text">Choco AI</span></h1>
 
             <p class="welcome-description">
-              Choco AI merupakan representasi digital berbasis AI dari Hasby Prasetya Saprudin. Sistem ini terus dikembangkan untuk menghadirkan pengalaman interaksi yang informatif, konsisten, dan profesional.
+              Choco AI adalah representasi digital berbasis kecerdasan buatan yang dikembangkan oleh Hasby Prasetya Saprudin. Dirancang untuk mendukung kebutuhan informasi, analisis, kreativitas, dan pengembangan proyek melalui interaksi yang profesional, konsisten, dan bertanggung jawab.
             </p>
 
             <div class="suggestion-label">Mulai dari sini</div>
@@ -1340,7 +1341,7 @@
 
   <div class="modal-backdrop" id="settingsBackdrop" hidden>
     <section class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-      <header class="settings-header"><div><div class="panel-heading">KONTROL CHOCO AI</div><h2 id="settingsTitle">Pengaturan</h2></div><button class="icon-button" type="button" data-close-panel aria-label="Tutup">×</button></header>
+      <header class="settings-header"><div><div class="panel-heading">KONTROL CHOCO AI</div><h2 id="settingsTitle">Pengaturan</h2></div><button class="icon-button" type="button" data-close-panel aria-label="Tutup"></button></header>
       <div class="settings-body settings-empty-state" aria-live="polite">Mohon maaf, Menu ini sedang tidak tersedia</div>
       <footer class="settings-footer"></footer>
     </section>
@@ -1371,6 +1372,7 @@
     const sidebarOverlay = document.getElementById("sidebarOverlay");
     const toast = document.getElementById("toast");
 
+    const CONVERSATION_STORAGE_KEY = "chocoCurrentConversationV1";
     let history = [];
     let modelMode = "standard";
     try {
@@ -1845,6 +1847,7 @@
       }
 
       history = [];
+      try { localStorage.removeItem(CONVERSATION_STORAGE_KEY); } catch {}
       window.dispatchEvent(new CustomEvent("choco:new-chat"));
       conversationTitle = "";
       conversationStarted = false;
@@ -1867,6 +1870,38 @@
       input.focus();
       scrollToBottom();
     }
+
+    function restoreCurrentConversation() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(CONVERSATION_STORAGE_KEY) || "null");
+        if (!saved || saved.version !== 1 || !Array.isArray(saved.history)) return;
+        const restored = saved.history.filter(item =>
+          item && (item.role === "user" || item.role === "assistant") &&
+          typeof item.content === "string" && item.content.trim()
+        ).slice(-48);
+        if (!restored.length) return;
+        history = restored;
+        const firstUserMessage = restored.find(item => item.role === "user");
+        if (firstUserMessage) updateRecentTitle(firstUserMessage.content);
+        welcome.style.display = "none";
+        restored.forEach(item => addMessage(item.content, item.role));
+        scrollToBottom();
+      } catch {
+        try { localStorage.removeItem(CONVERSATION_STORAGE_KEY); } catch {}
+      }
+    }
+
+    restoreCurrentConversation();
+    window.addEventListener("storage", event => {
+      if (event.key === "chocoNextAllowedAt" && event.newValue) {
+        cooldownUntil = Math.max(cooldownUntil, Number(event.newValue) || 0);
+        if (cooldownUntil > Date.now()) {
+          if (cooldownTimer) clearInterval(cooldownTimer);
+          updateSendCooldown();
+          cooldownTimer = setInterval(updateSendCooldown, 250);
+        }
+      }
+    });
 
     document.getElementById("clearChat").addEventListener("click", resetChat);
 
@@ -1997,9 +2032,17 @@
           { role: "assistant", content: reply }
         );
 
-        // Batasi riwayat di browser agar request tidak membengkak.
-        if (history.length > 48) {
-          history.splice(0, history.length - 48);
+        // Simpan percakapan aktif agar konteks tidak hilang ketika halaman dimuat ulang.
+        if (history.length > 48) history.splice(0, history.length - 48);
+        try {
+          localStorage.setItem(CONVERSATION_STORAGE_KEY, JSON.stringify({
+            version: 1,
+            title: conversationTitle,
+            history,
+            updatedAt: Date.now()
+          }));
+        } catch {
+          showToast("Percakapan tetap berjalan, tetapi penyimpanan riwayat browser tidak tersedia.");
         }
 
       } catch (error) {
