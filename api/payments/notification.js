@@ -61,7 +61,7 @@ async function finalizeLinkedLicense(orderId) {
 
   const requestId = transaction.license_request_id;
   const requests = await dbRequest(
-    "tcs_license_requests?select=id,product_id,product_sku,status,verification_status,payment_status,expires_at,verified_amount_idr&id=eq." +
+    "tcs_license_requests?select=id,product_id,product_sku,status,verification_status,payment_status,expires_at,verified_amount_idr,transaction_reference&id=eq." +
     encodeURIComponent(requestId) + "&limit=1"
   );
   const request = Array.isArray(requests) ? requests[0] : null;
@@ -131,7 +131,22 @@ async function finalizeLinkedLicense(orderId) {
         details: { order_id: orderId, verified_amount_idr: Number(transaction.amount_idr), source: "midtrans_webhook" }
       }]);
     }
-  } else if (request.verification_status !== "verified" || request.payment_status !== "funds_received") {
+  } else if (request.verification_status !== "verified" || request.payment_status !== "funds_received" ||
+      request.transaction_reference !== orderId || Number(request.verified_amount_idr) !== Number(transaction.amount_idr)) {
+    await setLicenseState(orderId, "failed");
+    return;
+  }
+
+  const verifiedRequests = await dbRequest(
+    "tcs_license_requests?select=id,status,verification_status,payment_status,transaction_reference,verified_amount_idr&id=eq." +
+    encodeURIComponent(requestId) + "&limit=1"
+  );
+  const verifiedRequest = Array.isArray(verifiedRequests) ? verifiedRequests[0] : null;
+  if (!verifiedRequest || verifiedRequest.status !== "pending" ||
+      verifiedRequest.verification_status !== "verified" ||
+      verifiedRequest.payment_status !== "funds_received" ||
+      verifiedRequest.transaction_reference !== orderId ||
+      Number(verifiedRequest.verified_amount_idr) !== Number(transaction.amount_idr)) {
     await setLicenseState(orderId, "failed");
     return;
   }
