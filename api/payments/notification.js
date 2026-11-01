@@ -98,7 +98,7 @@ export default async function handler(req, res) {
       payment_type: String(status.payment_type || "").slice(0, 60) || null,
       status_message: String(status.status_message || "").slice(0, 500) || null,
       fraud_status: fraudStatus.slice(0, 40) || null,
-      paid_at: paid ? new Date().toISOString() : null,
+      ...(paid ? { paid_at: new Date().toISOString() } : {}),
       notification_payload: {
         transaction_status: transactionStatus,
         transaction_time: String(status.transaction_time || "").slice(0, 40),
