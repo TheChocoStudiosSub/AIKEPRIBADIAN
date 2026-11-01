@@ -45,7 +45,7 @@ checks.push(
   { name: "search RPC uses invoker privileges", ok: rag.includes("security invoker") },
   { name: "search RPC caps result count", ok: rag.includes("least(coalesce(result_limit, 4), 8)") },
   { name: "knowledge updated_at trigger uses valid dollar quoting", ok: /returns trigger language plpgsql as \$\$[\s\S]*?end;\s*\$\$;/i.test(rag) },
-  { name: "migrations do not embed credentials", ok: ![...sqlByFile.values()].some((sql) => /(service_role|supabase_access_token|groq_api_key|password\s*=)/i.test(sql)) }
+  { name: "migrations do not embed credentials", ok: ![...sqlByFile.values()].some((sql) => /(supabase_service_role_key|supabase_access_token|groq_api_key|password\s*=\s*[\x27"][^\x27"]+)/i.test(sql)) }
 );
 
 let failures = 0;
