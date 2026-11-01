@@ -89,7 +89,8 @@ function readCookie(request, name) {
 async function ownerRpc(env, action, payload) {
   const baseUrl = String(env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
   const publishableKey = String(env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "");
-  if (!baseUrl || !publishableKey) return { ok: false, unavailable: true };
+  const serverKey = String(env.TCS_OWNER_AUTH_SERVER_KEY || "");
+  if (!baseUrl || !publishableKey || !serverKey) return { ok: false, unavailable: true };
   try {
     const response = await fetch(baseUrl + "/rest/v1/rpc/" + action, {
       method: "POST",
@@ -99,7 +100,7 @@ async function ownerRpc(env, action, payload) {
         "Content-Type": "application/json"
       },
       cache: "no-store",
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ ...payload, p_server_key: serverKey }),
       signal: AbortSignal.timeout(5000)
     });
     if (!response.ok) return { ok: false, unavailable: true };
