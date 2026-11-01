@@ -1,5 +1,3 @@
-import { createHash } from "node:crypto";
-
 const ALLOWED_ACTIONS = new Set([
   "dashboard", "list_pending", "list_requests", "list_products", "list_inventory",
   "list_licenses", "list_events", "verify_purchase", "hold", "approve", "reject",
