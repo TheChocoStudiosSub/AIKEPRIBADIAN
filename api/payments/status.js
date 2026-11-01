@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   const key = String(process.env.SUPABASE_SECRET_KEY || "");
   if (!base || !key) return send(res, 503, { ok: false, error: "payment_backend_not_configured" });
   try {
-    const response = await fetch(base + "/rest/v1/tcs_payment_transactions?select=order_id,product_name,amount_idr,transaction_status,payment_type,paid_at,created_at,license_status,license_id&order_id=eq." + encodeURIComponent(orderId) + "&limit=1", {
+    const response = await fetch(base + "/rest/v1/tcs_payment_transactions?select=order_id,product_name,amount_idr,transaction_status,payment_type,paid_at,created_at,license_status&order_id=eq." + encodeURIComponent(orderId) + "&limit=1", {
       headers: { apikey: key, Accept: "application/json" },
       cache: "no-store",
       signal: AbortSignal.timeout(10000)
@@ -30,8 +30,7 @@ export default async function handler(req, res) {
       paymentType: row.payment_type,
       paidAt: row.paid_at,
       createdAt: row.created_at,
-      licenseStatus: row.license_status,
-      licenseId: row.license_id
+      licenseStatus: row.license_status
     });
   } catch {
     return send(res, 503, { ok: false, error: "payment_status_unavailable" });
