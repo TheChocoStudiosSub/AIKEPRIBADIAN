@@ -260,7 +260,9 @@ export default async function handler(req, res) {
       return send(res, 200, { ok: true, orderId, transactionStatus: order.transaction_status, duplicate: true });
     }
 
-    const transactionStatus = incomingStatus;
+    const transactionStatus = order.transaction_status === "settlement" && incomingStatus === "capture"
+      ? "settlement"
+      : incomingStatus;
     const fraudStatus = incomingFraudStatus;
     const paid = incomingPaid || alreadyPaid;
 
