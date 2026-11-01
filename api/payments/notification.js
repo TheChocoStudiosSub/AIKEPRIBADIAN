@@ -28,7 +28,6 @@ async function dbRequest(path, method = "GET", body) {
     method,
     headers: {
       apikey: key,
-      Authorization: "Bearer " + key,
       "Content-Type": "application/json",
       Accept: "application/json",
       Prefer: "return=representation"
