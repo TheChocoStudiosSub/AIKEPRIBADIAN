@@ -1,3 +1,5 @@
+import { randomBytes } from "node:crypto";
+
 function send(res, status, payload) {
   res.setHeader("Cache-Control", "no-store, max-age=0");
   res.setHeader("Pragma", "no-cache");
@@ -106,7 +108,7 @@ export default async function handler(req, res) {
     }
 
     const orderId = "TCS-" + Date.now().toString(36).toUpperCase() + "-" +
-      crypto.randomBytes(6).toString("hex").toUpperCase();
+      randomBytes(6).toString("hex").toUpperCase();
     const midtransHost = production ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com";
     const auth = Buffer.from(serverKey + ":", "utf8").toString("base64");
     const snapResponse = await fetch(midtransHost + "/snap/v1/transactions", {
