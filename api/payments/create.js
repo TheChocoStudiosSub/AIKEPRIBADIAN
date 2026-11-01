@@ -72,6 +72,21 @@ function safeEqualHex(left, right) {
   return a.length === b.length && a.length > 0 && timingSafeEqual(a, b);
 }
 
+function midtransExpiryDate(date) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(date);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day} ${values.hour}:${values.minute}:${values.second} +0700`;
+}
+
 function validEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.length <= 254;
 }
@@ -136,24 +151,59 @@ export default async function handler(req, res) {
         return send(res, 409, { ok: false, error: "license_request_not_payable" });
       }
       const previous = await dbRequest(
-        "tcs_payment_transactions?select=order_id,snap_token,redirect_url,amount_idr,product_name&license_request_id=eq." +
+        "tcs_payment_transactions?select=order_id,snap_token,redirect_url,amount_idr,product_name,expires_at&license_request_id=eq." +
         encodeURIComponent(requestId) + "&transaction_status=eq.pending&order=created_at.desc&limit=1"
       );
       if (Array.isArray(previous) && previous.length) {
-        return send(res, 200, {
-          ok: true,
-          orderId: previous[0].order_id,
-          token: previous[0].snap_token,
-          redirectUrl: previous[0].redirect_url,
-          amountIdr: Number(previous[0].amount_idr),
-          productName: previous[0].product_name,
-          reused: true
+        const existing = previous[0];
+        const stillValid = existing.expires_at && Date.parse(existing.expires_at) > Date.now() &&
+          typeof existing.snap_token === "string" && existing.snap_token.length > 0 &&
+          typeof existing.redirect_url === "string" && existing.redirect_url.length > 0;
+        if (stillValid) {
+          return send(res, 200, {
+            ok: true,
+            orderId: existing.order_id,
+            token: existing.snap_token,
+            redirectUrl: existing.redirect_url,
+            amountIdr: Number(existing.amount_idr),
+            productName: existing.product_name,
+            expiresAt: existing.expires_at,
+            reused: true
+          });
+        }
+
+        // Confirm expiry with Midtrans before releasing the one-pending-order lock.
+        const midtransHost = production ? "https://api.midtrans.com" : "https://api.sandbox.midtrans.com";
+        const statusAuth = Buffer.from(serverKey + ":", "utf8").toString("base64");
+        const statusResponse = await fetch(midtransHost + "/v2/" + encodeURIComponent(existing.order_id) + "/status", {
+          headers: { Authorization: "Basic " + statusAuth, Accept: "application/json" },
+          cache: "no-store",
+          signal: AbortSignal.timeout(12000)
         });
+        const providerStatus = await statusResponse.json().catch(() => null);
+        if (!statusResponse.ok || !providerStatus || String(providerStatus.order_id) !== existing.order_id ||
+            Number(providerStatus.gross_amount) !== Number(existing.amount_idr)) {
+          return send(res, 503, { ok: false, error: "existing_payment_status_unavailable" });
+        }
+        const providerState = String(providerStatus.transaction_status || "").toLowerCase();
+        const providerFraud = String(providerStatus.fraud_status || "").toLowerCase();
+        if (providerState === "settlement" || (providerState === "capture" && providerFraud === "accept")) {
+          return send(res, 409, { ok: false, error: "payment_already_processed", orderId: existing.order_id });
+        }
+        if (!["expire", "cancel", "deny", "failure"].includes(providerState)) {
+          return send(res, 409, { ok: false, error: "existing_payment_still_active", orderId: existing.order_id });
+        }
+        await dbRequest(
+          "tcs_payment_transactions?order_id=eq." + encodeURIComponent(existing.order_id) + "&transaction_status=eq.pending",
+          "PATCH",
+          { transaction_status: providerState, updated_at: new Date().toISOString() }
+        );
       }
     }
 
     const orderId = "TCS-" + Date.now().toString(36).toUpperCase() + "-" +
       randomBytes(6).toString("hex").toUpperCase();
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
     const midtransHost = production ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com";
     const auth = Buffer.from(serverKey + ":", "utf8").toString("base64");
     const snapResponse = await fetch(midtransHost + "/snap/v1/transactions", {
@@ -176,6 +226,11 @@ export default async function handler(req, res) {
           first_name: customerName,
           email: customerEmail,
           phone: customerPhone
+        },
+        expiry: {
+          start_time: midtransExpiryDate(new Date()),
+          unit: "hour",
+          duration: 24
         }
       }),
       signal: AbortSignal.timeout(20000)
@@ -199,6 +254,7 @@ export default async function handler(req, res) {
       transaction_status: "pending",
       snap_token: snap.token,
       redirect_url: snap.redirect_url,
+      expires_at: expiresAt.toISOString(),
       license_request_id: hasLicenseRequest ? requestId : null,
       license_status: hasLicenseRequest ? "awaiting_payment" : "not_linked"
     };
@@ -236,7 +292,8 @@ export default async function handler(req, res) {
       token: snap.token,
       redirectUrl: snap.redirect_url,
       amountIdr: amount,
-      productName: product.product_name
+      productName: product.product_name,
+      expiresAt: expiresAt.toISOString()
     });
   } catch (error) {
     console.error("TCS payment creation failed", error?.message || "unknown_error");
