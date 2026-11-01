@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080b14">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/choco-app-icon.png">
   <meta name="description" content="Choco AI, representasi digital Hasby Prasetya Saprudin.">
   <title>Choco AI</title>
 
@@ -88,13 +90,7 @@
       box-shadow: 0 0 25px rgba(111,112,255,.18);
     }
 
-    .brand-icon {
-      width: 39px;
-      height: 39px;
-      border-radius: 14px;
-      font-size: 20px;
-      font-weight: 800;
-    }
+    .brand-icon {display:block;width:39px;height:39px;flex:0 0 39px;object-fit:cover;border-radius:14px;background:#2d3136;box-shadow:0 0 25px rgba(111,112,255,.18)}
 
     .brand-name {
       font-weight: 750;
@@ -297,15 +293,6 @@
       font-weight: 700;
     }
 
-    .beta {
-      padding: 4px 7px;
-      color: #bba4ff;
-      background: rgba(155,109,255,.12);
-      border: 1px solid rgba(155,109,255,.2);
-      border-radius: 6px;
-      font-size: 9px;
-      letter-spacing: .7px;
-    }
 
     .icon-button {
       display: grid;
@@ -384,7 +371,7 @@
       box-shadow:
         0 0 45px rgba(98,105,255,.13),
         inset 0 0 20px rgba(115,130,255,.08);
-      font-size: 30px;
+      overflow:hidden;object-fit:cover;
       animation: float 5s ease-in-out infinite;
     }
 
@@ -855,16 +842,8 @@
       );
     }
 
-    .identity-logo {
-      display: grid;
-      place-items: center;
-      width: 42px;
-      height: 42px;
-      margin-bottom: 13px;
-      border-radius: 14px;
-      background: var(--gradient);
-      font-size: 20px;
-    }
+    .identity-logo {display:grid;place-items:center;width:42px;height:42px;margin-bottom:13px;overflow:hidden;border-radius:14px;background:#2d3136}
+    .identity-logo img{display:block;width:100%;height:100%;object-fit:cover}
 
     .identity-title {
       font-size: 14px;
@@ -1129,9 +1108,6 @@
         font-size: 16px;
       }
 
-      .beta {
-        display: none;
-      }
     }
 
     .modal-backdrop{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:18px;background:rgba(2,4,10,.76);backdrop-filter:blur(8px)}
@@ -1146,6 +1122,14 @@
     .setting-toggle{display:flex;align-items:center;justify-content:space-between;gap:18px;color:#dce3f5;font-size:12px}
     .setting-toggle input{width:17px;height:17px;accent-color:#8d86ff;flex-shrink:0}
     .settings-footer{display:flex;justify-content:flex-end;padding:0 23px 23px}
+    .settings-header .icon-button{display:grid;place-items:center;line-height:1;font-family:Arial,sans-serif;font-size:22px;padding:0;flex:0 0 37px}
+    .auth-button.primary{min-height:40px;padding:10px 16px;border:1px solid rgba(130,145,255,.4);border-radius:10px;background:linear-gradient(110deg,#526fe0,#8658cf);color:#fff;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 5px 18px rgba(91,104,220,.2)}
+    .auth-button.primary:hover{filter:brightness(1.12)}
+    .settings-empty-state{min-height:120px;display:grid;place-items:center;text-align:center;color:#aab4ce;font-size:13px;line-height:1.8;padding:22px}
+    .assistant-link{color:#8fb2ff;text-decoration:underline;text-decoration-color:rgba(143,178,255,.55);text-underline-offset:3px;overflow-wrap:anywhere}
+    .assistant-link:hover{color:#c2d3ff;text-decoration-color:currentColor}
+    .ai-avatar{overflow:hidden;background:#2d3136;box-shadow:0 0 18px rgba(111,112,255,.12)}
+    .ai-avatar img{display:block;width:100%;height:100%;object-fit:cover}
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: .01ms !important;
@@ -1162,10 +1146,10 @@
 
     <aside class="sidebar" id="sidebar">
       <div class="brand">
-        <div class="brand-icon">C</div>
+        <img class="brand-icon" src="/assets/choco-app-icon.png" alt="Logo Choco AI" width="39" height="39">
         <div>
           <div class="brand-name">Choco AI</div>
-          <span class="brand-version">Personal AI · Beta</span>
+          <span class="brand-version">Representasi digital</span>
         </div>
       </div>
 
@@ -1209,7 +1193,6 @@
           <button class="icon-button mobile-menu" id="menuButton"
             aria-label="Buka menu">☰</button>
           <div class="page-title">Chat</div>
-          <span class="beta">BETA</span>
         </div>
 
         <div class="top-actions">
@@ -1226,15 +1209,14 @@
         <div class="chat-content">
 
           <section class="welcome" id="welcome">
-            <div class="welcome-mark">✦</div>
+            <img class="welcome-mark" src="/assets/choco-app-icon.png" alt="Logo Choco AI" width="66" height="66">
 
-            <div class="eyebrow">Your personal AI companion</div>
+            <div class="eyebrow">Representasi digital berbasis AI</div>
 
             <h1 id="welcomeHeading">Selamat datang di <span class="gradient-text">Choco AI</span></h1>
 
             <p class="welcome-description">
-              Gw Choco AI, representasi digital Hasby Prasetya Saprudin.
-              Masih dalam tahap pengembangan, tapi kita bisa mulai dari sini.
+              Choco AI merupakan representasi digital berbasis AI dari Hasby Prasetya Saprudin. Sistem ini terus dikembangkan untuk menghadirkan pengalaman interaksi yang informatif, konsisten, dan profesional.
             </p>
 
             <div class="suggestion-label">Mulai dari sini</div>
@@ -1315,7 +1297,7 @@
       <div class="panel-heading">Tentang Choco</div>
 
       <div class="identity-card">
-        <div class="identity-logo">✦</div>
+        <div class="identity-logo"><img src="/assets/choco-app-icon.png" alt="Logo Choco AI" width="42" height="42"></div>
         <div class="identity-title">Choco AI</div>
         <div class="identity-description">
           Representasi digital Hasby Prasetya Saprudin.
@@ -1359,7 +1341,7 @@
   <div class="modal-backdrop" id="settingsBackdrop" hidden>
     <section class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
       <header class="settings-header"><div><div class="panel-heading">KONTROL CHOCO AI</div><h2 id="settingsTitle">Pengaturan</h2></div><button class="icon-button" type="button" data-close-panel aria-label="Tutup">×</button></header>
-      <div class="settings-body memory-settings-empty" aria-live="polite"></div>
+      <div class="settings-body settings-empty-state" aria-live="polite">Mohon maaf, Menu ini sedang tidak tersedia</div>
       <footer class="settings-footer"></footer>
     </section>
   </div>
@@ -1396,6 +1378,8 @@
       if (savedModelMode === "standard") modelMode = "standard";
     } catch {}
     let busy = false;
+    let cooldownUntil = 0;
+    let cooldownTimer = null;
     let toastTimer;
     let conversationTitle = "";
     let conversationStarted = false;
@@ -1422,6 +1406,22 @@
     const saveSettingsButton = document.getElementById("saveSettings");
     if (saveSettingsButton) saveSettingsButton.addEventListener("click", () => { document.getElementById("settingsBackdrop").hidden = true; });
     document.getElementById("savePersonality").addEventListener("click", () => { savePreferenceFields(["tonePreference","detailPreference","humorPreference","emojiPreference"]); document.getElementById("personalityBackdrop").hidden = true; });
+    function updateSendCooldown() {
+      const remaining = Math.max(0, Math.ceil((cooldownUntil - Date.now()) / 1000));
+      if (!busy) send.disabled = remaining > 0;
+      send.textContent = remaining > 0 ? String(remaining) : "↑";
+      send.title = remaining > 0 ? "Tunggu " + remaining + " detik sebelum mengirim pesan berikutnya." : "Kirim pesan";
+      send.setAttribute("aria-label", remaining > 0 ? "Tunggu " + remaining + " detik" : "Kirim pesan");
+      if (remaining <= 0 && cooldownTimer) { clearInterval(cooldownTimer); cooldownTimer = null; }
+    }
+    function startSendCooldown() {
+      cooldownUntil = Date.now() + 10000;
+      try { localStorage.setItem("chocoNextAllowedAt", String(cooldownUntil)); } catch {}
+      if (cooldownTimer) clearInterval(cooldownTimer);
+      updateSendCooldown(); cooldownTimer = setInterval(updateSendCooldown, 250);
+    }
+    try { cooldownUntil = Math.max(0, Number(localStorage.getItem("chocoNextAllowedAt") || 0)); } catch {}
+    if (cooldownUntil > Date.now()) { updateSendCooldown(); cooldownTimer = setInterval(updateSendCooldown, 250); }
 
     const plusMenuButton = document.getElementById("plusMenuButton");
     const plusMenu = document.getElementById("plusMenu");
@@ -1487,7 +1487,7 @@
         licenseCard.className = "message assistant";
         const licenseAvatar = document.createElement("div");
         licenseAvatar.className = "ai-avatar";
-        licenseAvatar.textContent = "C";
+        licenseAvatar.appendChild(createChocoAvatar());
         const licenseBody = document.createElement("div");
         licenseBody.className = "message-body";
         const licenseTitle = document.createElement("strong");
@@ -1583,13 +1583,33 @@
     document.getElementById("menuButton").addEventListener("click", openSidebar);
     sidebarOverlay.addEventListener("click", closeSidebar);
 
+    function createChocoAvatar(label = "Logo Choco AI") {
+      const image = document.createElement("img");
+      image.src = "/assets/choco-app-icon.png"; image.alt = label; image.width = 32; image.height = 32;
+      return image;
+    }
+
     function renderAssistantText(container, text) {
       container.replaceChildren();
-      String(text).split(/(\*\*[^*]+\*\*)/g).forEach(part => {
-        if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
-          const strong = document.createElement("strong"); strong.textContent = part.slice(2, -2); container.appendChild(strong);
-        } else container.appendChild(document.createTextNode(part));
-      });
+      const pattern = /(\[[^\]]+\]\(https?:\/\/[^\s)]+\)|https?:\/\/[^\s<>()]+|\*\*[^*]+\*\*|`[^`]+`)/g;
+      let cursor = 0; const source = String(text);
+      for (const match of source.matchAll(pattern)) {
+        const token = match[0]; const index = match.index ?? 0;
+        if (index > cursor) container.appendChild(document.createTextNode(source.slice(cursor, index)));
+        const markdownLink = token.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)$/);
+        if (markdownLink) {
+          const anchor = document.createElement("a"); anchor.className = "assistant-link"; anchor.href = markdownLink[2]; anchor.target = "_blank";
+          anchor.rel = "noopener noreferrer"; anchor.textContent = markdownLink[1]; container.appendChild(anchor);
+        } else if (/^https?:\/\//i.test(token)) {
+          const cleanUrl = token.replace(/[.,!?;:]+$/, ""); const anchor = document.createElement("a");
+          anchor.className = "assistant-link"; anchor.href = cleanUrl; anchor.target = "_blank"; anchor.rel = "noopener noreferrer"; anchor.textContent = cleanUrl; container.appendChild(anchor);
+          if (cleanUrl.length < token.length) container.appendChild(document.createTextNode(token.slice(cleanUrl.length)));
+        } else if (token.startsWith("**")) {
+          const strong = document.createElement("strong"); strong.textContent = token.slice(2, -2); container.appendChild(strong);
+        } else { const code = document.createElement("code"); code.textContent = token.slice(1, -1); container.appendChild(code); }
+        cursor = index + token.length;
+      }
+      if (cursor < source.length) container.appendChild(document.createTextNode(source.slice(cursor)));
     }
     function addMessage(text, role, options = {}) {
       const wrapper = document.createElement("article");
@@ -1602,7 +1622,7 @@
       if (role === "assistant") {
         const avatar = document.createElement("div");
         avatar.className = "ai-avatar";
-        avatar.textContent = "C";
+        avatar.appendChild(createChocoAvatar());
 
         const body = document.createElement("div");
         body.className = "message-body";
@@ -1740,7 +1760,7 @@
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
 
-        if (!busy) {
+        if (!busy && Date.now() >= cooldownUntil) {
           form.requestSubmit();
         }
       }
@@ -1752,6 +1772,7 @@
       const message = input.value.trim();
 
       if (!message || busy) return;
+      if (Date.now() < cooldownUntil) { updateSendCooldown(); showToast("Tunggu jeda 10 detik sebelum mengirim pesan berikutnya."); return; }
 
       const isOwnerCredentialCandidate = /^[A-Za-z0-9._~-]{8,200}$/.test(message);
       busy = true;
@@ -1825,8 +1846,8 @@
         );
 
         // Batasi riwayat di browser agar request tidak membengkak.
-        if (history.length > 40) {
-          history.splice(0, history.length - 40);
+        if (history.length > 48) {
+          history.splice(0, history.length - 48);
         }
 
       } catch (error) {
@@ -1839,7 +1860,7 @@
         );
       } finally {
         busy = false;
-        send.disabled = false;
+        startSendCooldown();
         input.focus();
         scrollToBottom();
       }
