@@ -208,7 +208,7 @@ export default async function handler(req, res) {
     // Load the locally recorded order before accepting any provider status.
     // The Midtrans status amount must match both the signed notification and our own order.
     const recorded = await dbRequest(
-      "tcs_payment_transactions?select=order_id,amount_idr,currency,transaction_status,license_status&order_id=eq." +
+      "tcs_payment_transactions?select=order_id,amount_idr,currency,transaction_status,license_status,paid_at&order_id=eq." +
       encodeURIComponent(orderId) + "&limit=1"
     );
     const order = Array.isArray(recorded) ? recorded[0] : null;
@@ -225,10 +225,24 @@ export default async function handler(req, res) {
       return send(res, 409, { ok: false, error: "transaction_amount_mismatch" });
     }
 
-    const transactionStatus = mapStatus(status.transaction_status);
-    const fraudStatus = String(status.fraud_status || "").toLowerCase();
-    const paid = transactionStatus === "settlement" ||
-      (transactionStatus === "capture" && fraudStatus === "accept");
+    const incomingStatus = mapStatus(status.transaction_status);
+    const incomingFraudStatus = String(status.fraud_status || "").toLowerCase();
+    const alreadyPaid = order.transaction_status === "settlement" ||
+      (order.transaction_status === "capture" && String(order.fraud_status || "").toLowerCase() === "accept");
+    const incomingPaid = incomingStatus === "settlement" ||
+      (incomingStatus === "capture" && incomingFraudStatus === "accept");
+
+    // Never let a delayed non-paid notification overwrite a payment already confirmed as paid.
+    // Refund states remain authoritative and are still recorded for reconciliation.
+    const isRefund = incomingStatus === "refund" || incomingStatus === "partial_refund";
+    if (alreadyPaid && !incomingPaid && !isRefund) {
+      await finalizeLinkedLicense(orderId);
+      return send(res, 200, { ok: true, orderId, transactionStatus: order.transaction_status, duplicate: true });
+    }
+
+    const transactionStatus = incomingStatus;
+    const fraudStatus = incomingFraudStatus;
+    const paid = incomingPaid || alreadyPaid;
 
     const update = {
       transaction_status: transactionStatus,
@@ -236,7 +250,7 @@ export default async function handler(req, res) {
       payment_type: String(status.payment_type || "").slice(0, 60) || null,
       status_message: String(status.status_message || "").slice(0, 500) || null,
       fraud_status: fraudStatus.slice(0, 40) || null,
-      ...(paid ? { paid_at: new Date().toISOString() } : {}),
+      ...(paid && !order.paid_at ? { paid_at: new Date().toISOString() } : {}),
       notification_payload: {
         transaction_status: transactionStatus,
         transaction_time: String(status.transaction_time || "").slice(0, 40),
