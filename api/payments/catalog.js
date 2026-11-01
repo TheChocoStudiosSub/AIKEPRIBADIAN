@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   if (!base || !key) return send(res, 503, { ok: false, error: "payment_backend_not_configured" });
   try {
     const response = await fetch(base + "/rest/v1/tcs_license_products?select=product_id,product_sku,product_name,expected_amount_idr,currency&active=eq.true&order=product_name.asc", {
-      headers: { apikey: key, Authorization: "Bearer " + key, Accept: "application/json" },
+      headers: { apikey: key, Accept: "application/json" },
       cache: "no-store",
       signal: AbortSignal.timeout(10000)
     });
