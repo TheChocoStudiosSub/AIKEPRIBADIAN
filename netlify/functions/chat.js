@@ -87,7 +87,7 @@ function readCookie(request, name) {
 }
 
 async function ownerRpc(env, action, payload) {
-  const baseUrl = String(env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\\/+$/, "");
+  const baseUrl = String(env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
   const publishableKey = String(env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "");
   if (!baseUrl || !publishableKey) return { ok: false, unavailable: true };
   try {
