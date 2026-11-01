@@ -23,7 +23,7 @@ function sameOrigin(req) {
 }
 
 async function ownerRpc(action, payload = {}) {
-  const base = String(process.env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\\/+$/, "");
+  const base = String(process.env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
   const publishableKey = String(process.env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "");
   const serverKey = String(process.env.TCS_OWNER_AUTH_SERVER_KEY || "");
   if (!base || !publishableKey || !serverKey) return { ok: false };
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
   const session = await ownerRpc("tcs_owner_validate_session", { p_token: token });
   if (!session.ok || session.data !== true) return send(res, 401, { ok: false, error: "owner_session_required" });
 
-  const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\\/+$/, "");
+  const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\/+$/, "");
   const key = String(process.env.SUPABASE_SECRET_KEY || "");
   if (!base || !key) return send(res, 503, { ok: false, error: "payment_backend_not_configured" });
   try {
