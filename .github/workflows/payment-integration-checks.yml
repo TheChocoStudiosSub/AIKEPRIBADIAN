@@ -8,6 +8,7 @@ on:
       - "api/admin/payments.js"
       - "public/checkout.js"
       - "public/checkout/**"
+      - ".github/workflows/payment-integration-checks.yml"
   pull_request:
     paths:
       - "api/payments/**"
