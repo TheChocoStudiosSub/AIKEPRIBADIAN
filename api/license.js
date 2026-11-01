@@ -102,6 +102,7 @@ export default async function handler(req, res) {
       status: result.status,
       verificationStatus: result.verificationStatus || "pending",
       paymentStatus: result.paymentStatus || "unverified",
+      verificationNote: result.verificationNote || null,
       buyerDetailsReceived: Boolean(result.buyerDetailsReceived),
       expiresAt: result.expiresAt || null
     });
