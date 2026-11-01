@@ -1,0 +1,31 @@
+name: TCS payment integration checks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "api/payments/**"
+      - "api/admin/payments.js"
+      - "public/checkout.js"
+      - "public/checkout/**"
+  pull_request:
+    paths:
+      - "api/payments/**"
+      - "api/admin/payments.js"
+      - "public/checkout.js"
+      - "public/checkout/**"
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check JavaScript syntax
+        run: |
+          set -eu
+          for file in api/payments/*.js api/admin/payments.js public/checkout.js; do
+            node --check "$file"
+          done
