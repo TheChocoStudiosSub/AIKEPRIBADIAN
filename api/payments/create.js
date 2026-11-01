@@ -191,6 +191,19 @@ export default async function handler(req, res) {
           return send(res, 409, { ok: false, error: "payment_already_processed", orderId: existing.order_id });
         }
         if (!["expire", "cancel", "deny", "failure"].includes(providerState)) {
+          if (typeof existing.snap_token === "string" && existing.snap_token &&
+              typeof existing.redirect_url === "string" && existing.redirect_url) {
+            return send(res, 200, {
+              ok: true,
+              orderId: existing.order_id,
+              token: existing.snap_token,
+              redirectUrl: existing.redirect_url,
+              amountIdr: Number(existing.amount_idr),
+              productName: existing.product_name,
+              expiresAt: existing.expires_at,
+              reused: true
+            });
+          }
           return send(res, 409, { ok: false, error: "existing_payment_still_active", orderId: existing.order_id });
         }
         await dbRequest(
@@ -203,7 +216,8 @@ export default async function handler(req, res) {
 
     const orderId = "TCS-" + Date.now().toString(36).toUpperCase() + "-" +
       randomBytes(6).toString("hex").toUpperCase();
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const expiryStart = new Date();
+    const expiresAt = new Date(expiryStart.getTime() + 24 * 60 * 60 * 1000);
     const midtransHost = production ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com";
     const auth = Buffer.from(serverKey + ":", "utf8").toString("base64");
     const snapResponse = await fetch(midtransHost + "/snap/v1/transactions", {
@@ -228,7 +242,7 @@ export default async function handler(req, res) {
           phone: customerPhone
         },
         expiry: {
-          start_time: midtransExpiryDate(new Date()),
+          start_time: midtransExpiryDate(expiryStart),
           unit: "hour",
           duration: 24
         }
