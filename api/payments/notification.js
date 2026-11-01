@@ -205,10 +205,26 @@ export default async function handler(req, res) {
       return send(res, 502, { ok: false, error: "midtrans_status_verification_failed" });
     }
 
-    const amount = Number(status.gross_amount);
-    if (!Number.isSafeInteger(Math.round(amount)) || Math.round(amount * 100) !== Math.round(Number(grossAmount) * 100)) {
+    // Load the locally recorded order before accepting any provider status.
+    // The Midtrans status amount must match both the signed notification and our own order.
+    const recorded = await dbRequest(
+      "tcs_payment_transactions?select=order_id,amount_idr,currency,transaction_status,license_status&order_id=eq." +
+      encodeURIComponent(orderId) + "&limit=1"
+    );
+    const order = Array.isArray(recorded) ? recorded[0] : null;
+    if (!order) return send(res, 404, { ok: false, error: "order_not_found" });
+
+    const providerAmount = Number(status.gross_amount);
+    const notificationAmount = Number(grossAmount);
+    const expectedAmount = Number(order.amount_idr);
+    if (order.currency !== "IDR" || !Number.isSafeInteger(expectedAmount) || expectedAmount <= 0 ||
+        !Number.isFinite(providerAmount) || !Number.isFinite(notificationAmount) ||
+        !Number.isSafeInteger(providerAmount) || !Number.isSafeInteger(notificationAmount) ||
+        providerAmount !== notificationAmount || providerAmount !== expectedAmount) {
+      console.error("Midtrans payment amount integrity check failed", { orderId });
       return send(res, 409, { ok: false, error: "transaction_amount_mismatch" });
     }
+
     const transactionStatus = mapStatus(status.transaction_status);
     const fraudStatus = String(status.fraud_status || "").toLowerCase();
     const paid = transactionStatus === "settlement" ||
