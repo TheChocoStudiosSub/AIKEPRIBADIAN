@@ -186,7 +186,7 @@ export default async function handler(req, res) {
       return send(res, 502, { ok: false, error: "midtrans_checkout_unavailable" });
     }
 
-    await dbRequest("tcs_payment_transactions", "POST", {
+    const transactionRow = {
       order_id: orderId,
       product_id: product.product_id,
       product_sku: product.product_sku,
@@ -201,7 +201,34 @@ export default async function handler(req, res) {
       redirect_url: snap.redirect_url,
       license_request_id: hasLicenseRequest ? requestId : null,
       license_status: hasLicenseRequest ? "awaiting_payment" : "not_linked"
-    });
+    };
+
+    try {
+      await dbRequest("tcs_payment_transactions", "POST", transactionRow);
+    } catch (insertError) {
+      // A concurrent checkout may win the partial unique index. Reuse its valid Snap session.
+      if (hasLicenseRequest) {
+        const concurrent = await dbRequest(
+          "tcs_payment_transactions?select=order_id,snap_token,redirect_url,amount_idr,product_name&license_request_id=eq." +
+          encodeURIComponent(requestId) + "&transaction_status=eq.pending&order=created_at.desc&limit=1"
+        );
+        const existing = Array.isArray(concurrent) ? concurrent[0] : null;
+        if (existing && Number(existing.amount_idr) === amount &&
+            typeof existing.snap_token === "string" && existing.snap_token &&
+            typeof existing.redirect_url === "string" && existing.redirect_url) {
+          return send(res, 200, {
+            ok: true,
+            orderId: existing.order_id,
+            token: existing.snap_token,
+            redirectUrl: existing.redirect_url,
+            amountIdr: Number(existing.amount_idr),
+            productName: existing.product_name,
+            reused: true
+          });
+        }
+      }
+      throw insertError;
+    }
 
     return send(res, 200, {
       ok: true,
