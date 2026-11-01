@@ -208,7 +208,7 @@ export default async function handler(req, res) {
     // Load the locally recorded order before accepting any provider status.
     // The Midtrans status amount must match both the signed notification and our own order.
     const recorded = await dbRequest(
-      "tcs_payment_transactions?select=order_id,amount_idr,currency,transaction_status,license_status,paid_at&order_id=eq." +
+      "tcs_payment_transactions?select=order_id,amount_idr,currency,transaction_status,license_status,paid_at,fraud_status&order_id=eq." +
       encodeURIComponent(orderId) + "&limit=1"
     );
     const order = Array.isArray(recorded) ? recorded[0] : null;
