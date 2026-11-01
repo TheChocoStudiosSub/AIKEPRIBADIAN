@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Pembayaran | The Choco Studios</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0c1422;--panel:#121f31;--line:#26364b;--text:#edf3fb;--muted:#9cabc0;--accent:#d8e5f5}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 0%,#1a2a41 0,transparent 38%),var(--bg);color:var(--text);font:15px/1.6 Inter,Segoe UI,Arial,sans-serif;display:grid;place-items:center;padding:28px}
+    .wrap{width:min(100%,560px)}.brand{display:flex;align-items:center;gap:12px;margin:0 0 24px}.mark{width:42px;height:42px;border:1px solid #40536d;border-radius:13px;display:grid;place-items:center;font-weight:800;color:var(--accent)}.brand strong{display:block;font-size:15px}.brand small{color:var(--muted);letter-spacing:.12em;font-size:10px}
+    .card{background:rgba(18,31,49,.96);border:1px solid var(--line);border-radius:20px;padding:30px;box-shadow:0 25px 80px #0005}.eyebrow{margin:0 0 8px;color:#91a8c4;font-size:10px;font-weight:700;letter-spacing:.16em}h1{font-size:27px;line-height:1.2;margin:0 0 8px}.intro{margin:0 0 25px;color:var(--muted);font-size:13px}
+    label{display:block;margin:15px 0 7px;font-size:12px;font-weight:650;color:#c9d5e5}input,select{width:100%;min-height:46px;padding:0 13px;background:#0d1827;border:1px solid #34465e;border-radius:9px;color:var(--text);font:inherit;outline:none}input:focus,select:focus{border-color:#91a8c4;box-shadow:0 0 0 3px #91a8c422}
+    .price{margin:20px 0 4px;padding:16px;border:1px solid var(--line);border-radius:12px;display:flex;justify-content:space-between;align-items:center}.price span{font-size:12px;color:var(--muted)}.price strong{font-size:20px}
+    button{width:100%;margin-top:20px;min-height:48px;border:0;border-radius:10px;background:#e1eaf5;color:#122033;font:700 14px inherit;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}
+    #message{margin:16px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font-size:12px;color:#cbd8e8}#message[data-type=success]{border-color:#316a55;color:#b7e5d0}#message[data-type=warning]{border-color:#806a3d;color:#f0d9a8}
+    .foot{margin:18px 0 0;text-align:center;color:#788ba4;font-size:11px}.secure{display:flex;justify-content:center;gap:7px;color:#9db0c8;font-size:11px;margin-top:16px}
+    @media(max-width:520px){body{padding:16px}.card{padding:23px 18px}h1{font-size:24px}}
+  </style>
+  <script src="checkout.js" defer></script>
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand"><div class="mark">TCS</div><div><strong>The Choco Studios</strong><small>SECURE CHECKOUT</small></div></div>
+    <section class="card">
+      <p class="eyebrow">PEMBAYARAN PRODUK DIGITAL</p>
+      <h1>Selesaikan pembelian</h1>
+      <p class="intro">Periksa produk dan data pelanggan sebelum melanjutkan ke halaman pembayaran Midtrans.</p>
+      <form id="checkoutForm">
+        <label for="product">Produk</label>
+        <select id="product" required><option value="">Memuat katalog...</option></select>
+        <label for="customerName">Nama lengkap</label>
+        <input id="customerName" name="name" autocomplete="name" minlength="2" maxlength="100" required>
+        <label for="customerEmail">Alamat email</label>
+        <input id="customerEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
+        <label for="customerPhone">Nomor telepon</label>
+        <input id="customerPhone" name="phone" type="tel" autocomplete="tel" minlength="8" maxlength="30" placeholder="08xxxxxxxxxx" required>
+        <div class="price"><span>Total pembayaran</span><strong id="price">Memuat...</strong></div>
+        <button id="payButton" type="submit" disabled>Lanjutkan pembayaran</button>
+      </form>
+      <p id="message" role="status" aria-live="polite" hidden></p>
+      <div class="secure">Pembayaran diproses oleh Midtrans · Koneksi HTTPS</div>
+    </section>
+    <p class="foot">The Choco Studios · Pembayaran aman melalui Midtrans Snap</p>
+  </main>
+</body>
+</html>
