@@ -142,7 +142,7 @@ async function finalizeLinkedLicense(orderId) {
     "resolution=ignore-duplicates,return=representation"
   );
   await dbRequest(
-    "tcs_license_events?on_conflict=request_id",
+    "tcs_license_events?on_conflict=midtrans_order_id",
     "POST",
     [{
       request_id: requestId,
