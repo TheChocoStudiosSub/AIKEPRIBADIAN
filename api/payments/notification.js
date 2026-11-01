@@ -101,7 +101,7 @@ async function finalizeLinkedLicense(orderId) {
     );
     if (!Array.isArray(verified) || verified.length === 0) {
       const refreshed = await dbRequest(
-        "tcs_license_requests?select=id,status,verification_status,payment_status& id=eq." +
+        "tcs_license_requests?select=id,status,verification_status,payment_status&id=eq." +
         encodeURIComponent(requestId) + "&limit=1"
       );
       const current = Array.isArray(refreshed) ? refreshed[0] : null;
@@ -150,7 +150,7 @@ async function finalizeLinkedLicense(orderId) {
   }
 
   const refreshed = await dbRequest(
-    "tcs_license_requests?select=id,status& id=eq." + encodeURIComponent(requestId) + "&limit=1"
+    "tcs_license_requests?select=id,status&id=eq." + encodeURIComponent(requestId) + "&limit=1"
   );
   if (Array.isArray(refreshed) && refreshed[0]?.status === "approved") {
     const licenses = await dbRequest(
