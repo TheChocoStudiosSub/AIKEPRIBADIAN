@@ -1457,99 +1457,251 @@
     updateWelcomeGreeting();
 
     async function handleTcsLicenseRequest() {
+      const STORAGE_KEY = "tcs_license_request";
       const url = new URL(window.location.href);
       const fragment = new URLSearchParams(url.hash.replace(/^#/, ""));
-      const requestId = fragment.get("license_request") || url.searchParams.get("license_request") || "";
-      const requestToken = fragment.get("license_token") || url.searchParams.get("license_token") || "";
-      if (!requestId && !requestToken) return;
-      url.searchParams.delete("license_request");
-      url.searchParams.delete("license_token");
-      url.hash = "";
-      window.history.replaceState({}, document.title, url.pathname + url.search);
-      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestId) || requestToken.length < 20 || requestToken.length > 200) {
-        showToast("Tautan permintaan lisensi tidak valid.");
-        return;
-      }
-      try {
-        const response = await fetch("/api/license", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          cache: "no-store",
-          body: JSON.stringify({ requestId, requestToken })
-        });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok || !data.ok) throw new Error(data.error || "Permintaan lisensi tidak dapat diverifikasi.");
-        if (!["pending", "approved"].includes(data.status)) {
-          showToast("Status permintaan lisensi: " + String(data.status || "tidak diketahui") + ".");
+      const urlRequestId = fragment.get("license_request") || url.searchParams.get("license_request") || "";
+      const urlRequestToken = fragment.get("license_token") || url.searchParams.get("license_token") || "";
+      if (urlRequestId || urlRequestToken) {
+        if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(urlRequestId) || urlRequestToken.length < 20 || urlRequestToken.length > 200) {
+          showToast("Tautan permintaan lisensi tidak valid.");
           return;
         }
-        const licenseCard = document.createElement("article");
-        licenseCard.className = "message assistant";
-        const licenseAvatar = document.createElement("div");
-        licenseAvatar.className = "ai-avatar";
-        licenseAvatar.appendChild(createChocoAvatar());
-        const licenseBody = document.createElement("div");
-        licenseBody.className = "message-body";
-        const licenseTitle = document.createElement("strong");
-        licenseTitle.textContent = "Verifikasi pembelian TCS Stock & Sales Basic";
-        const licenseDescription = document.createElement("p");
-        licenseDescription.textContent = "Permintaan perangkat terverifikasi. Masukkan nomor pesanan atau referensi transaksi Projects.co.id. Data ini hanya dikirim ke server lisensi untuk pemeriksaan oleh The Choco Studios.";
-        licenseDescription.style.cssText = "margin:8px 0 12px;color:#aab4ce";
-        const referenceForm = document.createElement("form");
-        referenceForm.style.cssText = "display:flex;gap:8px;flex-wrap:wrap";
-        const referenceInput = document.createElement("input");
-        referenceInput.type = "text";
-        referenceInput.required = true;
-        referenceInput.minLength = 4;
-        referenceInput.maxLength = 120;
-        referenceInput.autocomplete = "off";
-        referenceInput.placeholder = "Nomor pesanan / referensi pembelian";
-        referenceInput.setAttribute("aria-label", "Nomor pesanan atau referensi pembelian");
-        referenceInput.style.cssText = "flex:1;min-width:210px;padding:11px;border:1px solid rgba(135,148,191,.25);border-radius:9px;background:#0c1220;color:#eef2ff";
-        const referenceButton = document.createElement("button");
-        referenceButton.type = "submit";
-        referenceButton.textContent = "Kirim referensi";
-        referenceButton.style.cssText = "padding:10px 14px;border:0;border-radius:9px;background:linear-gradient(110deg,#648bff,#a76cff);color:white;cursor:pointer";
-        const referenceStatus = document.createElement("p");
-        referenceStatus.setAttribute("role", "status");
-        referenceStatus.style.cssText = "margin:9px 0 0;color:#aab4ce;font-size:12px";
-        referenceForm.append(referenceInput, referenceButton);
-        licenseBody.append(licenseTitle, licenseDescription, referenceForm, referenceStatus);
-        licenseCard.append(licenseAvatar, licenseBody);
-        messages.appendChild(licenseCard);
-        referenceForm.addEventListener("submit", async event => {
-          event.preventDefault();
-          const purchaseReference = referenceInput.value.trim();
-          if (purchaseReference.length < 4 || purchaseReference.length > 120 || referenceButton.disabled) return;
-          referenceButton.disabled = true;
-          referenceInput.disabled = true;
-          referenceStatus.textContent = "Mengirim referensi pembelian...";
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+          requestId: urlRequestId,
+          requestToken: urlRequestToken,
+          submitted: false,
+          savedAt: Date.now()
+        }));
+        url.searchParams.delete("license_request");
+        url.searchParams.delete("license_token");
+        url.hash = "";
+        window.history.replaceState({}, document.title, url.pathname + url.search);
+      }
+
+      let saved;
+      try { saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "null"); } catch { saved = null; }
+      if (!saved || !saved.requestId || !saved.requestToken) return;
+      const { requestId, requestToken } = saved;
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestId) || requestToken.length < 20 || requestToken.length > 200) {
+        sessionStorage.removeItem(STORAGE_KEY);
+        showToast("Data sesi permintaan lisensi tidak valid.");
+        return;
+      }
+
+      const licenseCard = document.createElement("article");
+      licenseCard.className = "message assistant";
+      licenseCard.style.cssText = "margin:16px 0;padding:16px;border:1px solid rgba(135,148,191,.22);border-radius:16px;background:rgba(20,29,47,.72)";
+      const licenseAvatar = document.createElement("div");
+      licenseAvatar.className = "ai-avatar";
+      licenseAvatar.appendChild(createChocoAvatar());
+      const licenseBody = document.createElement("div");
+      licenseBody.className = "message-body";
+      const licenseTitle = document.createElement("strong");
+      licenseTitle.textContent = "Permintaan lisensi TCS Stock & Sales Basic";
+      const licenseDescription = document.createElement("p");
+      licenseDescription.textContent = "SKU produk: tcs-stock-sales-basic. SKU hanya mengidentifikasi produk, bukan bukti pembayaran. Untuk verifikasi, lengkapi username Projects.co.id dan ID transaksi pembelian.";
+      licenseDescription.style.cssText = "margin:8px 0 12px;color:#aab4ce;line-height:1.6";
+      const referenceForm = document.createElement("form");
+      referenceForm.style.cssText = "display:grid;gap:9px;max-width:520px";
+      const buyerLabel = document.createElement("label");
+      buyerLabel.textContent = "Username Projects.co.id";
+      buyerLabel.style.cssText = "font-size:12px;color:#dce4f4";
+      const buyerInput = document.createElement("input");
+      buyerInput.type = "text";
+      buyerInput.required = true;
+      buyerInput.minLength = 3;
+      buyerInput.maxLength = 80;
+      buyerInput.autocomplete = "username";
+      buyerInput.placeholder = "Masukkan username pembeli";
+      buyerInput.pattern = "[A-Za-z0-9._-]{3,80}";
+      buyerInput.style.cssText = "width:100%;padding:11px;border:1px solid rgba(135,148,191,.25);border-radius:9px;background:#0c1220;color:#eef2ff";
+      const referenceLabel = document.createElement("label");
+      referenceLabel.textContent = "ID transaksi / nomor pesanan Projects.co.id";
+      referenceLabel.style.cssText = "font-size:12px;color:#dce4f4;margin-top:3px";
+      const referenceInput = document.createElement("input");
+      referenceInput.type = "text";
+      referenceInput.required = true;
+      referenceInput.minLength = 4;
+      referenceInput.maxLength = 120;
+      referenceInput.autocomplete = "off";
+      referenceInput.placeholder = "Masukkan ID transaksi pembelian";
+      referenceInput.style.cssText = "width:100%;padding:11px;border:1px solid rgba(135,148,191,.25);border-radius:9px;background:#0c1220;color:#eef2ff";
+      const formActions = document.createElement("div");
+      formActions.style.cssText = "display:flex;gap:8px;flex-wrap:wrap";
+      const referenceButton = document.createElement("button");
+      referenceButton.type = "submit";
+      referenceButton.textContent = "Kirim data pembelian";
+      referenceButton.style.cssText = "padding:10px 14px;border:0;border-radius:9px;background:linear-gradient(110deg,#648bff,#a76cff);color:white;cursor:pointer";
+      const checkButton = document.createElement("button");
+      checkButton.type = "button";
+      checkButton.textContent = "Periksa status";
+      checkButton.style.cssText = "padding:10px 14px;border:1px solid rgba(135,148,191,.3);border-radius:9px;background:transparent;color:#dce4f4;cursor:pointer";
+      formActions.append(referenceButton, checkButton);
+      const referenceStatus = document.createElement("p");
+      referenceStatus.setAttribute("role", "status");
+      referenceStatus.style.cssText = "margin:9px 0 0;color:#aab4ce;font-size:12px;line-height:1.6";
+      const keyContainer = document.createElement("div");
+      keyContainer.style.cssText = "display:none;margin-top:14px;padding:14px;border:1px solid rgba(115,199,160,.3);border-radius:12px;background:rgba(37,104,78,.12)";
+      referenceForm.append(buyerLabel, buyerInput, referenceLabel, referenceInput, formActions, referenceStatus, keyContainer);
+      licenseBody.append(licenseTitle, licenseDescription, referenceForm);
+      licenseCard.append(licenseAvatar, licenseBody);
+      messages.appendChild(licenseCard);
+
+      let pollTimer = null;
+      let checking = false;
+      let deliveredKey = "";
+      const updateSaved = () => sessionStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+      const stopPolling = () => {
+        if (pollTimer) window.clearInterval(pollTimer);
+        pollTimer = null;
+      };
+      const showKey = (key) => {
+        deliveredKey = key;
+        keyContainer.style.display = "block";
+        keyContainer.replaceChildren();
+        const label = document.createElement("p");
+        label.textContent = "Kunci lisensi telah tersedia. Simpan kunci ini di tempat yang aman.";
+        label.style.cssText = "margin:0 0 9px;color:#bde8d2;font-size:12px";
+        const code = document.createElement("code");
+        code.textContent = key;
+        code.style.cssText = "display:block;padding:11px;border-radius:8px;background:rgba(0,0,0,.25);color:#f0fff7;font-size:13px;overflow-wrap:anywhere;user-select:all";
+        const copy = document.createElement("button");
+        copy.type = "button";
+        copy.textContent = "Salin kunci lisensi";
+        copy.style.cssText = "margin-top:10px;padding:9px 12px;border:0;border-radius:8px;background:#79c9a2;color:#10251c;font-weight:700;cursor:pointer";
+        copy.addEventListener("click", async () => {
           try {
-            const submitted = await fetch("/api/license", {
+            await navigator.clipboard.writeText(deliveredKey);
+            copy.textContent = "Kunci berhasil disalin";
+          } catch {
+            const range = document.createRange();
+            range.selectNodeContents(code);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            copy.textContent = "Pilih teks kunci lalu salin";
+          }
+        });
+        keyContainer.append(label, code, copy);
+      };
+
+      const refreshStatus = async (silent = false) => {
+        if (checking) return;
+        checking = true;
+        if (!silent) checkButton.disabled = true;
+        try {
+          const response = await fetch("/api/license", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            cache: "no-store",
+            body: JSON.stringify({ action: "status", requestId, requestToken })
+          });
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok || !data.ok) throw new Error(data.error || "Status permintaan tidak dapat diperiksa.");
+          if (data.buyerDetailsReceived) {
+            saved.submitted = true;
+            updateSaved();
+            buyerInput.disabled = true;
+            referenceInput.disabled = true;
+            referenceButton.disabled = true;
+            referenceButton.textContent = "Data pembelian terkirim";
+          }
+          if (data.status === "approved" && data.verificationStatus === "verified") {
+            referenceStatus.textContent = "Pembayaran telah diverifikasi dan permintaan disetujui. Mengambil kunci lisensi dari penyimpanan aman...";
+            const delivery = await fetch("/api/license", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               cache: "no-store",
-              body: JSON.stringify({ action: "submit_purchase_reference", requestId, requestToken, purchaseReference })
+              body: JSON.stringify({ action: "deliver", requestId, requestToken })
             });
-            const result = await submitted.json().catch(() => ({}));
-            if (!submitted.ok || !result.ok || !result.submitted) throw new Error(result.error || "Referensi belum berhasil disimpan.");
-            referenceStatus.textContent = "Referensi berhasil dikirim. Tim The Choco Studios akan memeriksa transaksi secara manual.";
-            input.value = "Saya sudah mengirim referensi pembelian untuk permintaan lisensi " + requestId + ". Mohon bantu jelaskan proses pemeriksaan selanjutnya.";
-            resizeInput();
-          } catch (error) {
-            referenceStatus.textContent = error.message || "Referensi gagal dikirim. Coba lagi.";
-            referenceButton.disabled = false;
-            referenceInput.disabled = false;
+            const delivered = await delivery.json().catch(() => ({}));
+            if (delivery.ok && delivered.ok && delivered.licenseKey) {
+              showKey(delivered.licenseKey);
+              referenceStatus.textContent = "Lisensi berhasil dialokasikan dan diambil dari Supabase.";
+              stopPolling();
+              showToast("Lisensi telah disetujui dan kunci tersedia.");
+            } else if (["license_suspended", "license_revoked"].includes(delivered.error)) {
+              referenceStatus.textContent = delivered.error === "license_suspended"
+                ? "Lisensi sedang ditangguhkan. Hubungi The Choco Studios untuk pemeriksaan."
+                : "Lisensi telah dicabut dan tidak dapat digunakan.";
+              stopPolling();
+            } else {
+              referenceStatus.textContent = "Pembayaran sudah terverifikasi. Kunci sedang menunggu proses alokasi.";
+            }
+          } else if (data.status === "rejected") {
+            referenceStatus.textContent = "Permintaan lisensi ditolak. Silakan hubungi The Choco Studios untuk informasi lebih lanjut.";
+            stopPolling();
+            sessionStorage.removeItem(STORAGE_KEY);
+          } else if (data.status === "expired") {
+            referenceStatus.textContent = "Masa berlaku permintaan lisensi telah berakhir. Buat permintaan baru dari aplikasi produk.";
+            stopPolling();
+            sessionStorage.removeItem(STORAGE_KEY);
+          } else if (data.verificationStatus === "hold") {
+            referenceStatus.textContent = "Permintaan sedang ditahan untuk pemeriksaan tambahan. Belum ada kunci yang dialokasikan.";
+          } else if (data.verificationStatus === "verified") {
+            referenceStatus.textContent = "Pembayaran telah diverifikasi. Permintaan menunggu persetujuan dan alokasi kunci oleh Owner.";
+          } else if (data.buyerDetailsReceived) {
+            referenceStatus.textContent = "Data pembelian diterima. Tim The Choco Studios akan mencocokkan transaksi dan memastikan dana telah diterima.";
+          } else {
+            referenceStatus.textContent = "Lengkapi username Projects.co.id dan ID transaksi agar permintaan dapat diperiksa.";
           }
+          if (data.status === "pending" && (data.buyerDetailsReceived || saved.submitted) && !pollTimer) {
+            pollTimer = window.setInterval(() => refreshStatus(true), 20000);
+          }
+        } catch (error) {
+          if (!silent) referenceStatus.textContent = error.message || "Status belum dapat diperiksa. Coba kembali.";
+        } finally {
+          checking = false;
+          checkButton.disabled = false;
           scrollToBottom();
-        });
-        input.value = "Saya ingin meminta kunci validasi untuk TCS Stock & Sales Basic. ID permintaan: " + requestId + ". Status terakhir: " + data.status + ". Tolong bantu proses verifikasi pembelian.";
-        resizeInput();
-        input.focus();
-        showToast(data.status === "approved" ? "Permintaan sudah disetujui. Lanjutkan percakapan untuk menerima informasi aktivasi." : "Permintaan perangkat berhasil diverifikasi. Lengkapi informasi pembelian di percakapan ini.");
-      } catch (error) {
-        showToast(error.message || "Verifikasi permintaan lisensi gagal.");
+        }
+      };
+
+      referenceForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const buyerUsername = buyerInput.value.trim();
+        const transactionReference = referenceInput.value.trim();
+        if (!/^[A-Za-z0-9._-]{3,80}$/.test(buyerUsername) || transactionReference.length < 4 || transactionReference.length > 120) {
+          referenceStatus.textContent = "Periksa kembali username dan ID transaksi yang dimasukkan.";
+          return;
+        }
+        referenceButton.disabled = true;
+        buyerInput.disabled = true;
+        referenceInput.disabled = true;
+        referenceStatus.textContent = "Mengirim data pembelian ke server lisensi...";
+        try {
+          const response = await fetch("/api/license", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            cache: "no-store",
+            body: JSON.stringify({ action: "submit_purchase_reference", requestId, requestToken, buyerUsername, transactionReference })
+          });
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok || !result.ok || !result.submitted) throw new Error(result.error || "Data pembelian belum berhasil disimpan.");
+          saved.submitted = true;
+          updateSaved();
+          referenceButton.textContent = "Data pembelian terkirim";
+          referenceStatus.textContent = "Data berhasil diterima. Tim The Choco Studios akan memeriksa transaksi secara manual di Projects.co.id.";
+          await refreshStatus(true);
+        } catch (error) {
+          referenceStatus.textContent = error.message || "Data pembelian gagal dikirim. Silakan coba lagi.";
+          referenceButton.disabled = false;
+          buyerInput.disabled = false;
+          referenceInput.disabled = false;
+        }
+        scrollToBottom();
+      });
+
+      checkButton.addEventListener("click", () => refreshStatus(false));
+      if (saved.submitted) {
+        buyerInput.disabled = true;
+        referenceInput.disabled = true;
+        referenceButton.disabled = true;
+        referenceButton.textContent = "Data pembelian terkirim";
       }
+      await refreshStatus(false);
+      showToast("Permintaan lisensi terhubung. Lengkapi data pembelian untuk memulai pemeriksaan.");
     }
     handleTcsLicenseRequest();
 
