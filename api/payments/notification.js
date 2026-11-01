@@ -264,7 +264,9 @@ export default async function handler(req, res) {
       ? "settlement"
       : incomingStatus;
     const fraudStatus = incomingFraudStatus;
-    const paid = incomingPaid || alreadyPaid;
+    // A refund notification must never trigger first-time license issuance.
+    // Existing issued licenses are left unchanged pending an explicit refund policy.
+    const paid = !isRefund && (incomingPaid || alreadyPaid);
 
     const update = {
       transaction_status: transactionStatus,
