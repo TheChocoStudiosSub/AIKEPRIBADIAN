@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   if (req.method !== "GET") return send(res, 405, { ok: false, error: "method_not_allowed" });
   const orderId = String(req.query?.orderId || "").trim();
   if (!/^[A-Za-z0-9._~-]{8,50}$/.test(orderId)) return send(res, 400, { ok: false, error: "invalid_order_id" });
-  const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\\/+$/, "");
+  const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\/+$/, "");
   const key = String(process.env.SUPABASE_SECRET_KEY || "");
   if (!base || !key) return send(res, 503, { ok: false, error: "payment_backend_not_configured" });
   try {
