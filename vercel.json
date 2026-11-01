@@ -4,6 +4,14 @@
   "outputDirectory": "public",
   "rewrites": [
     {
+      "source": "/admin",
+      "destination": "https://tcs-admin-panel.vercel.app/"
+    },
+    {
+      "source": "/admin/:path*",
+      "destination": "https://tcs-admin-panel.vercel.app/:path*"
+    },
+    {
       "source": "/.netlify/functions/:path*",
       "destination": "/api/:path*"
     }
