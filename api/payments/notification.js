@@ -71,6 +71,11 @@ async function finalizeLinkedLicense(orderId) {
   }
 
   if (request.status === "approved") {
+    if (request.transaction_reference !== orderId ||
+        Number(request.verified_amount_idr) !== Number(transaction.amount_idr)) {
+      await setLicenseState(orderId, "failed");
+      return;
+    }
     const licenses = await dbRequest(
       "tcs_licenses?select=id&request_id=eq." + encodeURIComponent(requestId) + "&limit=1"
     );
