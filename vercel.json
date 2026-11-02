@@ -4,6 +4,10 @@
   "outputDirectory": "public",
   "rewrites": [
     {
+      "source": "/assets/:path*",
+      "destination": "https://aikepribadian-6i9bdro8w-hasbyprasetya09-4218.vercel.app/assets/:path*"
+    },
+    {
       "source": "/admin",
       "destination": "https://tcs-admin-panel.vercel.app/"
     },
