@@ -173,8 +173,8 @@ export default async function handler(req, res) {
       if (planCode === "basic" && (allowed.length !== 1 || allowed[0] !== "kasirkita" || rows.some(item => item.can_sync))) {
         throw new Error("basic_must_only_include_kasirkita");
       }
-      if (planCode === "pro" && (allowed.length > 3 || !allowed.includes("kasirkita"))) {
-        throw new Error("pro_maximum_three_apps_including_kasirkita");
+      if (planCode === "pro" && !allowed.includes("kasirkita")) {
+        throw new Error("pro_must_include_kasirkita");
       }
       if (planCode === "business" && (allowed.length !== registeredCodes.size || [...registeredCodes].some(code => !allowed.includes(code)))) {
         throw new Error("business_must_include_all_apps");
