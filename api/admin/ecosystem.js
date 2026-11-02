@@ -141,11 +141,11 @@ export default async function handler(req, res) {
     if (action === "save_plan") {
       const planCode = text(body.plan_code, 20);
       if (!["basic","pro","business"].includes(planCode)) throw new Error("invalid_input");
-      const maxApps = planCode === "business" ? null : int(body.max_connected_apps, 1, 100);
+      const maxApps = planCode === "business" ? null : (planCode === "basic" ? 1 : 3);
       const feeBps = int(body.transaction_fee_basis_points, 0, 10000);
       const saved = await db("tcs_ecosystem_plans?plan_code=eq." + planCode, "PATCH", {
         max_connected_apps: maxApps,
-        includes_all_apps: planCode === "business" && body.includes_all_apps === true,
+        includes_all_apps: planCode === "business",
         transaction_fee_basis_points: feeBps,
         transaction_fee_enabled: false,
         daily_report_enabled: body.daily_report_enabled === true,
@@ -166,6 +166,19 @@ export default async function handler(req, res) {
         can_sync: item.can_sync === true && planCode !== "basic",
         report_enabled: item.report_enabled === true
       }));
+      const registered = await db("tcs_ecosystem_apps?select=app_code&lifecycle=neq.retired");
+      const registeredCodes = new Set((registered || []).map(item => item.app_code));
+      if (rows.some(item => !registeredCodes.has(item.app_code))) throw new Error("unknown_app");
+      const allowed = rows.filter(item => item.can_access).map(item => item.app_code);
+      if (planCode === "basic" && (allowed.length !== 1 || allowed[0] !== "kasirkita" || rows.some(item => item.can_sync))) {
+        throw new Error("basic_must_only_include_kasirkita");
+      }
+      if (planCode === "pro" && (allowed.length > 3 || !allowed.includes("kasirkita"))) {
+        throw new Error("pro_maximum_three_apps_including_kasirkita");
+      }
+      if (planCode === "business" && (allowed.length !== registeredCodes.size || [...registeredCodes].some(code => !allowed.includes(code)))) {
+        throw new Error("business_must_include_all_apps");
+      }
       const saved = await db("tcs_plan_app_entitlements?on_conflict=plan_code,app_code", "POST", rows, "resolution=merge-duplicates,return=representation");
       return send(res, 200, { ok: true, entitlements: saved || [] });
     }
