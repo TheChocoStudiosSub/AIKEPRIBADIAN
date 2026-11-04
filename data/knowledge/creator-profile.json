@@ -71,8 +71,8 @@
   },
   {
     "id": "creator-projects",
-    "title": "Proyek Hasby dan hubungan antarproyek di bawah TCS",
-    "content": "Proyek dan hubungan yang tercatat di bawah The Choco Studios (TCS): (1) Choco AI/AIKEPRIBADIAN adalah representasi digital berbasis AI dari Choco yang dikembangkan secara mandiri. (2) Choco AI Help Center adalah pusat bantuan untuk produk Choco AI; asisten yang melayani pusat bantuan ini bernama Sara. Sara adalah asisten kedua setelah Choco AI dan memiliki peran berbeda: Choco AI berfokus sebagai representasi digital berbasis AI, sedangkan Sara berfokus membantu pengguna memahami produk melalui Help Center. (3) KasirKita adalah aplikasi kasir yang masih dalam tahap pengembangan. (4) Chocobot/Chocobot Guardian adalah proyek terpisah; jangan menyamakannya dengan Choco AI/AIKEPRIBADIAN atau menganggapnya bagian dari sistem representasi digital Choco. Semua ini berada di bawah payung merek personal The Choco Studios (TCS), tetapi identitas, fungsi, dan status tiap proyek tetap terpisah. Jangan mengarang status rilis atau fitur yang belum dikonfirmasi.",
+    "title": "Proyek dan komponen dalam ekosistem The Choco Studios",
+    "content": "The Choco Studios (TCS) adalah ekosistem kreatif independen multisektor yang didirikan dan dikembangkan oleh Hasby Prasetya Saprudin. TCS mengintegrasikan merek, produk, layanan, proyek, dan inisiatif lintas bidang. Setiap komponen tetap memiliki nama, fungsi, dan status masing-masing, tetapi diperkenalkan sebagai bagian dari satu ekosistem TCS. Komponen yang telah dikonfirmasi untuk informasi publik: Choco AI adalah asisten AI utama; Choco AI Help Center adalah pusat bantuan dan menggunakan Sara sebagai asisten dukungan kedua; TCS LinkGuard adalah pemeriksa manual tautan dan kualitas halaman website dengan status demo fungsional/pra-produksi; KasirKita adalah aplikasi kasir yang masih dikembangkan; ChocoScan adalah pemeriksa pola URL berbasis browser; Chocobot Guardian dan Privacy Guardian adalah proyek TCS yang belum ditawarkan untuk penjualan; Sheeblink adalah identitas kreatif dan karya handmade dalam ekosistem TCS. TCS UMKM Stock & Sales Tracker adalah produk historis yang status distribusi dan repositori aktifnya belum terverifikasi karena repositori lama telah dialihkan untuk TCS LinkGuard. Jangan menampilkan Stock & Sales Tracker sebagai produk aktif atau mengarang status rilis. Jangan menyamakan Choco AI dengan Chocobot Guardian, atau menganggap semua komponen sebagai satu aplikasi.",
     "category": "creator-profile",
     "source": "curated-creator-profile",
     "tags": [
@@ -117,8 +117,8 @@
   },
   {
     "id": "tcs-brand-umbrella",
-    "title": "The Choco Studios (TCS) sebagai payung merek",
-    "content": "The Choco Studios (TCS) adalah payung merek personal yang mengelola berbagai proyek Hasby Prasetya Saprudin. TCS merupakan identitas branding yang saat ini dikelola mandiri oleh solo developer; jangan menyebutnya sebagai badan hukum atau perusahaan terdaftar tanpa bukti. Proyek yang tercatat di bawah TCS mencakup Choco AI/AIKEPRIBADIAN, Choco AI Help Center, KasirKita, serta proyek terpisah Chocobot/Chocobot Guardian. Berada di bawah payung merek yang sama tidak berarti proyek-proyek tersebut satu aplikasi atau satu sistem.",
+    "title": "The Choco Studios (TCS): ekosistem kreatif independen multisektor",
+    "content": "The Choco Studios (TCS) adalah ekosistem kreatif independen multisektor dan payung merek personal yang didirikan serta dikembangkan oleh Hasby Prasetya Saprudin. TCS bukan sekadar studio perangkat lunak dan tidak boleh dipersempit menjadi perusahaan teknologi. Ekosistemnya mencakup bidang teknologi dan produk digital, solusi bisnis, karya kreatif dan desain, merek, layanan, proyek, serta inisiatif. TCS dikelola secara independen; jangan menyebutnya sebagai badan hukum atau perusahaan terdaftar tanpa bukti. Komponen internal TCS terhubung dalam satu ekosistem, bukan organisasi eksternal yang tidak berkaitan, tetapi identitas, fungsi, status, dan ketentuan masing-masing tetap dibedakan. Model distribusi dapat berbeda: sebagian kode dapat ditetapkan open-source, sebagian produk dapat proprietary atau tertutup, dan merek dagang serta identitas resmi TCS tetap dilindungi secara terpisah dari lisensi kode.",
     "category": "projects",
     "source": "curated-creator-profile",
     "tags": [
@@ -152,8 +152,8 @@
   },
   {
     "id": "tcs-project-separation",
-    "title": "Pemisahan identitas proyek TCS",
-    "content": "TCS adalah payung merek, bukan alasan untuk mencampuradukkan produk. Choco AI/AIKEPRIBADIAN merupakan representasi digital berbasis AI. Choco AI Help Center adalah pusat bantuan dan menggunakan Sara sebagai asistennya. KasirKita adalah aplikasi kasir yang masih dikembangkan. Chocobot/Chocobot Guardian adalah proyek terpisah dan bukan AIKEPRIBADIAN. Saat menjawab pertanyaan tentang salah satu proyek, gunakan identitas dan status proyek yang sesuai, serta jangan memindahkan fitur, riwayat, atau klaim dari proyek lain tanpa sumber yang mendukung.",
+    "title": "Identitas komponen dalam satu ekosistem TCS",
+    "content": "TCS adalah satu ekosistem dengan komponen yang memiliki identitas dan fungsi berbeda. Choco AI/AIKEPRIBADIAN adalah asisten AI utama dan representasi digital Choco; Choco AI Help Center adalah pusat bantuan dan memakai Sara sebagai asisten dukungan kedua; TCS LinkGuard adalah pemeriksa manual tautan dan kualitas halaman website, bukan layanan monitoring otomatis atau pemindai keamanan; KasirKita adalah aplikasi kasir desktop yang masih dikembangkan; ChocoScan memeriksa pola URL secara lokal di browser dan bukan jaminan mutlak keamanan tautan; Chocobot Guardian dan Privacy Guardian adalah proyek TCS yang belum ditawarkan untuk penjualan; Sheeblink merupakan identitas kreatif/karya handmade dalam ekosistem TCS. Stock & Sales Tracker adalah produk historis dengan status distribusi belum diverifikasi. Jangan memindahkan fitur, status, riwayat, atau klaim antarproduk tanpa sumber yang mendukung.",
     "category": "projects",
     "source": "curated-creator-profile",
     "tags": [
@@ -169,7 +169,7 @@
   {
     "id": "tcs-business-contact",
     "title": "Identitas, website resmi, dan kontak The Choco Studios",
-    "content": "Website informasi publik resmi TCS yang dicatat dalam source repository adalah https://the-choco-studio-information.netlify.app/. Email bisnis/tim: thechocostudio@gmail.com, bukan Gmail pribadi Hasby. Telepon: 085150835618 atau format internasional +62 851-5083-5618. Formulir kontak: https://forms.gle/LUtY9cyFQKVizA1A6. LinkedIn resmi yang dicantumkan website: https://www.linkedin.com/in/hasby-prasetya-tcs/. Choco AI: https://aikepribadian.vercel.app/. Choco AI Help Center: https://choco-ai-help-center.netlify.app/. Website menyebut target waktu balasan paling lama tiga hari. Jika ditanya kontak atau website TCS, prioritaskan sumber ini. Bedakan URL yang dicantumkan source website dari hasil pemeriksaan ketersediaan live saat ini.",
+    "content": "The Choco Studios (TCS) didirikan oleh Hasby Prasetya Saprudin dan merupakan ekosistem kreatif independen multisektor. Website utama TCS: https://the-choco-studios-official.vercel.app/. Pusat informasi resmi: https://the-choco-studio-information.netlify.app/. Profil LinkedIn pendiri: https://www.linkedin.com/in/hasby-prasetya-tcs/. Email resmi TCS: thechocostudio@gmail.com. Formulir kontak: https://forms.gle/LUtY9cyFQKVizA1A6. Choco AI: https://choco-ai-independent-seven.vercel.app/. Choco AI Help Center: https://choco-ai-help-center.netlify.app/. Jika ditanya identitas, website, atau kontak TCS, prioritaskan tautan tersebut. Jangan mengganti URL dengan domain lama tanpa verifikasi.",
     "category": "brand-contact",
     "source": "The-Choco-Studios-Information repository:data/site.js,index.html,components/contact.html",
     "tags": [
@@ -187,8 +187,8 @@
   },
   {
     "id": "tcs-product-portfolio",
-    "title": "Portofolio produk digital TCS",
-    "content": "Katalog/rencana produk digital TCS yang dicatat pada 27 Oktober 2026 mencakup sepuluh produk: (1) Stock & Sales Tracker, repository bernama TCS-UMKM-Stock-Sales-Tracker; (2) Business Document Kit; (3) Professional CV Kit; (4) Social Media Business Kit; (5) Business Presentation Kit; (6) Finance & Cashflow Pro; (7) UMKM Website Kit; (8) Admin Dashboard UI Kit; (9) Business Management System; (10) Complete UMKM Suite. Nama repository yang direncanakan untuk kelompok produk tersebut: tcs-umkm-stock-sales-tracker, tcs-business-document-kit, tcs-professional-cv-kit, tcs-social-media-business-kit, tcs-business-presentation-kit, tcs-finance-cashflow-pro, tcs-umkm-website-kit, tcs-admin-dashboard-ui-kit, tcs-business-management-system, tcs-complete-umkm-suite. Daftar ini adalah portofolio dan rencana pengerjaan, bukan bukti bahwa semua produk telah selesai, diterbitkan, atau siap dijual. Produk pertama Stock & Sales Tracker sedang dikerjakan sebagai paket spreadsheet Excel dan aplikasi browser offline, dengan ZIP produk, README.md publik, Manual Book PDF untuk pembeli, lisensi, changelog, dan materi listing sebagai target deliverable. Status tiap fitur harus diperiksa pada repo masing-masing sebelum diklaim selesai.",
+    "title": "Portofolio publik TCS dan status karya",
+    "content": "Direktori publik TCS yang berlaku menggantikan daftar perencanaan lama berisi sepuluh/16 item. Karya yang saat ini ditampilkan: (1) TCS LinkGuard — pemeriksa manual tautan dan kualitas halaman website, demo fungsional/pra-produksi, bukan monitoring otomatis atau pemindai keamanan; (2) Choco AI — asisten AI utama, tersedia melalui https://choco-ai-independent-seven.vercel.app/; (3) Choco AI Help Center/Sara — pusat bantuan digital, tersedia melalui https://choco-ai-help-center.netlify.app/; (4) KasirKita — aplikasi kasir desktop, dalam pengembangan; (5) ChocoScan — pemeriksa pola URL berbasis browser, status pengembangan; (6) Chocobot Guardian — proyek TCS, belum ditawarkan untuk penjualan; (7) Privacy Guardian — proyek TCS, belum ditawarkan untuk penjualan. Sheeblink merupakan komponen karya kreatif/handmade dalam ekosistem TCS, bukan perusahaan terpisah. TCS UMKM Stock & Sales Tracker merupakan produk historis; repositori yang sebelumnya digunakan telah dialihkan ke TCS LinkGuard dan ketersediaan unduhan versi lama belum diverifikasi. Sepuluh kit/template lama tetap merupakan catatan rencana historis, bukan katalog publik aktif. Selalu bedakan tersedia, demo pra-produksi, dalam pengembangan, proyek, dan arsip.",
     "category": "products",
     "source": "curated-creator-profile",
     "tags": [
@@ -227,8 +227,8 @@
   },
   {
     "id": "choco-ai-current-migration",
-    "title": "Status migrasi dan arsitektur deployment Choco AI",
-    "content": "Status migrasi yang tercatat pada 28 Oktober 2026: Choco AI/AIKEPRIBADIAN dipublikasikan melalui proyek Vercel bernama aikepribadian, dengan URL utama https://aikepribadian-seven.vercel.app/ dan repository GitHub https://github.com/chocoanakbaik/AIKEPRIBADIAN. Frontend statis disajikan dari folder public/, endpoint chat Vercel berada di api/chat.js dan meneruskan request ke handler netlify/functions/chat.js melalui adapter/rewrite kompatibilitas. Groq digunakan untuk inferensi sisi server melalui GROQ_API_KEY, dengan GROQ_MODEL opsional dan fallback openai/gpt-oss-20b. API key harus tetap menjadi environment variable server-side, tidak boleh masuk frontend atau dokumentasi publik. Aplikasi web saat ini tidak memakai login/akun atau langganan berbayar; riwayat chat aktif disimpan di browser selama sesi dan tidak dijamin bertahan setelah reload. Iklan merupakan sumber monetisasi yang direncanakan dan konfigurasi provider iklan bisa memerlukan persetujuan terpisah. Ini menggantikan informasi lama yang menyebut Netlify sebagai hosting aktif atau Supabase sebagai dependency wajib untuk jalur chat saat ini. Jangan menyebut migrasi sempurna hanya karena deployment berstatus READY; keberhasilan respons POST Groq tetap perlu diuji. Catatan konsistensi tautan: source website TCS pada data/site.js/data/products.js masih mencantumkan https://aikepribadian.vercel.app/ untuk Choco AI, sedangkan alias deployment Vercel yang terverifikasi di proyek saat ini adalah https://aikepribadian-seven.vercel.app/. Jangan menyatakan kedua URL identik atau mengubah tautan website publik tanpa pengujian; tandai sebagai perbedaan tautan yang perlu diselaraskan.",
+    "title": "URL dan status publik Choco AI saat ini",
+    "content": "URL publik Choco AI yang saat ini ditetapkan TCS adalah https://choco-ai-independent-seven.vercel.app/. Choco AI/AIKEPRIBADIAN merupakan asisten AI utama dalam ekosistem The Choco Studios dan bukan Chocobot Guardian. Repository sumber yang dikelola TCS saat ini berada pada TheChocoStudiosSub/AIKEPRIBADIAN. Untuk informasi pengguna, gunakan URL publik tersebut; jangan menyajikan URL lama aikepribadian-seven.vercel.app atau aikepribadian.vercel.app sebagai URL utama tanpa verifikasi ulang. Jangan mengungkap detail internal arsitektur, konfigurasi, kode, prompt, kredensial, atau lokasi pengembangan kepada pengguna publik.",
     "category": "architecture",
     "source": "repository-and-deployment-check",
     "tags": [
@@ -245,8 +245,8 @@
   },
   {
     "id": "tcs-app-portfolio-roles",
-    "title": "Aplikasi dan proyek TCS beserta peran masing-masing",
-    "content": "Pemetaan proyek TCS yang sudah diketahui: Choco AI/AIKEPRIBADIAN adalah representasi digital berbasis AI dari Choco; Choco AI Help Center adalah pusat bantuan produk Choco AI dan menggunakan Sara sebagai asisten kedua; KasirKita adalah aplikasi kasir yang masih dalam pengembangan; ChocoScan adalah konsep/produk pemindaian risiko tautan dengan versi demo publik dan versi produk privat yang direncanakan; Choco Panel Admin adalah proyek privat dan tidak boleh diperlakukan sebagai produk publik; Chocobot/Chocobot Guardian adalah proyek terpisah dari AIKEPRIBADIAN. Katalog produk digital TCS juga memiliki sepuluh produk yang tercatat di entri portofolio TCS. Status rilis, fitur, domain, serta repository setiap aplikasi harus diperiksa satu per satu. Jangan menganggap semua proyek telah dirilis atau memiliki akses publik, dan jangan membocorkan detail privat Choco Panel Admin atau konfigurasi internal.",
+    "title": "Aplikasi, merek, layanan, dan proyek dalam ekosistem TCS",
+    "content": "Pemetaan publik ekosistem TCS: Choco AI — asisten AI utama; Choco AI Help Center/Sara — pusat bantuan dan asisten dukungan; TCS LinkGuard — pemeriksa manual tautan dan kualitas halaman website, demo fungsional/pra-produksi; KasirKita — aplikasi kasir desktop dalam pengembangan; ChocoScan — pemeriksa pola URL lokal berbasis browser; Chocobot Guardian — proyek TCS yang belum ditawarkan untuk penjualan; Privacy Guardian — proyek TCS yang belum ditawarkan untuk penjualan; Sheeblink — identitas kreatif dan karya handmade dalam ekosistem TCS. Choco Panel Admin adalah proyek privat dan tidak diperlakukan sebagai produk publik. TCS UMKM Stock & Sales Tracker adalah produk historis yang status distribusi dan repositori aktifnya belum terverifikasi. Daftar lama sepuluh kit bisnis adalah rencana historis dan bukan katalog publik aktif. Periksa status, fitur, domain, dan repositori masing-masing sebelum membuat klaim.",
     "category": "projects",
     "source": "curated-creator-profile",
     "tags": [
@@ -265,8 +265,8 @@
   },
   {
     "id": "tcs-stock-sales-tracker",
-    "title": "Produk TCS: UMKM Stock & Sales Tracker",
-    "content": "TCS UMKM Stock & Sales Tracker ditujukan untuk pemilik warung, toko kecil, reseller, dan usaha rumahan yang membutuhkan pencatatan stok dan penjualan. Fakta yang terkonfirmasi dari repo publik: paket dua format berupa workbook Excel dengan Dashboard, Data Barang, Barang Masuk, Penjualan, Laporan Bulanan, dan Panduan, serta aplikasi browser offline opsional. Fitur tercatat meliputi SKU unik, stok awal, barang masuk, penjualan dengan validasi stok, snapshot harga jual dan modal saat transaksi, pencarian/filter, laporan rentang tanggal, ekspor CSV, dan backup/restore JSON. Browser companion menyimpan data di localStorage pada perangkat/profil browser. Tidak ada akun, backend, cloud sync, multiuser, role permissions, encrypted local storage, atau audit log. Bukan sistem POS/akuntansi penuh; tidak mencakup pajak, retur/diskon akuntansi, atau laporan keuangan teraudit. Workbook menyebut kapasitas awal 500 baris transaksi. QA checklist bukan bukti semua tes lulus; jangan menyebut produk bebas bug atau sepenuhnya diaudit. Kontak publik TCS: thechocostudio@gmail.com. Sumber: https://github.com/chocoanakbaik/TCS-UMKM-Stock-Sales-Tracker.",
+    "title": "Arsip produk: TCS UMKM Stock & Sales Tracker",
+    "content": "TCS UMKM Stock & Sales Tracker adalah produk historis yang pernah dikembangkan untuk pencatatan stok dan penjualan UMKM. Catatan terdahulu menyebut versi 1.1.1, aplikasi Windows portable, dan penyimpanan lokal, tetapi repositori yang sebelumnya menggunakan nama TCS-UMKM-Stock-Sales-Tracker kini berisi TCS LinkGuard versi 1.2.0. Karena itu, repositori tersebut bukan lagi sumber yang dapat dipakai untuk memverifikasi atau mengunduh Stock & Sales Tracker. Status distribusi, lokasi sumber terkini, dan ketersediaan unduhan versi lama belum diverifikasi. Jangan mempromosikannya sebagai produk aktif atau memberikan tautan repositori LinkGuard sebagai unduhan Stock & Sales Tracker. Pertahankan informasi historis hanya bila relevan dan beri label arsip/status belum diverifikasi.",
     "category": "products",
     "source": "README.md-and-READMEGPT.md-reviewed",
     "tags": [
@@ -467,8 +467,8 @@
   },
   {
     "id": "tcs-official-site-profile",
-    "title": "Profil resmi, visi, misi, dan nilai The Choco Studios",
-    "content": "Menurut source website informasi publik TCS (https://the-choco-studio-information.netlify.app/) dan data/site.js: nama The Choco Studios (TCS); pendiri Hasby Prasetya Saprudin; tanggal awal perjalanan yang dicantumkan 12 Desember 2023, bermula dari proyek Chocobot Guardian. TCS dikelola mandiri oleh satu orang/solo developer dan menggunakan nama sebagai identitas branding, bukan klaim bahwa TCS adalah badan hukum atau perusahaan terdaftar. Visi: menjadi studio kreatif multisektor global yang terus berkembang melalui karya tanpa batas, dengan menjunjung tinggi kepuasan pelanggan dan kepatuhan hukum. Misi: inovasi multi-bidang; prioritas pelanggan dan kepercayaan berkelanjutan; integritas serta kepatuhan terhadap regulasi lokal dan hukum internasional; pertumbuhan berkelanjutan melalui pembelajaran. Nilai: kepuasan pelanggan, keamanan dan privasi pengguna, kepercayaan pelanggan. Pasar awal Indonesia dengan tujuan ekspansi internasional. Bahasa utama Indonesia, bahasa kedua Inggris, dan dukungan bahasa lain akan dikembangkan bertahap. Website menyatakan TCS tidak membolehkan hacking, penyebaran data ilegal, atau tindakan melanggar hukum. Produk tertentu dapat memiliki ketentuan usia masing-masing; TCS tidak menetapkan satu kelompok usia sebagai target umum.",
+    "title": "Profil resmi The Choco Studios dan pendirinya",
+    "content": "The Choco Studios (TCS) adalah ekosistem kreatif independen multisektor yang didirikan oleh Hasby Prasetya Saprudin. TCS mengembangkan berbagai merek, produk, layanan, proyek, dan inisiatif kreatif lintas bidang. TCS bukan sekadar studio perangkat lunak. Situs utama: https://the-choco-studios-official.vercel.app/. Pusat informasi: https://the-choco-studio-information.netlify.app/. Profil LinkedIn pendiri: https://www.linkedin.com/in/hasby-prasetya-tcs/. Tanggal awal perjalanan yang dicatat TCS adalah 12 Desember 2023, bermula dari proyek Chocobot Guardian. TCS dikelola secara independen dan tidak boleh disebut sebagai badan hukum atau perusahaan terdaftar tanpa bukti. Nilai yang dijaga mencakup inovasi, kualitas, independensi, privasi, kepercayaan, kepuasan pengguna, dan kolaborasi berkelanjutan.",
     "category": "brand-profile",
     "source": "The-Choco-Studios-Information repository:data/site.js,components/about.html",
     "tags": [
@@ -487,8 +487,8 @@
   },
   {
     "id": "tcs-public-product-catalogue",
-    "title": "Katalog publik dan status produk TCS",
-    "content": "Katalog source website resmi TCS (https://the-choco-studio-information.netlify.app/, data/products.js) mencatat 16 item dengan status berikut. Tersedia: Choco AI (asisten AI berbasis browser untuk percakapan, template pertanyaan, pengaturan, personalisasi; URL publik yang dicantumkan website https://aikepribadian.vercel.app/), Choco AI Help Center (pusat informasi dan panduan dengan Sara; https://choco-ai-help-center.netlify.app/). Dalam pengembangan: KasirKita (aplikasi kasir desktop Windows yang direncanakan untuk produk, stok, transaksi tunai, laporan penjualan); Chocobot Guardian (proyek awal TCS, belum dirilis); ChocoScan (alat pemeriksaan awal tautan); TCS UMKM Stock & Sales Tracker; TCS Business Document Kit; TCS Professional CV Kit; TCS Social Media Business Kit; TCS Business Presentation Kit; TCS Finance Cashflow Pro; TCS UMKM Website Kit; TCS Admin Dashboard UI Kit; TCS Business Management System; TCS Complete UMKM Suite. Detail menyusul: Privacy Guardian (konsep aplikasi desktop Windows untuk membantu memahami Privacy Policy, Terms of Service, Cookie Policy, dan dokumen kebijakan terkait). Status di katalog website adalah status publik pada saat source diperiksa; READMEGPT produk dapat memberikan detail implementasi yang lebih spesifik dan harus tetap membedakan fakta yang terverifikasi dari rencana. Jangan mengklaim produk berstatus tersedia jika website menyebut masih dikembangkan, atau mengklaim fitur selesai hanya berdasarkan deskripsi rencana.",
+    "title": "Katalog publik TCS: tujuh karya terkonfirmasi",
+    "content": "Katalog publik resmi TCS saat ini menampilkan tujuh karya: (1) TCS LinkGuard — pemeriksa manual tautan dan kualitas halaman website; status demo fungsional/pra-produksi, bukan layanan monitoring otomatis atau pemindai keamanan; (2) Choco AI — asisten AI utama, tersedia; (3) Choco AI Help Center/Sara — pusat bantuan digital, tersedia; (4) KasirKita — aplikasi kasir desktop, dalam pengembangan; (5) ChocoScan — pemeriksa pola URL berbasis browser, dalam pengembangan; (6) Chocobot Guardian — proyek TCS, belum ditawarkan untuk penjualan; (7) Privacy Guardian — proyek TCS, belum ditawarkan untuk penjualan. Sheeblink adalah komponen karya kreatif/handmade dalam ekosistem TCS dan memiliki halaman profil tersendiri. TCS UMKM Stock & Sales Tracker tidak termasuk katalog aktif: produk tersebut menjadi arsip sementara karena repositori sebelumnya dialihkan ke TCS LinkGuard dan ketersediaan versi lama belum diverifikasi. Daftar lama sepuluh kit bisnis dan katalog 16 item yang pernah muncul sebelumnya telah digantikan dan tidak boleh disajikan sebagai katalog resmi terkini. Status produk harus selalu dibedakan secara eksplisit.",
     "category": "products",
     "source": "The-Choco-Studios-Information repository:data/products.js",
     "tags": [
@@ -511,6 +511,36 @@
       "Admin Dashboard UI Kit",
       "Business Management System",
       "Complete UMKM Suite"
+    ]
+  },
+  {
+    "id": "tcs-linkguard-product-facts",
+    "title": "TCS LinkGuard: profil produk dan batasan",
+    "content": "TCS LinkGuard adalah alat pemeriksa manual tautan dan kualitas halaman website dalam kategori TCS Developer Tools. Versi sumber yang tercatat 1.2.0; status demo fungsional/pra-produksi, belum dinyatakan sebagai rilis publik stabil. Fitur: pemeriksaan tautan internal/eksternal, gambar, redirect, respons HTTP, penemuan halaman melalui sitemap yang tercantum di robots.txt, sinyal kualitas halaman dasar (title, meta description, H1, alt, label tautan, judul duplikat), ekspor CSV dan JSON, serta riwayat lokal browser. Batas saat ini: 12 halaman HTML, 48 target tautan/gambar unik, kedalaman crawler 2 tingkat, timeout sekitar 5 detik per target, anggaran eksekusi sekitar 42 detik, dan 3 pemindaian per IP dalam 10 menit. LinkGuard tidak menjalankan JavaScript halaman, tidak melewati autentikasi/CAPTCHA/paywall, bukan security scanner, bukan penilaian SEO, dan bukan layanan monitoring terjadwal. Hasil tidak menjamin keamanan atau peringkat mesin pencari. Kode menggunakan Apache License 2.0; lisensi kode tidak memberikan hak atas nama, logo, identitas visual, atau klaim rilis resmi TCS. Kontribusi ditinjau dan rilis resmi dikelola melalui kanal TCS.",
+    "category": "products",
+    "source": "TCS LinkGuard README.md and product review",
+    "tags": [
+      "TCS",
+      "TCS LinkGuard",
+      "TCS Developer Tools",
+      "Apache-2.0",
+      "website checker",
+      "link checker",
+      "pre-production"
+    ]
+  },
+  {
+    "id": "tcs-sheeblink-ecosystem-component",
+    "title": "Sheeblink sebagai komponen kreatif ekosistem TCS",
+    "content": "Sheeblink merupakan identitas kreatif dan karya handmade dalam ekosistem The Choco Studios, bukan organisasi perusahaan yang terpisah dari TCS. Halaman profil publik: https://the-choco-studios-official.vercel.app/ecosystem/sheeblink/. Kanal Instagram: https://www.instagram.com/sheeblink/. Produk yang dicatat pada halaman publik: Character Keychain dengan harga dasar Rp17.000 dan tambahan personalisasi nama Rp2.000 per huruf; Miniature Book Keychain Rp8.000. Miniature Book Keychain adalah miniatur dekoratif, bukan buku yang dapat dibaca. Harga dan ketersediaan dapat berubah; arahkan pengguna untuk mengonfirmasi melalui kanal resmi sebelum pembayaran.",
+    "category": "ecosystem",
+    "source": "TCS Official ecosystem page",
+    "tags": [
+      "TCS",
+      "Sheeblink",
+      "handmade",
+      "creative work",
+      "ecosystem"
     ]
   }
 ]
