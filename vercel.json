@@ -3,11 +3,15 @@
   "framework": null,
   "outputDirectory": "public",
   "functions": {
-    "api/sara.js": {
+    "api/chat.js": {
       "maxDuration": 30
     }
   },
   "rewrites": [
+    {
+      "source": "/api/sara",
+      "destination": "/api/chat?mode=sara"
+    },
     {
       "source": "/admin",
       "destination": "https://tcs-admin-panel.vercel.app/"
