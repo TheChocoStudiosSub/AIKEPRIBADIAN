@@ -27,7 +27,7 @@ function readCookie(req, name) {
 
 function setSessionCookie(res, token, maxAge = SESSION_TTL_SECONDS) {
   res.setHeader("Set-Cookie", COOKIE_NAME + "=" + token +
-    "; Max-Age=" + maxAge + "; Path=/; HttpOnly; Secure; SameSite=Lax");
+    "; Max-Age=" + maxAge + "; Path=/; HttpOnly; Secure; SameSite=Strict; Priority=High");
 }
 
 function sameOrigin(req) {
