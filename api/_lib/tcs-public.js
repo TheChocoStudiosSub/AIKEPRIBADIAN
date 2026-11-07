@@ -37,8 +37,8 @@ function classify(ua){
     ["Facebook crawler",/facebookexternalhit|meta-externalagent/i],["Twitterbot",/twitterbot/i],
     ["LinkedInBot",/linkedinbot/i],["Discordbot",/discordbot/i],["AhrefsBot",/ahrefsbot/i],
     ["SemrushBot",/semrushbot/i],["DuckDuckBot",/duckduckbot/i],["YandexBot",/yandexbot/i],
-    ["Baiduspider",/baiduspider/i],["Automated client",/curl\\/|wget\\/|python-requests|node-fetch|headlesschrome|puppeteer|playwright/i],
-    ["Unidentified bot",/\\b(bot|crawler|spider|scraper|preview)\\b/i]
+    ["Baiduspider",/baiduspider/i],["Automated client",/curl\/|wget\/|python-requests|node-fetch|headlesschrome|puppeteer|playwright/i],
+    ["Unidentified bot",/\b(bot|crawler|spider|scraper|preview)\b/i]
   ];
   for(const [name,pattern] of rules)if(pattern.test(ua))return{bot:true,name};
   return{bot:false,name:null};
@@ -84,9 +84,9 @@ async function handleTrack(input,req,res,origin,base,key){
   }
   if(input.event==="download"){
     const productCode=clean(input.productCode,100),productName=clean(input.productName,180),url=clean(input.url,2000);
-    if(!/^[a-z0-9][a-z0-9_-]{1,99}$/i.test(productCode)||productName.length<2||!/^https:\\/\\//i.test(url))return send(res,400,{ok:false,error:"invalid_input"},origin);
+    if(!/^[a-z0-9][a-z0-9_-]{1,99}$/i.test(productCode)||productName.length<2||!/^https:\/\//i.test(url))return send(res,400,{ok:false,error:"invalid_input"},origin);
     const name=clean(input.name,120)||null,email=clean(input.email,254).toLowerCase()||null;
-    if(email&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email))return send(res,400,{ok:false,error:"invalid_email"},origin);
+    if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return send(res,400,{ok:false,error:"invalid_email"},origin);
     const parsed=new URL(url),safeUrl=parsed.origin+parsed.pathname;
     await db(base,key,"tcs_product_downloads","POST",[{
       ...common,product_code:productCode,product_name:productName,
@@ -99,7 +99,7 @@ async function handleTrack(input,req,res,origin,base,key){
 }
 async function uploadLogo(base,key,dataUrl){
   if(!dataUrl)return null;
-  const match=dataUrl.match(/^data:(image\\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/);
+  const match=dataUrl.match(/^data:(image\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/);
   if(!match)throw new Error("invalid_logo");
   const bytes=Buffer.from(match[2],"base64");
   if(!bytes.length||bytes.length>1024*1024)throw new Error("logo_too_large");
@@ -119,9 +119,9 @@ async function handleBrandApplication(input,req,res,origin,base,key){
   const website=clean(input.websiteUrl,500),repository=clean(input.repositoryUrl,500);
   const domains=Array.isArray(input.domains)?input.domains.slice(0,20).map(x=>clean(x,253).toLowerCase()).filter(Boolean):[];
   const safeHttps=value=>{if(!value)return null;try{const u=new URL(value);if(u.protocol!=="https:"||u.username||u.password)throw new Error();return u.toString().slice(0,500);}catch{throw new Error("invalid_input");}};
-  const safeDomains=domains.map(domain=>{if(!/^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$/.test(domain))throw new Error("invalid_input");return domain;});
+  const safeDomains=domains.map(domain=>{if(!/^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(domain))throw new Error("invalid_input");return domain;});
   if(brand_name.length<2||slogan.length<3||about.length<20||direction.length<10||owner_name.length<2||
-    !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(contact_email)||!contact_email.endsWith("@gmail.com"))
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact_email)||!contact_email.endsWith("@gmail.com"))
     return send(res,400,{ok:false,error:"invalid_input"},origin);
   const ip=String(header(req,"x-vercel-forwarded-for")||header(req,"x-forwarded-for")).split(",").pop().trim();
   const rateKey=hash("brand-application:"+contact_email+":"+(ip||"unknown"),key);
@@ -142,7 +142,7 @@ export async function handleTcsPublic(req,res){
   try{
     const input=await readBody(req);
     if(!input||typeof input!=="object"||Array.isArray(input))return send(res,400,{ok:false,error:"invalid_json"},origin);
-    const key=process.env.SUPABASE_SECRET_KEY||"",base=String(process.env.TCS_SUPABASE_URL||"").replace(/\\/+$/,"");
+    const key=process.env.SUPABASE_SECRET_KEY||"",base=String(process.env.TCS_SUPABASE_URL||"").replace(/\/+$/,"");
     if(!key||!base)return send(res,503,{ok:false,error:"service_unavailable"},origin);
     if(input.action==="track")return await handleTrack(input,req,res,origin,base,key);
     if(input.action==="brand_application")return await handleBrandApplication(input,req,res,origin,base,key);
