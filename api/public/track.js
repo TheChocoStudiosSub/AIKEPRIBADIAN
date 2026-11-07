@@ -4,6 +4,7 @@ const ALLOWED_ORIGINS = new Set([
   "https://the-choco-studios-official.vercel.app",
   "https://the-choco-studio-information.netlify.app",
   "https://tcs-information-hub.vercel.app",
+  "https://choco-ai-help-center.netlify.app",
   "https://choco-ai-independent-seven.vercel.app",
   "https://tcs-admin-panel.vercel.app"
 ]);
