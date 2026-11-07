@@ -3,6 +3,7 @@ import { createHmac } from "node:crypto";
 const ALLOWED_ORIGINS = new Set([
   "https://the-choco-studios-official.vercel.app",
   "https://the-choco-studio-information.netlify.app",
+  "https://tcs-information-hub.vercel.app",
   "https://choco-ai-independent-seven.vercel.app",
   "https://tcs-admin-panel.vercel.app"
 ]);
@@ -71,12 +72,17 @@ export default async function handler(req, res) {
     const sessionHash = hash(sessionId, secret);
     const ip = String(req.headers["x-vercel-forwarded-for"] || req.headers["x-forwarded-for"] || "").split(",").pop().trim();
     const ipHash = ip ? hash(ip, secret) : visitorHash;
-    const rateKey = hash("analytics:" + ipHash, secret).slice(0, 64);
-    const limitResponse = await fetch(base + "/rest/v1/rpc/tcs_consume_analytics_rate_limit", {
-      method: "POST", headers: { apikey: secret, Authorization: "Bearer " + secret, "Content-Type": "application/json" },
-      body: JSON.stringify({ p_key: rateKey, p_limit: 180, p_window_seconds: 3600 }), cache: "no-store", signal: AbortSignal.timeout(5000)
-    });
-    if (!limitResponse.ok || await limitResponse.json() !== true) return send(res, 429, { ok: false, error: "rate_limited" }, origin);
+    const limits = [
+      { key: hash("analytics-ip:" + ipHash, secret), max: 600 },
+      { key: hash("analytics-visitor:" + visitorHash, secret), max: 180 }
+    ];
+    for (const item of limits) {
+      const limitResponse = await fetch(base + "/rest/v1/rpc/tcs_consume_analytics_rate_limit", {
+        method: "POST", headers: { apikey: secret, Authorization: "Bearer " + secret, "Content-Type": "application/json" },
+        body: JSON.stringify({ p_key: item.key, p_limit: item.max, p_window_seconds: 3600 }), cache: "no-store", signal: AbortSignal.timeout(5000)
+      });
+      if (!limitResponse.ok || await limitResponse.json() !== true) return send(res, 429, { ok: false, error: "rate_limited" }, origin);
+    }
     const ua = String(req.headers["user-agent"] || "").slice(0, 600);
     const classification = classify(ua);
     const siteKey = String(input.siteKey || "").toLowerCase();
