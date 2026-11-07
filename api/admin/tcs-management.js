@@ -106,6 +106,16 @@ export default async function handler(req, res) {
       if (!result?.length) throw new Error("brand_not_found");
       return send(res, 200, { ok: true, brand: result[0] });
     }
+    if (action === "update_brand_security") {
+      if (!validId(input.id) || !["not_assessed","reviewing","secured","attention_required"].includes(input.security_status)) throw new Error("invalid_input");
+      const result = await db("tcs_brands?id=eq." + encodeURIComponent(input.id), "PATCH", {
+        security_status: input.security_status,
+        security_notes: typeof input.security_notes === "string" ? input.security_notes.trim().slice(0, 5000) || null : null,
+        updated_at: new Date().toISOString()
+      }, "return=representation");
+      if (!result?.length) throw new Error("brand_not_found");
+      return send(res, 200, { ok: true, brand: result[0] });
+    }
     if (action === "crawler_control") {
       if (!validId(input.id) || !["pause","resume"].includes(input.command)) throw new Error("invalid_input");
       const status = input.command === "pause" ? "paused" : "running";
