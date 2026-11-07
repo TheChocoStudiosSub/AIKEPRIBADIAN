@@ -1,3 +1,4 @@
+import { handleTcsManagement } from "../_lib/tcs-management.js";
 const COOKIE_NAME = "tcs_owner_session";
 
 function send(res, status, payload) {
@@ -109,6 +110,8 @@ export default async function handler(req, res) {
   if (!await ownerSessionValid(req)) return send(res, 401, { ok: false, error: "owner_session_required" });
   const body = await readBody(req);
   if (!body || typeof body !== "object" || Array.isArray(body)) return send(res, 400, { ok: false, error: "invalid_json" });
+  const feature = new URL(req.url || "/", "https://local.invalid").searchParams.get("feature");
+  if (feature === "tcs-management") return handleTcsManagement(req, res, body);
 
   try {
     const action = text(body.action, 40, /^[a-z_]+$/);
