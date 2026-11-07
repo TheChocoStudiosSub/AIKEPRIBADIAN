@@ -5,6 +5,12 @@
   "functions": {
     "api/chat.js": {
       "maxDuration": 30
+    },
+    "api/public/brand-application.js": {
+      "maxDuration": 30
+    },
+    "api/admin/tcs-management.js": {
+      "maxDuration": 20
     }
   },
   "rewrites": [
