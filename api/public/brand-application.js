@@ -75,6 +75,11 @@ export default async function handler(req, res) {
     const direction = clean(input.direction,3000);
     const owner_name = clean(input.ownerName,120);
     const contact_email = clean(input.email,254).toLowerCase();
+    const website_url = clean(input.websiteUrl,500);
+    const repository_url = clean(input.repositoryUrl,500);
+    const known_domains = Array.isArray(input.domains) ? input.domains.slice(0,20).map(x=>clean(x,253).toLowerCase()).filter(Boolean) : [];
+    const safeHttps = value => { if (!value) return null; try { const u = new URL(value); if (u.protocol !== "https:" || u.username || u.password) throw new Error(); return u.toString().slice(0,500); } catch { throw new Error("invalid_input"); } };
+    const safeDomains = known_domains.map(domain => { if (!/^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$/.test(domain)) throw new Error("invalid_input"); return domain; });
     if (brand_name.length < 2 || slogan.length < 3 || about.length < 20 || direction.length < 10 || owner_name.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact_email)) return send(res, 400, { ok: false, error: "invalid_input" }, origin);
     const key = process.env.SUPABASE_SECRET_KEY || "";
     const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\/+$/, "");
@@ -82,11 +87,13 @@ export default async function handler(req, res) {
     const ip = String(req.headers["x-vercel-forwarded-for"] || req.headers["x-forwarded-for"] || "").split(",").pop().trim();
     const rateKey = hash("brand-application:" + contact_email + ":" + (ip || "unknown"), key);
     if (!await rateLimit(base,key,rateKey)) return send(res,429,{ok:false,error:"rate_limited"},origin);
+    const validatedWebsite = safeHttps(website_url);
+    const validatedRepository = safeHttps(repository_url);
     const logo_url = await uploadLogo(base,key,clean(input.logoDataUrl,1500000));
     const r = await fetch(base + "/rest/v1/tcs_brand_applications", {
       method: "POST",
       headers: { apikey: key, Authorization: "Bearer " + key, "Content-Type": "application/json", Prefer: "return=representation" },
-      body: JSON.stringify([{ brand_name, logo_url, slogan, about, direction, owner_name, contact_email }]),
+      body: JSON.stringify([{ brand_name, logo_url, slogan, about, direction, owner_name, contact_email, website_url: validatedWebsite, repository_url: validatedRepository, known_domains: safeDomains }]),
       cache: "no-store", signal: AbortSignal.timeout(12000)
     });
     if (!r.ok) throw new Error("submission_failed");
