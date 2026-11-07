@@ -79,7 +79,7 @@ export default async function handler(req, res) {
     const repository_url = clean(input.repositoryUrl,500);
     const known_domains = Array.isArray(input.domains) ? input.domains.slice(0,20).map(x=>clean(x,253).toLowerCase()).filter(Boolean) : [];
     const safeHttps = value => { if (!value) return null; try { const u = new URL(value); if (u.protocol !== "https:" || u.username || u.password) throw new Error(); return u.toString().slice(0,500); } catch { throw new Error("invalid_input"); } };
-    const safeDomains = known_domains.map(domain => { if (!/^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$/.test(domain)) throw new Error("invalid_input"); return domain; });
+    const safeDomains = known_domains.map(domain => { if (!/^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(domain)) throw new Error("invalid_input"); return domain; });
     if (brand_name.length < 2 || slogan.length < 3 || about.length < 20 || direction.length < 10 || owner_name.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact_email) || !contact_email.endsWith("@gmail.com")) return send(res, 400, { ok: false, error: "invalid_input" }, origin);
     const key = process.env.SUPABASE_SECRET_KEY || "";
     const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\/+$/, "");
