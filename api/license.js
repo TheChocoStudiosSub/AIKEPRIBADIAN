@@ -1,3 +1,4 @@
+import { handleTcsPublic } from "./_lib/tcs-public.js";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function send(res, status, payload) {
@@ -10,6 +11,8 @@ function send(res, status, payload) {
 }
 
 export default async function handler(req, res) {
+  const feature = new URL(req.url || "/", "https://local.invalid").searchParams.get("feature");
+  if (feature === "tcs-public") return handleTcsPublic(req, res);
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return send(res, 405, { error: "method_not_allowed" });
