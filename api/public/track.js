@@ -108,10 +108,12 @@ export default async function handler(req, res) {
       const name = String(input.name || "").trim().slice(0,120) || null;
       const email = String(input.email || "").trim().toLowerCase().slice(0,254) || null;
       if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return send(res, 400, { ok: false }, origin);
+      const parsedUrl = new URL(url);
+      const safeDownloadUrl = parsedUrl.origin + parsedUrl.pathname;
       await db("tcs_product_downloads", "POST", [{
         ...common, product_code: productCode, product_name: productName,
         product_version: String(input.version || "").trim().slice(0,60) || null,
-        download_url: url, downloader_name: name, downloader_email: email
+        download_url: safeDownloadUrl, downloader_name: name, downloader_email: email
       }], secret, base);
       return send(res, 200, { ok: true }, origin);
     }
