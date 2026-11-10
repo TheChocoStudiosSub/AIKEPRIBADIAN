@@ -1,3 +1,4 @@
+import { validateAdminSession } from "../_lib/admin-auth.js";
 const ALLOWED_ACTIONS = new Set([
   "dashboard", "list_pending", "list_requests", "list_products", "list_inventory",
   "list_licenses", "list_events", "verify_purchase", "hold", "approve", "reject",
@@ -9,15 +10,6 @@ function send(res, status, payload) {
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   return res.status(status).json(payload);
-}
-
-function readCookie(req, name) {
-  const raw = String(req.headers.cookie || "");
-  for (const part of raw.split(";")) {
-    const index = part.indexOf("=");
-    if (index >= 0 && part.slice(0, index).trim() === name) return part.slice(index + 1).trim();
-  }
-  return "";
 }
 
 function sameOrigin(req) {
@@ -57,41 +49,10 @@ async function readBody(req) {
   });
 }
 
-async function ownerRpc(action, payload = {}) {
-  const base = String(process.env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
-  const publishableKey = String(process.env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "");
-  const serverKey = String(process.env.TCS_OWNER_AUTH_SERVER_KEY || "");
-  if (!base || !publishableKey || !serverKey) return { ok: false };
-  try {
-    const response = await fetch(base + "/rest/v1/rpc/" + action, {
-      method: "POST",
-      headers: {
-        apikey: publishableKey,
-        Authorization: "Bearer " + publishableKey,
-        "Content-Type": "application/json"
-      },
-      cache: "no-store",
-      body: JSON.stringify({ ...payload, p_server_key: serverKey }),
-      signal: AbortSignal.timeout(6000)
-    });
-    if (!response.ok) return { ok: false };
-    return { ok: true, data: await response.json() };
-  } catch {
-    return { ok: false };
-  }
-}
-
-async function isOwner(req) {
-  const token = readCookie(req, "tcs_owner_session");
-  if (!/^[a-f0-9]{64}$/i.test(token)) return false;
-  const result = await ownerRpc("tcs_owner_validate_session", { p_token: token });
-  return result.ok && result.data === true;
-}
-
 export default async function handler(req, res) {
   if (req.method !== "POST") return send(res, 405, { ok: false, error: "method_not_allowed" });
   if (!sameOrigin(req)) return send(res, 403, { ok: false, error: "origin_not_allowed" });
-  if (!await isOwner(req)) return send(res, 401, { ok: false, error: "owner_session_required" });
+  if (!validateAdminSession(req)) return send(res, 401, { ok: false, error: "owner_session_required" });
 
   const body = await readBody(req);
   if (!body || typeof body !== "object" || Array.isArray(body)) return send(res, 400, { ok: false, error: "invalid_json" });
