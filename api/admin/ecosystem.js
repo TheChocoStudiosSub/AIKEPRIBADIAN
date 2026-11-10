@@ -1,19 +1,11 @@
 import { handleTcsManagement } from "../_lib/tcs-management.js";
-const COOKIE_NAME = "tcs_owner_session";
+import { validateAdminSession } from "../_lib/admin-auth.js";
 
 function send(res, status, payload) {
   res.setHeader("Cache-Control", "no-store, max-age=0");
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   return res.status(status).json(payload);
-}
-
-function readCookie(req, name) {
-  for (const part of String(req.headers.cookie || "").split(";")) {
-    const index = part.indexOf("=");
-    if (index >= 0 && part.slice(0, index).trim() === name) return part.slice(index + 1).trim();
-  }
-  return "";
 }
 
 function sameOrigin(req) {
@@ -48,25 +40,6 @@ async function readBody(req) {
     });
     req.on("error", () => resolve(null));
   });
-}
-
-async function ownerSessionValid(req) {
-  const token = readCookie(req, COOKIE_NAME);
-  if (!/^[a-f0-9]{64}$/i.test(token)) return false;
-  const base = String(process.env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
-  const publishable = process.env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "";
-  const serverKey = process.env.TCS_OWNER_AUTH_SERVER_KEY || "";
-  if (!base || !publishable || !serverKey) return false;
-  try {
-    const response = await fetch(base + "/rest/v1/rpc/tcs_owner_validate_session", {
-      method: "POST",
-      headers: { apikey: publishable, Authorization: "Bearer " + publishable, "Content-Type": "application/json" },
-      body: JSON.stringify({ p_token: token, p_server_key: serverKey }),
-      cache: "no-store",
-      signal: AbortSignal.timeout(6000)
-    });
-    return response.ok && await response.json() === true;
-  } catch { return false; }
 }
 
 async function db(path, method = "GET", payload, prefer) {
@@ -114,7 +87,7 @@ const SELECT = {
 export default async function handler(req, res) {
   if (req.method !== "POST") return send(res, 405, { ok: false, error: "method_not_allowed" });
   if (!sameOrigin(req)) return send(res, 403, { ok: false, error: "origin_not_allowed" });
-  if (!await ownerSessionValid(req)) return send(res, 401, { ok: false, error: "owner_session_required" });
+  if (!validateAdminSession(req)) return send(res, 401, { ok: false, error: "owner_session_required" });
   const body = await readBody(req);
   if (!body || typeof body !== "object" || Array.isArray(body)) return send(res, 400, { ok: false, error: "invalid_json" });
   const feature = new URL(req.url || "/", "https://local.invalid").searchParams.get("feature");
