@@ -104,7 +104,6 @@ async function ownerRpc(env, action, payload) {
       method: "POST",
       headers: {
         apikey: publishableKey,
-        Authorization: "Bearer " + publishableKey,
         "Content-Type": "application/json"
       },
       cache: "no-store",
@@ -146,7 +145,6 @@ async function retrieveTcsKnowledge(query, env) {
       method: "POST",
       headers: {
         apikey: publishableKey,
-        Authorization: "Bearer " + publishableKey,
         "Content-Type": "application/json"
       },
       cache: "no-store",
