@@ -2241,6 +2241,8 @@
       resizeInput();
 
       const waiting = addMessage("", "assistant", { typing: true });
+      let streamedWrapper = null;
+      let streamedContent = null;
 
       try {
         const response = await fetch("/api/chat", {
@@ -2258,8 +2260,6 @@
         });
 
         let data;
-        let streamedWrapper = null;
-        let streamedContent = null;
         if ((response.headers.get("content-type") || "").includes("text/event-stream")) {
           waiting.remove();
           streamedWrapper = addMessage("", "assistant");
