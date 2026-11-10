@@ -2,7 +2,7 @@
   {
     "id": "project-stack",
     "title": "Arsitektur dan hosting aktif Choco AI",
-    "content": "Choco AI/AIKEPRIBADIAN saat ini ditargetkan pada satu proyek Vercel. Frontend statis berada di public/, endpoint publik api/chat.js menggunakan adapter untuk handler netlify/functions/chat.js, dan Groq dipanggil dari sisi server. Repository sumber: https://github.com/chocoanakbaik/AIKEPRIBADIAN. URL utama: https://aikepribadian-seven.vercel.app/. Environment variable rahasia GROQ_API_KEY dan GROQ_MODEL opsional dikelola di Vercel; jangan taruh rahasia di frontend atau repository.",
+    "content": "Choco AI berjalan pada Vercel dengan frontend statis di public/, endpoint api/chat.js, dan handler server-side netlify/functions/chat.js. Inferensi menggunakan Groq dari sisi server. Repository sumber TCS: https://github.com/TheChocoStudiosSub/AIKEPRIBADIAN. URL produksi utama: https://choco-ai-independent-seven.vercel.app/. Rahasia seperti GROQ_API_KEY, TCS_OWNER_AUTH_SERVER_KEY, dan kredensial Supabase dikelola sebagai environment variables server-side; jangan menaruhnya di frontend atau repository.",
     "category": "architecture",
     "source": "repository-and-deployment-check",
     "tags": [
@@ -72,7 +72,7 @@
   {
     "id": "tcs-brand-contact",
     "title": "Kontak resmi The Choco Studios",
-    "content": "Email bisnis/tim The Choco Studios adalah thechocostudio@gmail.com dan nomor kontak yang dicatat adalah +62 851-5083-5618. Email ini adalah identitas bisnis TCS, bukan Gmail pribadi. URL website resmi TCS belum tercatat dalam sumber repository yang diverifikasi; jangan mengarang domain.",
+    "content": "Email kontak publik The Choco Studios adalah thechocostudio@gmail.com. Situs resmi TCS: https://the-choco-studios-official.vercel.app/. Situs informasi TCS: https://the-choco-studios-information.vercel.app/. Profil LinkedIn Hasby Prasetya Saprudin: https://www.linkedin.com/in/hasby-prasetya-tcs/. Jangan menyebarkan nomor pribadi atau mengarang kanal kontak lain.",
     "category": "brand-contact",
     "source": "curated-creator-profile",
     "tags": [
@@ -86,7 +86,7 @@
   {
     "id": "tcs-product-catalogue",
     "title": "Katalog produk digital TCS",
-    "content": "Katalog/rencana produk TCS yang dicatat pada 27 Oktober 2026: Stock & Sales Tracker, Business Document Kit, Professional CV Kit, Social Media Business Kit, Business Presentation Kit, Finance & Cashflow Pro, UMKM Website Kit, Admin Dashboard UI Kit, Business Management System, dan Complete UMKM Suite. Katalog ini tidak membuktikan semua produk selesai atau siap dijual. README.md publik dan Manual Book pembeli diwajibkan untuk tiap produk yang dijual; READMEGPT.md merupakan cetak biru internal yang membedakan status implementasi, rencana, dan hal yang belum dipastikan.",
+    "content": "Fokus publik TCS saat ini adalah pengembangan open-source dan ekosistem terintegrasi. Komponen utama yang dapat disebut adalah Choco AI, Sara AI, TCS LinkGuard, dan Sheeblink. TCS tetap dapat mengembangkan aplikasi siap pakai, tetapi daftar lama 16 aplikasi bukan katalog aktif. TCS UMKM Stock & Sales Tracker telah ditinggalkan. Jangan mengklaim produk lama atau rencana yang belum diverifikasi sebagai produk aktif.",
     "category": "products",
     "source": "curated-creator-profile",
     "tags": [
@@ -95,6 +95,18 @@
       "READMEGPT.md",
       "README.md",
       "Manual Book"
+    ]
+  },
+  {
+    "id": "tcs-open-source-policy",
+    "title": "Prinsip open-source dan identitas TCS",
+    "content": "TCS berfokus pada open-source. Kode dapat digunakan dan dikembangkan sesuai lisensi, sedangkan nama, logo, repositori resmi, dan rilis resmi TCS tetap dikelola TCS. Kontribusi ditinjau sebelum digabungkan. TCS bukan agensi, kolektif, marketplace, atau perusahaan yang menaungi developer independen.",
+    "category": "tcs-policy",
+    "source": "curated-tcs-profile",
+    "tags": [
+      "open source",
+      "TCS",
+      "governance"
     ]
   }
 ]
