@@ -8,8 +8,21 @@
     }
   },
   "redirects": [
-    { "source": "/checkout", "destination": "/", "permanent": true },
-    { "source": "/checkout/:path*", "destination": "/", "permanent": true }
+    {
+      "source": "/checkout",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/checkout/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/checkout/:path*",
+      "destination": "/",
+      "permanent": true
+    }
   ],
   "rewrites": [
     {
@@ -98,6 +111,5 @@
         }
       ]
     }
-  ],
-  "redirects": []
+  ]
 }
