@@ -2251,20 +2251,55 @@
             history,
             memories: [],
             preferences,
-            modelMode
+            modelMode,
+            client: "chatbot",
+            stream: true
           })
         });
 
         let data;
-
-        try {
-          data = await response.json();
-        } catch {
-          throw new Error("Respons backend bukan JSON yang valid.");
+        let streamedWrapper = null;
+        let streamedContent = null;
+        if ((response.headers.get("content-type") || "").includes("text/event-stream")) {
+          waiting.remove();
+          streamedWrapper = addMessage("", "assistant");
+          streamedContent = streamedWrapper.querySelector(".message-body > div:last-child");
+          const reader = response.body && response.body.getReader();
+          if (!reader) throw new Error("Browser tidak dapat membaca aliran respons.");
+          const decoder = new TextDecoder();
+          let buffer = "";
+          let reply = "";
+          let streamDone = false;
+          const consumeFrame = frame => {
+            const payload = frame.split(/\r?\n/).filter(line => line.startsWith("data:")).map(line => line.slice(5).trim()).join("\n");
+            if (!payload) return;
+            if (payload === "[DONE]") { streamDone = true; return; }
+            let eventData;
+            try { eventData = JSON.parse(payload); } catch { return; }
+            if (eventData && eventData.error) throw new Error(eventData.error.message || String(eventData.error));
+            const delta = eventData && eventData.choices && eventData.choices[0] && eventData.choices[0].delta && eventData.choices[0].delta.content;
+            if (typeof delta === "string" && delta) { reply += delta; renderAssistantText(streamedContent, reply); scrollToBottom(); }
+          };
+          try {
+            while (!streamDone) {
+              const result = await reader.read();
+              if (result.done) break;
+              buffer += decoder.decode(result.value, { stream: true });
+              const frames = buffer.split(/\r?\n\r?\n/);
+              buffer = frames.pop() || "";
+              for (const frame of frames) consumeFrame(frame);
+            }
+            buffer += decoder.decode();
+            if (buffer.trim()) consumeFrame(buffer);
+          } finally { reader.releaseLock(); }
+          if (!response.ok) throw new Error("Permintaan streaming gagal (HTTP " + response.status + ").");
+          if (!reply.trim()) throw new Error("Groq tidak mengirimkan isi jawaban.");
+          data = { reply };
+        } else {
+          try { data = await response.json(); }
+          catch { throw new Error("Respons backend bukan JSON yang valid."); }
+          waiting.remove();
         }
-
-        waiting.remove();
-
         if (data.authAttempt === true) {
           await revealReply(typeof data.reply === "string" ? data.reply : "Verifikasi Owner selesai.");
           return;
@@ -2292,7 +2327,8 @@
           return;
         }
 
-        await revealReply(reply);
+        if (streamedWrapper) renderAssistantText(streamedContent, reply);
+        else await revealReply(reply);
 
         history.push(
           { role: "user", content: message },
@@ -2314,6 +2350,7 @@
 
       } catch (error) {
         waiting.remove();
+        if (streamedWrapper) streamedWrapper.remove();
 
         addMessage(
           error.message || "Gagal menghubungi backend. Coba lagi nanti.",
