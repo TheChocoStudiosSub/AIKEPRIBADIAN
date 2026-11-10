@@ -1767,14 +1767,14 @@
       const licenseBody = document.createElement("div");
       licenseBody.className = "message-body";
       const licenseTitle = document.createElement("strong");
-      licenseTitle.textContent = "Permintaan lisensi TCS Stock & Sales Basic";
+      licenseTitle.textContent = "Permintaan lisensi TCS";
       const licenseDescription = document.createElement("p");
-      licenseDescription.textContent = "SKU produk: tcs-stock-sales-basic. SKU hanya mengidentifikasi produk, bukan bukti pembayaran. Untuk verifikasi pembayaran, lengkapi username Projects.co.id dan ID transaksi pembelian.";
+      licenseDescription.textContent = "Permintaan ini ditinjau secara manual oleh Owner. Lengkapi identitas pembeli dan referensi transaksi dari kanal pembayaran yang digunakan. Jangan mengirim kata sandi atau data kartu.";
       licenseDescription.style.cssText = "margin:8px 0 12px;color:#aab4ce;line-height:1.6";
       const referenceForm = document.createElement("form");
       referenceForm.style.cssText = "display:grid;gap:9px;max-width:520px";
       const buyerLabel = document.createElement("label");
-      buyerLabel.textContent = "Username Projects.co.id";
+      buyerLabel.textContent = "Identitas pembeli / akun pembayaran";
       buyerLabel.style.cssText = "font-size:12px;color:#dce4f4";
       const buyerInput = document.createElement("input");
       buyerInput.type = "text";
@@ -1782,11 +1782,11 @@
       buyerInput.minLength = 3;
       buyerInput.maxLength = 80;
       buyerInput.autocomplete = "username";
-      buyerInput.placeholder = "Masukkan username pembeli";
+      buyerInput.placeholder = "Masukkan identitas pembeli";
       buyerInput.pattern = "[A-Za-z0-9._-]{3,80}";
       buyerInput.style.cssText = "width:100%;padding:11px;border:1px solid rgba(135,148,191,.25);border-radius:9px;background:#0c1220;color:#eef2ff";
       const referenceLabel = document.createElement("label");
-      referenceLabel.textContent = "ID transaksi pembelian Projects.co.id";
+      referenceLabel.textContent = "ID transaksi / referensi pembayaran";
       referenceLabel.style.cssText = "font-size:12px;color:#dce4f4;margin-top:3px";
       const referenceInput = document.createElement("input");
       referenceInput.type = "text";
@@ -1794,13 +1794,13 @@
       referenceInput.minLength = 4;
       referenceInput.maxLength = 120;
       referenceInput.autocomplete = "off";
-      referenceInput.placeholder = "Masukkan ID transaksi pembelian";
+      referenceInput.placeholder = "Masukkan ID transaksi atau referensi pembayaran";
       referenceInput.style.cssText = "width:100%;padding:11px;border:1px solid rgba(135,148,191,.25);border-radius:9px;background:#0c1220;color:#eef2ff";
       const formActions = document.createElement("div");
       formActions.style.cssText = "display:flex;gap:8px;flex-wrap:wrap";
       const referenceButton = document.createElement("button");
       referenceButton.type = "submit";
-      referenceButton.textContent = "Kirim data pembelian";
+      referenceButton.textContent = "Kirim referensi transaksi";
       referenceButton.style.cssText = "padding:10px 14px;border:0;border-radius:9px;background:linear-gradient(110deg,#648bff,#a76cff);color:white;cursor:pointer";
       const checkButton = document.createElement("button");
       checkButton.type = "button";
@@ -1874,7 +1874,7 @@
             buyerInput.disabled = true;
             referenceInput.disabled = true;
             referenceButton.disabled = true;
-            referenceButton.textContent = "Data pembelian terkirim";
+            referenceButton.textContent = "Referensi transaksi terkirim";
           }
           if (data.status === "approved" && data.verificationStatus === "verified") {
             referenceStatus.textContent = "Pembayaran telah diverifikasi dan permintaan disetujui. Mengambil kunci lisensi dari penyimpanan aman...";
@@ -1913,7 +1913,7 @@
           } else if (data.buyerDetailsReceived) {
             referenceStatus.textContent = "Data pembelian diterima. Tim The Choco Studios akan mencocokkan transaksi dan memastikan dana telah diterima.";
           } else {
-            referenceStatus.textContent = "Lengkapi username Projects.co.id dan ID transaksi agar permintaan dapat diperiksa.";
+            referenceStatus.textContent = "Lengkapi identitas pembeli dan referensi transaksi agar permintaan dapat diperiksa.";
           }
           if (data.status === "pending" && (data.buyerDetailsReceived || saved.submitted) && !pollTimer) {
             pollTimer = window.setInterval(() => refreshStatus(true), 20000);
@@ -1951,7 +1951,7 @@
           saved.submitted = true;
           updateSaved();
           referenceButton.textContent = "Data pembelian terkirim";
-          referenceStatus.textContent = "Data berhasil diterima. Tim The Choco Studios akan memeriksa transaksi secara manual di Projects.co.id.";
+          referenceStatus.textContent = "Referensi transaksi berhasil diterima. Owner TCS akan memeriksanya secara manual.";
           await refreshStatus(true);
         } catch (error) {
           referenceStatus.textContent = error.message || "Data pembelian gagal dikirim. Silakan coba lagi.";
