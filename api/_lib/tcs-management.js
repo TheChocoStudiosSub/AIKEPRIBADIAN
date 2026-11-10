@@ -35,11 +35,10 @@ export async function handleTcsManagement(req, res, input) {
   try {
     const action = String(input.action || "");
     if (action === "bootstrap") {
-      const [visits, downloads, brands, applications, crawlerJobs, totalVisits, botVisits, humanVisits, totalDownloads, trafficSummary] = await Promise.all([
+      const [visits, downloads, brands, crawlerJobs, totalVisits, botVisits, humanVisits, totalDownloads, trafficSummary] = await Promise.all([
         db("tcs_site_visits?select=id,site_key,page_path,referrer_host,user_agent,is_bot,bot_name,country_code,region_code,created_at&order=created_at.desc&limit=250"),
         db("tcs_product_downloads?select=id,site_key,product_code,product_name,product_version,download_url,downloader_name,downloader_email,is_bot,created_at&order=created_at.desc&limit=250"),
         db("tcs_brands?select=*&order=created_at.desc&limit=250"),
-        db("tcs_brand_applications?select=*&order=created_at.desc&limit=250"),
         db("tcs_crawler_jobs?select=id,seed_url,status,max_pages,pages_crawled,pages_failed,created_at,last_activity_at&order=created_at.desc&limit=50"),
         count("tcs_site_visits?select=id"),
         count("tcs_site_visits?select=id&is_bot=eq.true"),
@@ -53,17 +52,9 @@ export async function handleTcsManagement(req, res, input) {
       const botSessions = summary.reduce((n, row) => n + Number(row.bot_sessions || 0), 0);
       const identifiedDownloads = summary.reduce((n, row) => n + Number(row.identified_downloads || 0), 0);
       return send(res, 200, {
-        ok: true, visits, downloads, brands, applications, crawlerJobs, trafficSummary: summary,
+        ok: true, visits, downloads, brands, crawlerJobs, trafficSummary: summary,
         stats: { totalVisits, botVisits, humanVisits, totalDownloads, uniqueSessions, humanSessions, botSessions, identifiedDownloads }
       });
-    }
-    if (action === "review_application") {
-      if (!validId(input.id) || !["reviewing","approved","rejected"].includes(input.status)) throw new Error("invalid_input");
-      const result = await db("rpc/tcs_review_brand_application", "POST", {
-        p_application_id: input.id, p_status: input.status,
-        p_reviewer_note: typeof input.note === "string" ? input.note.trim().slice(0, 2000) : null
-      });
-      return send(res, 200, { ok: true, result });
     }
     if (action === "set_brand_status") {
       if (!validId(input.id) || !["active","paused","archived"].includes(input.status)) throw new Error("invalid_input");
