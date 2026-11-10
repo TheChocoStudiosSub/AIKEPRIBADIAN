@@ -14,10 +14,17 @@ function readCookie(req, name) {
 }
 
 function sameOrigin(req) {
-  const origin = req.headers.origin;
-  const host = req.headers.host;
+  const origin = String(req.headers.origin || "");
+  const host = String(req.headers.host || "");
+  const allowedOrigins = String(process.env.TCS_ADMIN_ALLOWED_ORIGINS || "")
+    .split(",").map((value) => value.trim()).filter(Boolean);
+  if (origin && allowedOrigins.includes(origin)) return true;
   if (origin && host) {
-    try { if (new URL(origin).host !== host) return false; } catch { return false; }
+    try {
+      if (new URL(origin).host !== host) return false;
+    } catch {
+      return false;
+    }
   }
   return String(req.headers["sec-fetch-site"] || "").toLowerCase() !== "cross-site";
 }
