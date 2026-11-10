@@ -152,15 +152,16 @@ export default async function handler(req, res) {
       const registered = await db("tcs_ecosystem_apps?select=app_code&lifecycle=neq.retired");
       const registeredCodes = new Set((registered || []).map(item => item.app_code));
       if (rows.some(item => !registeredCodes.has(item.app_code))) throw new Error("unknown_app");
-      const allowed = rows.filter(item => item.can_access).map(item => item.app_code);
-      if (planCode === "basic" && (allowed.length !== 1 || allowed[0] !== "kasirkita" || rows.some(item => item.can_sync))) {
-        throw new Error("basic_must_only_include_kasirkita");
+      const allowedRows = rows.filter(item => item.can_access);
+      const allowed = allowedRows.map(item => item.app_code);
+      if (planCode === "basic" && (allowed.length !== 1 || rows.some(item => item.can_sync))) {
+        throw new Error("basic_requires_one_local_app_without_sync");
       }
-      if (planCode === "pro" && !allowed.includes("kasirkita")) {
-        throw new Error("pro_must_include_kasirkita");
+      if (planCode === "pro" && (allowed.length < 1 || allowed.length > 3 || allowedRows.some(item => !item.can_sync))) {
+        throw new Error("pro_requires_one_to_three_synced_apps");
       }
-      if (planCode === "business" && (allowed.length !== registeredCodes.size || [...registeredCodes].some(code => !allowed.includes(code)))) {
-        throw new Error("business_must_include_all_apps");
+      if (planCode === "business" && (allowed.length !== registeredCodes.size || [...registeredCodes].some(code => !allowed.includes(code)) || allowedRows.some(item => !item.can_sync))) {
+        throw new Error("business_requires_all_synced_apps");
       }
       const saved = await db("tcs_plan_app_entitlements?on_conflict=plan_code,app_code", "POST", rows, "resolution=merge-duplicates,return=representation");
       return send(res, 200, { ok: true, entitlements: saved || [] });
