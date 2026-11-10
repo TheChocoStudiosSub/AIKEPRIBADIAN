@@ -38,8 +38,23 @@ export function adaptNetlifyHandler(handler) {
       const response = await handler(request);
       res.statusCode = response.status || 200;
       response.headers.forEach((value, key) => res.setHeader(key, value));
-      if (!response.body) {
-        res.end();
+      if (!response.body) { res.end(); return; }
+      if ((response.headers.get("content-type") || "").includes("text/event-stream")) {
+        const reader = response.body.getReader();
+        let clientClosed = false;
+        const closeHandler = () => { clientClosed = true; void reader.cancel().catch(() => {}); };
+        res.once("close", closeHandler);
+        try {
+          while (!clientClosed) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            if (!res.write(Buffer.from(value))) await new Promise(resolve => res.once("drain", resolve));
+          }
+          if (!res.writableEnded && !clientClosed) res.end();
+        } finally {
+          res.off("close", closeHandler);
+          try { reader.releaseLock(); } catch {}
+        }
         return;
       }
       const body = Buffer.from(await response.arrayBuffer());
