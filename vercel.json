@@ -7,6 +7,10 @@
       "maxDuration": 30
     }
   },
+  "redirects": [
+    { "source": "/checkout", "destination": "/", "permanent": true },
+    { "source": "/checkout/:path*", "destination": "/", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/admin/",
