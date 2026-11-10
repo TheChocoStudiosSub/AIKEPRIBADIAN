@@ -9,6 +9,10 @@
   },
   "rewrites": [
     {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
       "source": "/api/sara",
       "destination": "/api/chat?mode=sara"
     },
@@ -83,16 +87,5 @@
       ]
     }
   ],
-  "redirects": [
-    {
-      "source": "/admin",
-      "destination": "https://tcs-admin-panel.vercel.app/",
-      "permanent": false
-    },
-    {
-      "source": "/admin/:path*",
-      "destination": "https://tcs-admin-panel.vercel.app/:path*",
-      "permanent": false
-    }
-  ]
+  "redirects": []
 }
