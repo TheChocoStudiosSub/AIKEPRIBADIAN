@@ -4,7 +4,10 @@
   "outputDirectory": "public",
   "functions": {
     "api/chat.js": {
-      "maxDuration": 30
+      "maxDuration": 60
+    },
+    "api/app-chat.js": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
