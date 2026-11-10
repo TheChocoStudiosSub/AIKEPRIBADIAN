@@ -31,8 +31,11 @@ function setSessionCookie(res, token, maxAge = SESSION_TTL_SECONDS) {
 }
 
 function sameOrigin(req) {
-  const origin = req.headers.origin;
-  const host = req.headers.host;
+  const origin = String(req.headers.origin || "");
+  const host = String(req.headers.host || "");
+  const allowedOrigins = String(process.env.TCS_ADMIN_ALLOWED_ORIGINS || "")
+    .split(",").map((value) => value.trim()).filter(Boolean);
+  if (origin && allowedOrigins.includes(origin)) return true;
   if (origin && host) {
     try {
       if (new URL(origin).host !== host) return false;
@@ -127,7 +130,7 @@ export default async function handler(req, res) {
   if (action !== "login") return send(res, 400, { ok: false, error: "unknown_action" });
 
   const credential = typeof body.credential === "string" ? body.credential : "";
-  if (!/^[A-Za-z0-9._~-]{8,200}$/.test(credential)) {
+  if (credential.length < 8 || credential.length > 200 || /[\\u0000-\\u001F\\u007F]/.test(credential)) {
     return send(res, 400, { ok: false, error: "invalid_credential_format" });
   }
 
