@@ -185,8 +185,8 @@ export default async (request) => {
     if (request.method !== "POST") {
       return json({ error: "Gunakan metode POST." }, 405);
     }
-    if (!env.GROQ_API_KEY) {
-      return json({ error: "GROQ_API_KEY belum dikonfigurasi di environment server." }, 503);
+    if (!env.GROQ_API_KEY && !env.GROQ_API_KEY_APP) {
+      return json({ error: "Kunci API Groq belum dikonfigurasi di environment server." }, 503);
     }
     let body;
     try {
@@ -195,6 +195,10 @@ export default async (request) => {
       return json({ error: "Body request bukan JSON yang valid." }, 400);
     }
 
+    const clientType = body.client === "app" ? "app" : "chatbot";
+    const apiKey = clientType === "app" ? env.GROQ_API_KEY_APP : env.GROQ_API_KEY;
+    if (!apiKey) return json({ error: clientType === "app" ? "GROQ_API_KEY_APP belum dikonfigurasi di environment server." : "GROQ_API_KEY belum dikonfigurasi di environment server." }, 503);
+    const streamRequested = body.stream === true;
     const message = typeof body.message === "string" ? body.message.trim() : "";
     if (!message) return json({ error: "Pesan masih kosong." }, 400);
     if (message.length > MAX_MESSAGE_CHARS) {
@@ -362,48 +366,52 @@ export default async (request) => {
     try {
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
-        headers: {
-          Authorization: "Bearer " + env.GROQ_API_KEY,
-          "Content-Type": "application/json"
-        },
+        headers: { Authorization: "Bearer " + apiKey, "Content-Type": "application/json" },
         body: JSON.stringify({
           model: env.GROQ_MODEL || MODEL_ID,
           messages,
-          max_completion_tokens: ({ short: 500, balanced: 1000, detailed: 2000 })[responseLength]
-        })
+          max_completion_tokens: ({ short: 500, balanced: 1000, detailed: 2000 })[responseLength],
+          stream: streamRequested
+        }),
+        signal: AbortSignal.timeout(55000)
       });
-      let data = await response.json();
       if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
         if (response.status === 429) {
           const retryAfter = Number(response.headers.get("retry-after") || 0);
           const waitMessage = retryAfter > 0 ? " Tunggu sekitar " + retryAfter + " detik sebelum mencoba kembali." : " Tunggu sebentar sebelum mencoba kembali.";
           return json({ error: "Batas penggunaan Groq sedang tercapai." + waitMessage, retryAfter }, 429);
         }
-        return json({ error: data?.error?.message || `Groq mengembalikan HTTP ${response.status}.` }, response.status);
+        return json({ error: data?.error?.message || "Groq mengembalikan HTTP " + response.status + "." }, response.status >= 400 && response.status < 600 ? response.status : 502);
       }
-
+      if (streamRequested) {
+        if (!response.body) return json({ error: "Groq tidak mengirimkan aliran respons." }, 502);
+        return new Response(response.body, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/event-stream; charset=utf-8",
+            "Cache-Control": "no-cache, no-store, no-transform",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+            "X-Choco-Stream": "groq"
+          }
+        });
+      }
+      const data = await response.json();
       let choice = data?.choices?.[0];
       let reply = choice?.message?.content || "Model mengembalikan jawaban kosong.";
       let finishReason = choice?.finish_reason || null;
-
-      // Jika Groq menghentikan keluaran karena token habis, minta satu lanjutan yang tidak mengulang jawaban.
       if (finishReason === "length" && reply.trim()) {
         try {
           const continuation = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
-            headers: {
-              Authorization: "Bearer " + env.GROQ_API_KEY,
-              "Content-Type": "application/json"
-            },
+            headers: { Authorization: "Bearer " + apiKey, "Content-Type": "application/json" },
             body: JSON.stringify({
               model: env.GROQ_MODEL || MODEL_ID,
-              messages: [
-                ...messages,
-                { role: "assistant", content: reply },
-                { role: "user", content: "Jawaban sebelumnya terhenti karena batas keluaran. Lanjutkan tepat dari bagian terakhir yang sudah ditulis. Jangan mengulang pembukaan, paragraf, atau daftar yang sudah ada. Selesaikan semua bagian yang masih belum terjawab dan akhiri dengan wajar." }
-              ],
+              messages: [...messages, { role: "assistant", content: reply }, { role: "user", content: "Jawaban sebelumnya terhenti karena batas keluaran. Lanjutkan tepat dari bagian terakhir yang sudah ditulis. Jangan mengulang pembukaan, paragraf, atau daftar yang sudah ada. Selesaikan semua bagian yang masih belum terjawab dan akhiri dengan wajar." }],
               max_completion_tokens: 1000
-            })
+            }),
+            signal: AbortSignal.timeout(30000)
           });
           if (continuation.ok) {
             const continuationData = await continuation.json();
@@ -418,13 +426,9 @@ export default async (request) => {
           // Jawaban pertama tetap dikembalikan jika permintaan lanjutan gagal.
         }
       }
-
-      return json({
-        reply,
-        model: data?.model || env.GROQ_MODEL || MODEL_ID,
-        truncated: finishReason === "length"
-      });
-    } catch {
+      return json({ reply, model: data?.model || env.GROQ_MODEL || MODEL_ID, truncated: finishReason === "length" });
+    } catch (error) {
+      console.error("Groq request failed:", error?.name || "Error");
       return json({ error: "Tidak bisa menghubungi layanan Groq." }, 502);
     }
 };
