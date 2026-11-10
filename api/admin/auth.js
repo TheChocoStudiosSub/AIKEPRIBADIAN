@@ -149,8 +149,13 @@ export default async function handler(req, res) {
     return send(res, 503, { ok: false, error: "owner_verifier_unavailable" });
   }
 
-  const candidate = pbkdf2Sync(credential, Buffer.from(verifier.salt_hex, "hex"), 310000, 32, "sha256");
-  const expected = Buffer.from(verifier.credential_hash, "hex");
+  const configuredSalt = String(process.env.TCS_OWNER_PANEL_CREDENTIAL_SALT || "");
+  const configuredHash = String(process.env.TCS_OWNER_PANEL_CREDENTIAL_HASH || "");
+  const usePanelCredential = /^[0-9a-f]{32}$/i.test(configuredSalt) && /^[0-9a-f]{64}$/i.test(configuredHash);
+  const saltHex = usePanelCredential ? configuredSalt : verifier.salt_hex;
+  const hashHex = usePanelCredential ? configuredHash : verifier.credential_hash;
+  const candidate = pbkdf2Sync(credential, Buffer.from(saltHex, "hex"), 310000, 32, "sha256");
+  const expected = Buffer.from(hashHex, "hex");
   if (candidate.length !== expected.length || !timingSafeEqual(candidate, expected)) {
     return send(res, 401, { ok: false, error: "invalid_credentials" });
   }
