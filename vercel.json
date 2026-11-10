@@ -13,14 +13,6 @@
       "destination": "/api/chat?mode=sara"
     },
     {
-      "source": "/admin",
-      "destination": "https://tcs-admin-panel.vercel.app/"
-    },
-    {
-      "source": "/admin/:path*",
-      "destination": "https://tcs-admin-panel.vercel.app/:path*"
-    },
-    {
       "source": "/.netlify/functions/:path*",
       "destination": "/api/:path*"
     }
@@ -89,6 +81,18 @@
           "value": "no-cache"
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/admin",
+      "destination": "https://tcs-admin-panel.vercel.app/",
+      "permanent": false
+    },
+    {
+      "source": "/admin/:path*",
+      "destination": "https://tcs-admin-panel.vercel.app/:path*",
+      "permanent": false
     }
   ]
 }
