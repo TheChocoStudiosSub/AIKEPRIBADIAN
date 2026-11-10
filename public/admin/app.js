@@ -51,7 +51,8 @@ function badge(value) {
 
 function errorText(code) {
   const messages = {
-    owner_auth_unavailable: "Layanan verifikasi Owner sedang tidak tersedia.",
+    owner_auth_unavailable: "Layanan verifikasi Panel Admin sedang tidak tersedia.",
+    owner_panel_auth_not_configured: "Konfigurasi autentikasi Panel Admin belum lengkap.",
     owner_verifier_unavailable: "Data verifikasi Owner tidak dapat dibaca.",
     owner_session_unavailable: "Sesi Owner belum dapat dibuat.",
     invalid_credentials: "Kredensial Owner tidak valid.",
