@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Ajukan brand untuk bergabung ke dalam ekosistem The Choco Studios.">
+  <title>Pengajuan Brand | The Choco Studios</title>
+  <link rel="stylesheet" href="/admin/brand-application.css">
+  <script src="/admin/brand-application.js" defer></script>
+</head>
+<body>
+  <main class="join-shell">
+    <header class="join-header"><a class="wordmark" href="https://the-choco-studios-official.vercel.app/">THE CHOCO STUDIOS</a><span>EKOSISTEM BRAND</span></header>
+    <section class="join-intro">
+      <p class="eyebrow">PENERIMAAN BRAND</p>
+      <h1>Ajukan brand untuk bergabung dengan TCS.</h1>
+      <p>Isi profil brand secara lengkap. Pengajuan akan ditinjau oleh Owner TCS sebelum brand dimasukkan ke dalam ekosistem. Pengajuan tidak otomatis berarti diterima.</p>
+    </section>
+    <form id="brandForm" class="join-form">
+      <div class="form-section"><p class="eyebrow">IDENTITAS BRAND</p>
+        <label>Nama brand<input name="brandName" maxlength="120" required placeholder="Nama resmi brand"></label>
+        <label>Logo brand<input id="brandLogo" name="logo" type="file" accept="image/png,image/jpeg,image/webp" required><small>PNG, JPG, atau WebP. Maksimal 1 MB.</small></label>
+        <div id="logoPreview" class="logo-preview" hidden></div>
+        <label>Slogan brand<input name="slogan" maxlength="240" required placeholder="Slogan atau tagline brand"></label>
+        <label>Tentang brand<textarea name="about" minlength="20" maxlength="5000" rows="5" required placeholder="Jelaskan produk, layanan, nilai, dan latar belakang brand."></textarea></label>
+        <label>Arah dan tujuan brand<textarea name="direction" minlength="10" maxlength="3000" rows="4" required placeholder="Jelaskan visi, fokus pengembangan, dan arah brand ke depan."></textarea></label>
+      </div>
+      <div class="form-section"><p class="eyebrow">PENANGGUNG JAWAB</p>
+        <label>Nama pemilik brand<input name="ownerName" maxlength="120" required placeholder="Nama pemilik atau penanggung jawab"></label>
+        <label>Bentuk keterlibatan di TCS<select name="relationshipType" required><option value="under_tcs">Brand berada di bawah naungan TCS</option><option value="partner">Mitra kerja sama independen</option></select><small>Pilih apakah brand menjadi bagian dari ekosistem TCS atau bekerja sama sebagai mitra independen.</small></label>
+        <label>Gmail khusus brand<input name="email" type="email" maxlength="254" required placeholder="namabrand@gmail.com"><small>Gunakan akun Gmail yang dikhususkan untuk komunikasi brand, bukan email pribadi yang tidak terkait.</small></label>
+        <label>Website resmi brand (opsional)<input name="websiteUrl" type="url" maxlength="500" placeholder="https://brand.example"></label>
+        <label>Repositori kode / GitHub (opsional)<input name="repositoryUrl" type="url" maxlength="500" placeholder="https://github.com/brand/repository"></label>
+        <label>Domain yang dikelola brand (opsional)<textarea name="domains" rows="3" maxlength="2000" placeholder="brand.example&#10;shop.brand.example"></textarea><small>Satu domain per baris. Informasi ini membantu koordinasi pemeriksaan keamanan.</small></label>
+      </div>
+      <label class="consent"><input type="checkbox" name="consent" required><span>Saya menyatakan informasi yang dikirim benar dan memberi izin kepada TCS untuk menghubungi alamat Gmail brand ini terkait proses pengajuan.</span></label>
+      <button id="submitButton" class="submit-button" type="submit">Kirim pengajuan brand</button>
+      <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
+    </form>
+    <footer class="join-footer">The Choco Studios · Pengajuan akan ditinjau secara manual oleh Owner TCS.</footer>
+  </main>
+</body>
+</html>
