@@ -28,7 +28,8 @@ The above describes the product role. Capabilities that require integrations or 
 
 - Choco AI: https://choco-ai-independent-seven.vercel.app/
 - Official TCS website: https://the-choco-studios-official.vercel.app/
-- TCS Information: https://the-choco-studio-information.netlify.app/
+- TCS Information: https://the-choco-studios-information.vercel.app/
+- TCS LinkGuard: https://tcs-linkguard.vercel.app/
 - Help Center / Sara: https://choco-ai-help-center.vercel.app/
 - Contribution guide: https://the-choco-studios-official.vercel.app/bergabung/
 - Contact: thechocostudio@gmail.com
@@ -64,3 +65,7 @@ The public TCS Knowledge Hub is the canonical source for public TCS identity and
 ## Development and deployment
 
 The production Vercel project is `aikepribadian`. Changes to API routes must preserve the existing Vercel adapter, server-only environment variables, Supabase authorization boundaries, license endpoints, and payment safeguards. Test API behavior, rate limits, Owner-session validation, RAG retrieval, and the public frontend before promoting a deployment.
+
+## Payment and public onboarding
+
+Automated payment checkout and Midtrans integration are disabled. License requests, if any, are reviewed manually by the Owner. Public brand-application intake has been removed; ecosystem components are managed internally by TCS.
