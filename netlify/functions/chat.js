@@ -373,7 +373,7 @@ export default async (request) => {
           max_completion_tokens: ({ short: 500, balanced: 1000, detailed: 2000 })[responseLength],
           stream: streamRequested
         }),
-        signal: AbortSignal.timeout(55000)
+        signal: AbortSignal.timeout(25000)
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
