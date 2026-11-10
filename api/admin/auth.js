@@ -46,7 +46,7 @@ async function checkLoginRateLimit(req) {
   try {
     const response = await fetch(base + "/rest/v1/rpc/tcs_owner_get_verifier", {
       method: "POST",
-      headers: { apikey: publishableKey, Authorization: "Bearer " + publishableKey, "Content-Type": "application/json" },
+      headers: { apikey: publishableKey, "Content-Type": "application/json" },
       cache: "no-store",
       body: JSON.stringify({ p_client_hash: hash(address), p_server_key: serverKey }),
       signal: AbortSignal.timeout(6000)
