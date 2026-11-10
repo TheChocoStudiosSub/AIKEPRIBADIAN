@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Panel Administrasi | The Choco Studios</title>
+  <link rel="icon" type="image/png" href="/assets/choco-app-icon.png">
+  <link rel="stylesheet" href="/admin/style.css?v=20261110-3">
+  <style>html,body{min-height:100%;background:#0b1220!important;color:#edf3fb!important}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}.login-screen{min-height:100vh;display:grid;place-items:center;padding:36px 18px}.login-card{width:min(100%,460px);padding:34px;border:1px solid rgba(166,188,216,.14);border-radius:22px;background:#111b2b;color:#edf3fb;box-shadow:0 28px 90px rgba(0,0,0,.32)}[hidden]{display:none!important}</style>
+  <script src="/admin/app.js?v=20261110-3" defer></script>
+  <script src="/admin/ecosystem-admin.js?v=20261110-3" defer></script>
+  <script src="/admin/management-admin.js?v=20261110-3" defer></script>
+</head>
+<body>
+  <main id="loginScreen" class="login-screen">
+    <section class="login-card">
+      <div class="brand-lockup">
+        <img src="/assets/choco-app-icon.png" alt="Logo Choco AI">
+        <div>
+          <strong>The Choco Studios</strong>
+          <span>ADMINISTRATION CONSOLE</span>
+        </div>
+      </div>
+      <div class="login-heading">
+        <p class="eyebrow">AREA TERBATAS</p>
+        <h1>Panel Administrasi</h1>
+        <p>Masuk menggunakan kredensial Owner Panel Admin TCS. Akses administrasi dikelola secara terpisah dari Choco AI.</p>
+      </div>
+      <form id="loginForm" autocomplete="on">
+        <label for="ownerCredential">Kredensial Owner</label>
+        <div class="input-with-action">
+          <input id="ownerCredential" name="credential" type="password" minlength="8" maxlength="200" autocomplete="current-password" required>
+          <button id="toggleCredential" class="icon-button" type="button" aria-label="Tampilkan kredensial">Lihat</button>
+        </div>
+        <button id="loginButton" class="button button-primary button-wide" type="submit">Masuk sebagai Owner</button>
+        <p id="loginError" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+      <p class="login-security">Sesi aman · HttpOnly cookie · Masa sesi 8 jam</p>
+    </section>
+    <p class="login-footer">The Choco Studios · Sistem administrasi internal</p>
+  </main>
+
+  <div id="appShell" class="app-shell" hidden>
+    <header class="topbar">
+      <div class="topbar-left">
+        <button id="sidebarToggle" class="icon-button mobile-only" type="button" aria-label="Buka navigasi">☰</button>
+        <div class="brand-lockup brand-lockup-small">
+          <img src="/assets/choco-app-icon.png" alt="">
+          <div>
+            <strong>The Choco Studios</strong>
+            <span>ADMINISTRATION CONSOLE</span>
+          </div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <span class="owner-indicator"><span class="status-dot"></span>TCS Owner · Super Admin</span>
+        <button id="refreshAll" class="button button-quiet" type="button">Muat ulang</button>
+        <button id="logoutButton" class="button button-outline" type="button">Keluar</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside id="sidebar" class="sidebar">
+        <div class="sidebar-label">PENGELOLAAN</div>
+        <nav class="side-nav" aria-label="Navigasi administrasi">
+          <button class="nav-item active" data-view="overview" type="button"><span class="nav-symbol">▦</span>Ringkasan</button>
+          <button class="nav-item" data-view="requests" type="button"><span class="nav-symbol">▤</span>Permintaan lisensi</button>
+          <button class="nav-item" data-view="apps" type="button"><span class="nav-symbol">▣</span>Aplikasi</button>
+          <button class="nav-item" data-view="plans" type="button"><span class="nav-symbol">◇</span>Paket &amp; Tarif</button>
+          <button class="nav-item" data-view="customers" type="button"><span class="nav-symbol">♙</span>Pelanggan</button>
+          <button class="nav-item" data-view="reports" type="button"><span class="nav-symbol">▤</span>Laporan</button>
+          <button class="nav-item" data-view="promos" type="button"><span class="nav-symbol">％</span>Promo</button>
+          <button class="nav-item" data-view="licenses" type="button"><span class="nav-symbol">◇</span>Lisensi aktif</button>
+          <button class="nav-item" data-view="events" type="button"><span class="nav-symbol">≡</span>Riwayat aktivitas</button>
+          <button class="nav-item" data-view="products" type="button"><span class="nav-symbol">▧</span>Produk dan harga</button>
+          <button class="nav-item" data-view="payments" type="button"><span class="nav-symbol">◈</span>Pembayaran Midtrans</button>
+          <button class="nav-item" data-view="app-control" type="button"><span class="nav-symbol">⚙</span>Kontrol Aplikasi</button>
+          <button class="nav-item" data-view="traffic" type="button"><span class="nav-symbol">◉</span>Analitik Pengunjung</button>
+          <button class="nav-item" data-view="downloads" type="button"><span class="nav-symbol">⇩</span>Riwayat Unduhan</button>
+          <button class="nav-item" data-view="brands" type="button"><span class="nav-symbol">◇</span>Brand Ekosistem</button>
+          <button class="nav-item" data-view="applications" type="button"><span class="nav-symbol">＋</span>Pengajuan Brand</button>
+          <button class="nav-item" data-view="crawler" type="button"><span class="nav-symbol">⌁</span>TCS Web Crawler</button>
+        </nav>
+        <div class="sidebar-note">
+          <span class="sidebar-note-title">PENGENDALIAN AKSES</span>
+          <p>Persetujuan lisensi hanya dilakukan setelah transaksi dan dana diterima diverifikasi secara manual.</p>
+        </div>
+        <div class="sidebar-bottom">TCS · Internal Operations</div>
+      </aside>
+
+      <main class="main-content">
+        <div class="page-heading">
+          <div>
+            <p id="pageEyebrow" class="eyebrow">PUSAT KENDALI</p>
+            <h1 id="pageTitle">Ringkasan</h1>
+            <p id="pageDescription">Pantau permintaan, inventaris, dan status lisensi TCS.</p>
+          </div>
+          <div id="pageActions" class="page-actions"><button id="refreshPage" class="button button-outline" type="button">Perbarui halaman</button></div>
+        </div>
+        <div id="toastRegion" class="toast-region" role="status" aria-live="polite"></div>
+
+        <section id="view-overview" class="view-section">
+          <div class="stat-grid">
+            <article class="stat-card"><span>Permintaan menunggu</span><strong id="statPending">0</strong><small>Belum diverifikasi</small></article>
+            <article class="stat-card"><span>Pembayaran terverifikasi</span><strong id="statVerified">0</strong><small>Menunggu alokasi kunci</small></article>
+            <article class="stat-card"><span>Lisensi aktif</span><strong id="statActive">0</strong><small>Akses berjalan</small></article>
+            <article class="stat-card"><span>Lisensi ditangguhkan</span><strong id="statSuspended">0</strong><small>Akses sementara dihentikan</small></article>
+            <article class="stat-card"><span>Lisensi dicabut</span><strong id="statRevoked">0</strong><small>Akses dihentikan permanen</small></article>
+            <article class="stat-card"><span>Kunci tersedia</span><strong id="statAvailable">0</strong><small>Belum dialokasikan</small></article>
+            <article class="stat-card"><span>Kunci teralokasi</span><strong id="statAssigned">0</strong><small>Terhubung ke permintaan</small></article>
+          </div>
+          <div class="content-grid">
+            <article class="panel-card">
+              <div class="panel-card-heading"><div><p class="eyebrow">ANTREAN</p><h2>Permintaan terbaru</h2></div><button class="text-button" data-go="requests" type="button">Lihat semua</button></div>
+              <div id="overviewRequests" class="compact-list"><p class="empty-state">Memuat data permintaan...</p></div>
+            </article>
+            <article class="panel-card">
+              <div class="panel-card-heading"><div><p class="eyebrow">INFORMASI</p><h2>Status operasional</h2></div></div>
+              <div class="notice-list">
+                <div><span class="notice-mark">01</span><p>SKU mengidentifikasi produk atau paket. SKU bukan bukti pembelian dan tidak digunakan sendirian untuk mengambil kunci.</p></div>
+                <div><span class="notice-mark">02</span><p>Admin wajib mencocokkan ID transaksi, username pembeli, SKU, nominal, dan status dana diterima di Projects.co.id.</p></div>
+                <div><span class="notice-mark">03</span><p>Kunci hanya dialokasikan setelah pembayaran terverifikasi dan inventaris memiliki kunci tersedia.</p></div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="view-requests" class="view-section" hidden>
+          <div class="toolbar">
+            <input id="requestSearch" class="search-input" type="search" placeholder="Cari ID, username, transaksi, atau SKU...">
+            <select id="requestFilter" class="select-input" aria-label="Filter permintaan">
+              <option value="all">Semua status</option>
+              <option value="pending">Menunggu</option>
+              <option value="verified">Terverifikasi</option>
+              <option value="approved">Disetujui</option>
+              <option value="rejected">Ditolak</option>
+              <option value="expired">Kedaluwarsa</option>
+            </select>
+          </div>
+          <div class="panel-card table-card">
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Permintaan</th><th>Produk / SKU</th><th>Pembeli</th><th>Referensi transaksi</th><th>Verifikasi</th><th>Status</th><th>Tindakan</th></tr></thead>
+                <tbody id="requestsTable"><tr><td colspan="7" class="empty-state">Memuat data...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <p class="section-footnote">Referensi lama yang belum dilengkapi username dan ID transaksi tidak dapat disetujui. Data tersebut tidak dianggap sebagai bukti pembayaran.</p>
+        </section>
+
+        <section id="view-inventory" class="view-section" hidden>
+          <div class="inventory-layout">
+            <article class="panel-card import-card">
+              <div class="panel-card-heading"><div><p class="eyebrow">PENAMBAHAN STOK</p><h2>Impor kunci lisensi</h2></div></div>
+              <p class="muted">Masukkan kunci pre-issued yang sah. Satu kunci per baris. Kunci disimpan dalam bentuk terenkripsi dan tidak ditampilkan kembali setelah impor.</p>
+              <form id="inventoryImportForm" class="stack-form">
+                <label for="inventoryProduct">Produk</label>
+                <select id="inventoryProduct" class="select-input" required></select>
+                <label for="licenseKeys">Daftar kunci</label>
+                <textarea id="licenseKeys" rows="7" spellcheck="false" autocomplete="off" placeholder="TCS1-XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX" required></textarea>
+                <button id="importKeysButton" class="button button-primary" type="submit">Impor kunci</button>
+                <p id="importResult" class="form-message" role="status" aria-live="polite"></p>
+              </form>
+            </article>
+            <article class="panel-card">
+              <div class="panel-card-heading"><div><p class="eyebrow">KETERSEDIAAN</p><h2>Ringkasan inventaris</h2></div></div>
+              <div id="inventorySummary" class="inventory-summary"></div>
+            </article>
+          </div>
+          <div class="panel-card table-card">
+            <div class="panel-card-heading"><div><p class="eyebrow">DATA INVENTARIS</p><h2>Daftar kunci</h2></div></div>
+            <div class="table-scroll"><table><thead><tr><th>ID inventaris</th><th>Produk</th><th>SKU</th><th>Status</th><th>Dibuat</th><th>Dialokasikan</th></tr></thead><tbody id="inventoryTable"><tr><td colspan="6" class="empty-state">Memuat data...</td></tr></tbody></table></div>
+          </div>
+        </section>
+
+        <section id="view-payments" class="view-section" hidden>
+          <div class="stat-grid">
+            <article class="stat-card"><span>Total transaksi tercatat</span><strong id="paymentCount">0</strong><small>Riwayat transaksi Midtrans</small></article>
+            <article class="stat-card"><span>Transaksi menunggu</span><strong id="paymentPending">0</strong><small>Belum menerima pembayaran</small></article>
+            <article class="stat-card"><span>Dana berhasil diterima</span><strong id="paymentRevenue">Rp0</strong><small>Settlement dan capture valid</small></article>
+          </div>
+          <div class="panel-card table-card">
+            <div class="panel-card-heading"><div><p class="eyebrow">MIDTRANS SNAP</p><h2>Riwayat transaksi</h2></div></div>
+            <div class="table-scroll"><table><thead><tr><th>ID pesanan</th><th>Produk</th><th>Pelanggan</th><th>Nominal</th><th>Metode</th><th>Status pembayaran</th><th>Status lisensi</th><th>Waktu</th></tr></thead><tbody id="paymentsTable"><tr><td colspan="8" class="empty-state">Memuat transaksi...</td></tr></tbody></table></div>
+          </div>
+          <p class="section-footnote">Status pembayaran diperbarui melalui notifikasi Midtrans yang diverifikasi menggunakan Server Key dan pemeriksaan status langsung ke API Midtrans. Transaksi yang terhubung dengan permintaan lisensi akan memicu verifikasi dan alokasi kunci otomatis setelah pembayaran terkonfirmasi. Transaksi tanpa permintaan lisensi hanya tercatat sebagai pembayaran.</p>
+        </section>
+
+        <section id="view-licenses" class="view-section" hidden>
+          <div class="panel-card table-card">
+            <div class="table-scroll"><table><thead><tr><th>Lisensi</th><th>Pemegang</th><th>Produk</th><th>Status akses</th><th>Aktivasi</th><th>Kedaluwarsa</th><th>Tindakan</th></tr></thead><tbody id="licensesTable"><tr><td colspan="7" class="empty-state">Memuat data...</td></tr></tbody></table></div>
+          </div>
+        </section>
+
+        <section id="view-events" class="view-section" hidden>
+          <div class="panel-card table-card">
+            <div class="table-scroll"><table><thead><tr><th>Waktu</th><th>Aktivitas</th><th>Permintaan</th><th>Lisensi</th><th>Detail</th></tr></thead><tbody id="eventsTable"><tr><td colspan="5" class="empty-state">Memuat data...</td></tr></tbody></table></div>
+          </div>
+        </section>
+
+        <section id="view-products" class="view-section" hidden>
+          <div id="productsList" class="product-grid"><p class="empty-state">Memuat data produk...</p></div>
+        </section>
+        <section id="view-app-control" class="view-section" hidden>
+          <form id="appControlForm" class="stack-form">
+            <article class="panel-card">
+              <div class="panel-card-heading"><div><p class="eyebrow">KONEKSI SERVER</p><h2>Kontrol TCS Stock &amp; Sales Tracker</h2></div><span id="appControlRevision" class="badge">Belum dimuat</span></div>
+              <p class="muted">Pengaturan di halaman ini dikirim ke TCS Backend. Aplikasi desktop memeriksa perubahan secara otomatis setiap beberapa detik tanpa mengirim data stok, transaksi, atau profil usaha pengguna.</p>
+              <label class="control-toggle"><input id="appControlEnabled" type="checkbox"> <span><strong>Izinkan aplikasi berjalan</strong><small>Jika dinonaktifkan, aplikasi menampilkan pemberitahuan pemeliharaan. Data lokal pengguna tidak dihapus.</small></span></label>
+            </article>
+            <article class="panel-card">
+              <div class="panel-card-heading"><div><p class="eyebrow">FITUR APLIKASI</p><h2>Pengaturan akses fitur</h2></div></div>
+              <div class="control-check-grid">
+                <label><input id="featureProducts" type="checkbox"><span><strong>Data barang</strong><small>Tambah, ubah, dan kelola barang.</small></span></label>
+                <label><input id="featureStock" type="checkbox"><span><strong>Barang masuk</strong><small>Pencatatan stok masuk.</small></span></label>
+                <label><input id="featureSales" type="checkbox"><span><strong>Penjualan</strong><small>Pencatatan transaksi penjualan.</small></span></label>
+                <label><input id="featureReports" type="checkbox"><span><strong>Laporan</strong><small>Ringkasan dan ekspor laporan.</small></span></label>
+                <label><input id="featureSettings" type="checkbox"><span><strong>Pengaturan</strong><small>Profil usaha dan pengaturan lokal.</small></span></label>
+              </div>
+              <p class="section-footnote">Ringkasan tetap tersedia sebagai halaman utama. Perubahan akses diterapkan pada aplikasi yang sedang berjalan setelah sinkronisasi berikutnya.</p>
+            </article>
+            <article class="panel-card">
+              <div class="panel-card-heading"><div><p class="eyebrow">PENGUMUMAN</p><h2>Informasi dan pemberitahuan</h2></div></div>
+              <label class="control-toggle"><input id="notificationEnabled" type="checkbox"> <span><strong>Aktifkan pemberitahuan</strong><small>Pemberitahuan akan tampil otomatis di aplikasi desktop.</small></span></label>
+              <div class="form-grid">
+                <label for="notificationTitle">Judul pemberitahuan</label>
+                <input id="notificationTitle" class="form-input" maxlength="120" type="text" placeholder="Informasi dari The Choco Studios">
+                <label for="notificationLevel">Jenis pemberitahuan</label>
+                <select id="notificationLevel" class="select-input"><option value="info">Informasi</option><option value="success">Pembaruan berhasil</option><option value="warning">Peringatan</option><option value="critical">Penting</option></select>
+                <label for="notificationBody">Isi pemberitahuan</label>
+                <textarea id="notificationBody" class="form-input" rows="4" maxlength="2000" placeholder="Tulis informasi yang akan diterima pengguna aplikasi."></textarea>
+              </div>
+            </article>
+            <article class="panel-card">
+              <div class="panel-card-heading"><div><p class="eyebrow">INFORMASI VERSI</p><h2>Pembaruan aplikasi</h2></div></div>
+              <div class="form-grid">
+                <label for="latestVersion">Versi terbaru</label>
+                <input id="latestVersion" class="form-input" type="text" maxlength="40" required>
+                <label for="minimumVersion">Versi minimum</label>
+                <input id="minimumVersion" class="form-input" type="text" maxlength="40" required>
+                <label for="updateUrl">URL pembaruan</label>
+                <input id="updateUrl" class="form-input" type="url" maxlength="500" placeholder="https://...">
+                <label for="updateNotes">Catatan pembaruan</label>
+                <textarea id="updateNotes" class="form-input" rows="4" maxlength="5000" placeholder="Daftar perubahan pada versi terbaru."></textarea>
+              </div>
+            </article>
+            <div class="form-actions"><button id="saveAppControl" class="button button-primary" type="submit">Simpan dan kirim ke aplikasi</button><button id="reloadAppControl" class="button button-outline" type="button">Muat ulang pengaturan</button><span id="appControlStatus" class="form-message" role="status" aria-live="polite"></span></div>
+          </form>
+        </section>
+        <section id="view-apps" class="view-section" hidden><div id="ecosystemAppsRoot"></div></section>
+        <section id="view-plans" class="view-section" hidden><div id="ecosystemPlansRoot"></div></section>
+        <section id="view-customers" class="view-section" hidden><div id="ecosystemCustomersRoot"></div></section>
+        <section id="view-reports" class="view-section" hidden><div id="ecosystemReportsRoot"></div></section>
+        <section id="view-promos" class="view-section" hidden><div id="ecosystemPromosRoot"></div></section>
+        <section id="view-traffic" class="view-section" hidden><div id="tcsTrafficRoot"></div></section>
+        <section id="view-downloads" class="view-section" hidden><div id="tcsDownloadsRoot"></div></section>
+        <section id="view-brands" class="view-section" hidden><div id="tcsBrandsRoot"></div></section>
+        <section id="view-applications" class="view-section" hidden><div id="tcsApplicationsRoot"></div></section>
+        <section id="view-crawler" class="view-section" hidden><div id="tcsCrawlerRoot"></div></section>
+      </main>
+    </div>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop" hidden>
+    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-heading"><div><p class="eyebrow">TINDAKAN OWNER</p><h2 id="modalTitle">Detail</h2></div><button id="modalClose" class="icon-button" type="button" aria-label="Tutup">×</button></header>
+      <div id="modalBody" class="modal-body"></div>
+      <footer id="modalFooter" class="modal-footer"></footer>
+    </section>
+  </div>
+</body>
+</html>
