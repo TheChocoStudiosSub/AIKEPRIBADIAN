@@ -3,6 +3,7 @@ import { createHmac, randomUUID } from "node:crypto";
 const ALLOWED_ORIGINS = new Set([
   "https://the-choco-studios-official.vercel.app",
   "https://the-choco-studio-information.netlify.app",
+  "https://the-choco-studios-information.vercel.app",
   "https://tcs-information-hub.vercel.app",
   "https://choco-ai-independent-seven.vercel.app",
   "https://choco-ai-help-center.netlify.app",
@@ -97,43 +98,6 @@ async function handleTrack(input,req,res,origin,base,key){
   }
   return send(res,400,{ok:false,error:"invalid_event"},origin);
 }
-async function uploadLogo(base,key,dataUrl){
-  if(!dataUrl)return null;
-  const match=dataUrl.match(/^data:(image\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/);
-  if(!match)throw new Error("invalid_logo");
-  const bytes=Buffer.from(match[2],"base64");
-  if(!bytes.length||bytes.length>1024*1024)throw new Error("logo_too_large");
-  const mime=match[1],extension=mime==="image/jpeg"?"jpg":mime.slice(6),path=randomUUID()+"."+extension,bucket="tcs-brand-logos";
-  const check=await fetch(base+"/storage/v1/bucket/"+bucket,{headers:{apikey:key,Authorization:"Bearer "+key},cache:"no-store"});
-  if(check.status===404){
-    const create=await fetch(base+"/storage/v1/bucket",{method:"POST",headers:{apikey:key,Authorization:"Bearer "+key,"Content-Type":"application/json"},body:JSON.stringify({id:bucket,name:bucket,public:true,file_size_limit:1048576,allowed_mime_types:["image/png","image/jpeg","image/webp"]}),cache:"no-store"});
-    if(!create.ok&&create.status!==409)throw new Error("logo_storage_unavailable");
-  }else if(!check.ok)throw new Error("logo_storage_unavailable");
-  const upload=await fetch(base+"/storage/v1/object/"+bucket+"/"+path,{method:"POST",headers:{apikey:key,Authorization:"Bearer "+key,"Content-Type":mime,"x-upsert":"false"},body:bytes,cache:"no-store",signal:AbortSignal.timeout(12000)});
-  if(!upload.ok)throw new Error("logo_upload_failed");
-  return base+"/storage/v1/object/public/"+bucket+"/"+path;
-}
-async function handleBrandApplication(input,req,res,origin,base,key){
-  const brand_name=clean(input.brandName,120),slogan=clean(input.slogan,240),about=clean(input.about,5000),
-    direction=clean(input.direction,3000),owner_name=clean(input.ownerName,120),contact_email=clean(input.email,254).toLowerCase();
-  const website=clean(input.websiteUrl,500),repository=clean(input.repositoryUrl,500),relationship_type=clean(input.relationshipType,30);
-  const domains=Array.isArray(input.domains)?input.domains.slice(0,20).map(x=>clean(x,253).toLowerCase()).filter(Boolean):[];
-  const safeHttps=value=>{if(!value)return null;try{const u=new URL(value);if(u.protocol!=="https:"||u.username||u.password)throw new Error();return u.toString().slice(0,500);}catch{throw new Error("invalid_input");}};
-  const safeDomains=domains.map(domain=>{if(!/^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(domain))throw new Error("invalid_input");return domain;});
-  if(!["under_tcs","partner"].includes(relationship_type)||brand_name.length<2||slogan.length<3||about.length<20||direction.length<10||owner_name.length<2||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact_email)||!contact_email.endsWith("@gmail.com"))
-    return send(res,400,{ok:false,error:"invalid_input"},origin);
-  const ip=String(header(req,"x-vercel-forwarded-for")||header(req,"x-forwarded-for")).split(",").pop().trim();
-  const rateKey=hash("brand-application:"+contact_email+":"+(ip||"unknown"),key);
-  if(!await consumeLimit(base,key,rateKey,3,86400))return send(res,429,{ok:false,error:"rate_limited"},origin);
-  const logo_url=await uploadLogo(base,key,clean(input.logoDataUrl,1500000));
-  await db(base,key,"tcs_brand_applications","POST",[{
-    brand_name,logo_url,slogan,about,direction,owner_name,contact_email,relationship_type,
-    website_url:safeHttps(website),repository_url:safeHttps(repository),known_domains:safeDomains
-  }],"return=minimal");
-  return send(res,201,{ok:true},origin);
-}
-
 export async function handleTcsPublic(req,res){
   const origin=header(req,"origin");
   if(req.method==="OPTIONS")return send(res,204,{},origin);
@@ -145,11 +109,10 @@ export async function handleTcsPublic(req,res){
     const key=process.env.SUPABASE_SECRET_KEY||"",base=String(process.env.TCS_SUPABASE_URL||"").replace(/\/+$/,"");
     if(!key||!base)return send(res,503,{ok:false,error:"service_unavailable"},origin);
     if(input.action==="track")return await handleTrack(input,req,res,origin,base,key);
-    if(input.action==="brand_application")return await handleBrandApplication(input,req,res,origin,base,key);
     return send(res,400,{ok:false,error:"unknown_action"},origin);
   }catch(error){
     const code=String(error?.message||"");
-    const status=code==="invalid_logo"||code==="logo_too_large"||code==="invalid_input"?400:500;
+    const status=code==="invalid_input"?400:500;
     return send(res,status,{ok:false,error:status===400?code:"public_request_failed"},origin);
   }
 }
