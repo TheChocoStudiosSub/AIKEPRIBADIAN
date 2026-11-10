@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 
 const COOKIE_NAME = "tcs_admin_session";
 const SESSION_TTL_SECONDS = 8 * 60 * 60;
@@ -49,7 +49,7 @@ export function createAdminSessionCookie(res) {
   const key = secret();
   if (!key) throw new Error("admin_session_secret_not_configured");
   const now = Math.floor(Date.now() / 1000);
-  const nonce = Array.from({ length: 16 }, () => Math.floor(Math.random() * 256).toString(16).padStart(2, "0")).join("");
+  const nonce = randomBytes(16).toString("hex");
   const payload = Buffer.from(JSON.stringify({ iss: "tcs-admin", iat: now, exp: now + SESSION_TTL_SECONDS, nonce })).toString("base64url");
   const token = payload + "." + signature(payload, key);
   res.setHeader("Set-Cookie", COOKIE_NAME + "=" + token + "; Max-Age=" + SESSION_TTL_SECONDS + "; Path=/; HttpOnly; Secure; SameSite=Strict; Priority=High");
