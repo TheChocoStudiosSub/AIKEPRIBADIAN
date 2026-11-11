@@ -2303,7 +2303,9 @@
           { role: "assistant", content: reply }
         );
 
-        // Riwayat hanya tersimpan sementara di memori halaman.\n\n      } catch (error) {
+        // Riwayat hanya tersimpan sementara di memori halaman.
+
+      } catch (error) {
         waiting.remove();
         if (streamedWrapper) streamedWrapper.remove();
 
