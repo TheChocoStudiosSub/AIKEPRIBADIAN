@@ -1,6 +1,6 @@
 (() => {
 "use strict";
-const ENDPOINT="https://choco-ai-independent-seven.vercel.app/api/license?feature=tcs-public";
+const ENDPOINT="/api/license?feature=tcs-public";
 const SITE=document.currentScript?.dataset.site||"tcs-website";
 function sid(key){try{let v=sessionStorage.getItem(key);if(!v){v=crypto.randomUUID();sessionStorage.setItem(key,v);}return v;}catch{return crypto.randomUUID();}}
 const visitorId=sid("tcs_analytics_visitor_v1"),session=sid("tcs_analytics_session_v1");
