@@ -1622,14 +1622,6 @@
     const sidebarOverlay = document.getElementById("sidebarOverlay");
     const toast = document.getElementById("toast");
 
-    // Tangani Enter sejak awal inisialisasi agar tidak memicu submit HTML/native reload.
-    input.addEventListener("keydown", event => {
-      if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;
-      event.preventDefault();
-      event.stopPropagation();
-      if (!busy && Date.now() >= cooldownUntil) form.requestSubmit();
-    });
-
     const CONVERSATION_STORAGE_KEY = "chocoCurrentConversationV1";
     try { localStorage.removeItem(CONVERSATION_STORAGE_KEY); } catch {}
     let history = [];
@@ -1683,6 +1675,20 @@
     }
     try { cooldownUntil = Math.max(0, Number(localStorage.getItem("chocoNextAllowedAt") || 0)); } catch {}
     if (cooldownUntil > Date.now()) { updateSendCooldown(); cooldownTimer = setInterval(updateSendCooldown, 250); }
+
+    // Enter mengirim melalui submit handler chat yang sama dengan tombol Kirim.
+    // Listener dipasang setelah busy dan cooldown dideklarasikan agar tidak terkena TDZ.
+    input.addEventListener("keydown", event => {
+      if (event.key !== "Enter" || event.shiftKey || event.isComposing || event.keyCode === 229) return;
+      event.preventDefault();
+      if (busy) return;
+      if (Date.now() < cooldownUntil) {
+        updateSendCooldown();
+        showToast("Tunggu jeda 10 detik sebelum mengirim pesan berikutnya.");
+        return;
+      }
+      form.requestSubmit(send);
+    });
 
     const plusMenuButton = document.getElementById("plusMenuButton");
     const plusMenu = document.getElementById("plusMenu");
