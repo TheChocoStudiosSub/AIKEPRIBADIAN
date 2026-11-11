@@ -2135,7 +2135,9 @@
       scrollToBottom();
     }
 
-    // Riwayat chat sengaja tidak dipulihkan setelah refresh.\n\n    window.addEventListener("storage", event => {
+    // Riwayat chat sengaja tidak dipulihkan setelah refresh.
+
+    window.addEventListener("storage", event => {
       if (event.key === "chocoNextAllowedAt" && event.newValue) {
         cooldownUntil = Math.max(cooldownUntil, Number(event.newValue) || 0);
         if (cooldownUntil > Date.now()) {
