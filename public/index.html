@@ -1525,7 +1525,6 @@
               maxlength="4000"
               placeholder="Tulis sesuatu ke Choco AI..."
               aria-label="Pesan untuk Choco AI"
-              onkeydown="if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); document.getElementById('form').requestSubmit(); }"
               required
             ></textarea>
 
@@ -1622,6 +1621,14 @@
     const sidebar = document.getElementById("sidebar");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
     const toast = document.getElementById("toast");
+
+    // Tangani Enter sejak awal inisialisasi agar tidak memicu submit HTML/native reload.
+    input.addEventListener("keydown", event => {
+      if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (!busy && Date.now() >= cooldownUntil) form.requestSubmit();
+    });
 
     const CONVERSATION_STORAGE_KEY = "chocoCurrentConversationV1";
     try { localStorage.removeItem(CONVERSATION_STORAGE_KEY); } catch {}
