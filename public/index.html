@@ -1525,6 +1525,7 @@
               maxlength="4000"
               placeholder="Tulis sesuatu ke Choco AI..."
               aria-label="Pesan untuk Choco AI"
+              onkeydown="if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); document.getElementById('form').requestSubmit(); }"
               required
             ></textarea>
 
@@ -2172,16 +2173,6 @@
     }
 
     input.addEventListener("input", resizeInput);
-
-    input.addEventListener("keydown", event => {
-      if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-
-        if (!busy && Date.now() >= cooldownUntil) {
-          form.requestSubmit();
-        }
-      }
-    });
 
     form.addEventListener("submit", async event => {
       event.preventDefault();
