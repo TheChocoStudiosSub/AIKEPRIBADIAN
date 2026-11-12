@@ -386,7 +386,6 @@
       border: 1px solid rgba(138,133,255,.3);
       box-shadow: 0 0 45px rgba(98,105,255,.13), inset 0 0 20px rgba(115,130,255,.08);
       overflow: visible;
-      cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -396,18 +395,17 @@
       position: absolute;
       inset: -2px;
       z-index: -1;
-      border: 1px solid rgba(137,129,255,.18);
+      border: 1px solid rgba(137,155,255,.32);
       border-radius: inherit;
       pointer-events: none;
       opacity: 0;
+      will-change: transform, opacity, box-shadow;
+      animation: welcome-ripple 6s ease-out infinite;
     }
 
-    .welcome-mark-wrap.is-rippling::before {
-      animation: welcome-ripple 900ms ease-out;
-    }
-
-    .welcome-mark-wrap.is-rippling::after {
-      animation: welcome-ripple 1100ms 120ms ease-out;
+    .welcome-mark-wrap::after {
+      animation-delay: 3s;
+      border-color: rgba(164,130,255,.34);
     }
 
     .welcome-mark {
@@ -423,9 +421,24 @@
     }
 
     @keyframes welcome-ripple {
-      0% { transform: scale(.94); opacity: .85; box-shadow: 0 0 12px rgba(116,151,255,.55), inset 0 0 12px rgba(116,151,255,.25); }
-      65% { opacity: .45; }
-      100% { transform: scale(1.9); opacity: 0; box-shadow: 0 0 34px rgba(116,151,255,0), inset 0 0 24px rgba(116,151,255,0); }
+      0% {
+        transform: scale(.96);
+        opacity: .82;
+        box-shadow: 0 0 12px rgba(116,151,255,.5), inset 0 0 12px rgba(116,151,255,.2);
+      }
+      45% { opacity: .38; }
+      100% {
+        transform: scale(2.05);
+        opacity: 0;
+        box-shadow: 0 0 38px rgba(116,151,255,0), inset 0 0 26px rgba(116,151,255,0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .welcome-mark-wrap::before,
+      .welcome-mark-wrap::after {
+        animation: none;
+      }
     }
 
     .eyebrow {
@@ -1921,22 +1934,6 @@
       toastTimer = setTimeout(() => {
         toast.classList.remove("show");
       }, 2600);
-    }
-
-    const welcomeMark = document.querySelector(".welcome-mark-wrap");
-    if (welcomeMark) {
-      let rippleAnimationsFinished = 0;
-      welcomeMark.addEventListener("pointerdown", () => {
-        rippleAnimationsFinished = 0;
-        welcomeMark.classList.remove("is-rippling");
-        void welcomeMark.offsetWidth;
-        welcomeMark.classList.add("is-rippling");
-      });
-      welcomeMark.addEventListener("animationend", event => {
-        if (event.animationName !== "welcome-ripple") return;
-        rippleAnimationsFinished += 1;
-        if (rippleAnimationsFinished >= 2) welcomeMark.classList.remove("is-rippling");
-      });
     }
 
     function scrollToBottom() {
