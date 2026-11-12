@@ -2,7 +2,7 @@
   {
     "id": "project-stack",
     "title": "Arsitektur dan hosting aktif Choco AI",
-    "content": "Choco AI berjalan pada Vercel dengan frontend statis di public/, endpoint api/chat.js, dan handler server-side netlify/functions/chat.js. Inferensi menggunakan Groq dari sisi server. Repository sumber TCS: https://github.com/TheChocoStudiosSub/AIKEPRIBADIAN. URL produksi utama: https://choco-ai-independent-seven.vercel.app/. Rahasia seperti GROQ_API_KEY, TCS_OWNER_AUTH_SERVER_KEY, dan kredensial Supabase dikelola sebagai environment variables server-side; jangan menaruhnya di frontend atau repository.",
+    "content": "Choco AI berjalan pada Vercel dengan frontend statis di public/, endpoint api/chat.js, dan handler server-side netlify/functions/chat.js. Inferensi menggunakan Groq dari sisi server. Repository sumber TCS: https://github.com/TheChocoStudiosSub/AIKEPRIBADIAN. URL produksi utama: https://tcs-choco-ai.vercel.app/. Rahasia seperti GROQ_API_KEY, TCS_OWNER_AUTH_SERVER_KEY, dan kredensial Supabase dikelola sebagai environment variables server-side; jangan menaruhnya di frontend atau repository.",
     "category": "architecture",
     "source": "repository-and-deployment-check",
     "tags": [
@@ -72,7 +72,7 @@
   {
     "id": "tcs-brand-contact",
     "title": "Kontak resmi The Choco Studios",
-    "content": "Email kontak publik The Choco Studios adalah thechocostudio@gmail.com. Situs resmi TCS: https://the-choco-studios-official.vercel.app/. Situs informasi TCS: https://the-choco-studios-information.vercel.app/. Profil LinkedIn Hasby Prasetya Saprudin: https://www.linkedin.com/in/hasby-prasetya-tcs/. Jangan menyebarkan nomor pribadi atau mengarang kanal kontak lain.",
+    "content": "Email kontak publik The Choco Studios adalah thechocostudio@gmail.com. Situs resmi TCS: https://the-choco-studios-official.vercel.app/. Situs informasi TCS: https://the-choco-studio-information.netlify.app/. Profil LinkedIn Hasby Prasetya Saprudin: https://www.linkedin.com/in/hasby-prasetya-tcs/. Jangan menyebarkan nomor pribadi atau mengarang kanal kontak lain.",
     "category": "brand-contact",
     "source": "curated-creator-profile",
     "tags": [
