@@ -372,8 +372,9 @@
       text-align: center;
     }
 
-    .welcome-mark {
+    .welcome-mark-wrap {
       position: relative;
+      isolation: isolate;
       display: grid;
       place-items: center;
       flex: 0 0 70px;
@@ -381,25 +382,50 @@
       height: 70px;
       margin: 0;
       border-radius: 23px;
-      background: linear-gradient(
-        135deg,
-        rgba(98,137,255,.2),
-        rgba(164,102,255,.17)
-      );
+      background: linear-gradient(135deg, rgba(98,137,255,.2), rgba(164,102,255,.17));
       border: 1px solid rgba(138,133,255,.3);
-      box-shadow:
-        0 0 45px rgba(98,105,255,.13),
-        inset 0 0 20px rgba(115,130,255,.08);
-      overflow:hidden;object-fit:cover;
-      animation: float 5s ease-in-out infinite;
+      box-shadow: 0 0 45px rgba(98,105,255,.13), inset 0 0 20px rgba(115,130,255,.08);
+      overflow: visible;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .welcome-mark::before {
+    .welcome-mark-wrap::before,
+    .welcome-mark-wrap::after {
       content: "";
       position: absolute;
-      inset: -7px;
-      border: 1px solid rgba(137,129,255,.12);
-      border-radius: 28px;
+      inset: -2px;
+      z-index: -1;
+      border: 1px solid rgba(137,129,255,.18);
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .welcome-mark-wrap.is-rippling::before {
+      animation: welcome-ripple 900ms ease-out;
+    }
+
+    .welcome-mark-wrap.is-rippling::after {
+      animation: welcome-ripple 1100ms 120ms ease-out;
+    }
+
+    .welcome-mark {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      object-fit: cover;
+      position: relative;
+      z-index: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    @keyframes welcome-ripple {
+      0% { transform: scale(.94); opacity: .85; box-shadow: 0 0 12px rgba(116,151,255,.55), inset 0 0 12px rgba(116,151,255,.25); }
+      65% { opacity: .45; }
+      100% { transform: scale(1.9); opacity: 0; box-shadow: 0 0 34px rgba(116,151,255,0), inset 0 0 24px rgba(116,151,255,0); }
     }
 
     .eyebrow {
@@ -1467,7 +1493,7 @@
 
           <section class="welcome" id="welcome">
             <div class="welcome-line">
-              <img class="welcome-mark" src="/assets/choco-app-icon.png?v=20261111" alt="Logo Choco AI" width="70" height="70">
+              <span class="welcome-mark-wrap" aria-label="Logo Choco AI" role="img"><img class="welcome-mark" src="/assets/choco-app-icon.png?v=20261111" alt="" width="70" height="70"></span>
               <h1 id="welcomeHeading">Selamat datang di <span class="gradient-text">Choco AI</span></h1>
             </div>
           </section>
@@ -1895,6 +1921,22 @@
       toastTimer = setTimeout(() => {
         toast.classList.remove("show");
       }, 2600);
+    }
+
+    const welcomeMark = document.querySelector(".welcome-mark-wrap");
+    if (welcomeMark) {
+      welcomeMark.addEventListener("pointerdown", () => {
+        welcomeMark.classList.remove("is-rippling");
+        void welcomeMark.offsetWidth;
+        welcomeMark.classList.add("is-rippling");
+      });
+      welcomeMark.addEventListener("animationend", event => {
+        if (event.animationName === "welcome-ripple" &&
+            !welcomeMark.querySelector(":scope")) return;
+        if (event.animationName === "welcome-ripple" &&
+            !welcomeMark.matches(":hover")) welcomeMark.classList.remove("is-rippling");
+      });
+      welcomeMark.addEventListener("pointerleave", () => welcomeMark.classList.remove("is-rippling"));
     }
 
     function scrollToBottom() {
