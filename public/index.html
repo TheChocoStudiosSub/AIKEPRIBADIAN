@@ -350,6 +350,9 @@
     }
 
     .welcome {
+      display: flex;
+      align-items: center;
+      gap: 24px;
       margin: auto 0;
       padding: 28px 0 38px;
       animation: appear .65s ease both;
@@ -359,9 +362,10 @@
       position: relative;
       display: grid;
       place-items: center;
-      width: 66px;
-      height: 66px;
-      margin: 0 0 27px;
+      flex: 0 0 80px;
+      width: 80px;
+      height: 80px;
+      margin: 0;
       border-radius: 23px;
       background: linear-gradient(
         135deg,
@@ -1029,11 +1033,12 @@
       }
 
       .welcome-mark {
-        width: 56px;
-        height: 56px;
-        border-radius: 19px;
+        flex-basis: 80px;
+        width: 80px;
+        height: 80px;
+        border-radius: 25px;
         font-size: 25px;
-        margin-bottom: 23px;
+        margin: 0;
       }
 
       .welcome h1 {
@@ -1228,10 +1233,11 @@
     .chat-content { width:min(880px,100%); padding:42px 32px 26px; }
     .welcome { max-width:760px; padding:32px 0 42px; }
     .welcome-mark {
-      width:72px;
-      height:72px;
-      margin-bottom:29px;
-      border-radius:22px;
+      flex-basis:80px;
+      width:80px;
+      height:80px;
+      margin:0;
+      border-radius:25px;
       border-color:rgba(145,158,255,.36);
       box-shadow:0 12px 38px rgba(88,104,218,.18),inset 0 0 20px rgba(115,130,255,.1);
     }
@@ -1359,7 +1365,7 @@
       .topbar { height:62px; flex-basis:62px; padding:0 15px; }
       .chat-content { padding:25px 18px 20px; }
       .welcome { padding:24px 0 30px; }
-      .welcome-mark { width:60px; height:60px; margin-bottom:24px; border-radius:19px; }
+      .welcome-mark { flex-basis:80px; width:80px; height:80px; margin:0; border-radius:25px; }
       .welcome h1 { font-size:clamp(29px,8vw,37px); letter-spacing:-1.4px; }
       .welcome-description { font-size:13px; }
       .suggestions { gap:9px; }
@@ -1383,7 +1389,7 @@
     @media (max-height: 680px) and (min-width: 721px) {
       .chat-content { padding-top:20px; }
       .welcome { padding-block:18px; }
-      .welcome-mark { width:54px; height:54px; margin-bottom:16px; }
+      .welcome-mark { flex-basis:80px; width:80px; height:80px; margin:0; }
       .welcome-description { margin-block:12px 18px; }
       .suggestion { min-height:78px; }
     }
@@ -1443,7 +1449,7 @@
         <div class="chat-content">
 
           <section class="welcome" id="welcome">
-            <img class="welcome-mark" src="/assets/choco-app-icon.png?v=20261111" alt="Logo Choco AI" width="66" height="66">
+            <img class="welcome-mark" src="/assets/choco-app-icon.png?v=20261111" alt="Logo Choco AI" width="80" height="80">
 
             <h1 id="welcomeHeading">Selamat datang di <span class="gradient-text">Choco AI</span></h1>
 
