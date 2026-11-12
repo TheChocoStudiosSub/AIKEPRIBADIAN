@@ -94,7 +94,7 @@
   {
     "id": "tcs-official-sites",
     "title": "Situs resmi TCS",
-    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Situs informasi TCS: https://the-choco-studios-information.vercel.app/. Keduanya memiliki fungsi berbeda; situs informasi bukan situs resmi utama.",
+    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Situs informasi TCS: https://the-choco-studio-information.netlify.app/. Keduanya memiliki fungsi berbeda; situs informasi bukan situs resmi utama.",
     "category": "tcs-contact",
     "source": "curated-tcs-profile",
     "tags": [
