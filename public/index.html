@@ -489,7 +489,7 @@
     .all-sizes-ad-slot { min-width: 0; }
     .all-sizes-ad-placeholder { min-height: 130px; display: grid; align-content: center; justify-items: center; gap: 7px; padding: 16px 10px; text-align: center; border: 1px dashed rgba(135,148,191,.22); border-radius: 12px; background: rgba(255,255,255,.015); color: #79849e; font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
     .all-sizes-ad-placeholder span { color: #5e6a85; font-size: 10px; }
-    .native-ad-slot[hidden], .sponsor-link-slot[hidden], .social-ad-note[hidden], .plus-menu[hidden] { display: none !important; }
+    .native-ad-slot[hidden], .sponsor-link-slot[hidden], .social-ad-note[hidden] { display: none !important; }
 
     .native-ad-label {
       margin-bottom: 8px;
@@ -742,18 +742,6 @@
       gap: 12px;
     }
 
-    .input-hints { display: flex; align-items: center; gap: 7px; }
-    .plus-menu-wrap { position: relative; }
-    .plus-trigger { width: 36px; height: 36px; justify-content: center; border: 1px solid rgba(135,148,191,.18); background: rgba(255,255,255,.025); font-size: 17px; }
-    .plus-menu { position: absolute; z-index: 30; left: 0; bottom: calc(100% + 12px); width: min(280px, calc(100vw - 42px)); padding: 9px; border: 1px solid rgba(135,148,191,.2); border-radius: 15px; background: #111827; box-shadow: 0 18px 50px rgba(0,0,0,.42); }
-    .plus-menu-heading { padding: 7px 9px 10px; color: #8995b0; font-size: 10px; font-weight: 750; letter-spacing: .8px; text-transform: uppercase; }
-    .plus-menu-item { display: flex; align-items: center; gap: 11px; width: 100%; padding: 10px 9px; text-align: left; border: 0; border-radius: 10px; background: transparent; color: #e6ebfa; cursor: pointer; }
-    .plus-menu-item:hover { background: rgba(255,255,255,.06); }
-    .plus-menu-item.model-choice[aria-pressed="true"] { background: rgba(99,140,255,.14); box-shadow: inset 0 0 0 1px rgba(99,140,255,.38); }
-    .plus-menu-item.model-choice[aria-pressed="true"] .plus-menu-icon { color: #fff; background: rgba(99,140,255,.2); }
-    .plus-menu-icon { display: grid; place-items: center; width: 34px; height: 34px; flex: 0 0 34px; border: 1px solid var(--border); border-radius: 10px; color: #b9c5ff; }
-    .plus-menu-item strong { display: block; font-size: 12px; font-weight: 650; }
-    .plus-menu-item small { display: block; margin-top: 3px; color: #7f8aa4; font-size: 10px; line-height: 1.4; }
 
     .tool-button {
       display: flex;
@@ -1087,10 +1075,6 @@
         padding: 7px;
       }
 
-      .tool-label {
-        display: none;
-      }
-
       .disclaimer {
         font-size: 9px;
       }
@@ -1320,7 +1304,6 @@
     #message::placeholder { color:#98a5c0; }
     .tool-button { min-height:35px; border-radius:10px; color:#a9b7d1; }
     .tool-button:hover { background:rgba(255,255,255,.06); color:#eef2ff; }
-    .plus-trigger { width:auto; min-width:38px; padding-inline:11px; border-color:rgba(173,190,231,.15); }
     .send-button { width:39px; height:39px; border-radius:13px; background:var(--gradient); }
     .send-button:hover { transform:translateY(-1px); }
     .disclaimer { color:#8491ad; font-size:10px; }
@@ -1345,15 +1328,14 @@
     .tip-title { color:#c4b4ff; }
     .tip-text { color:#a0acc5; }
 
-    .plus-menu, .account-menu {
+    .account-menu {
       border-color:rgba(173,190,231,.2);
       border-radius:15px;
       background:#121c30;
       box-shadow:0 22px 60px rgba(0,0,0,.48);
     }
-    .plus-menu-item, .account-menu-item { border-radius:11px; }
-    .plus-menu-item:hover, .account-menu-item:hover { background:rgba(132,155,255,.1); }
-    .plus-menu-item small { color:#9aa8c4; }
+    .account-menu-item { border-radius:11px; }
+    .account-menu-item:hover { background:rgba(132,155,255,.1); }
     .settings-modal {
       border-color:rgba(173,190,231,.2);
       border-radius:21px;
@@ -1513,21 +1495,7 @@
             ></textarea>
 
             <div class="input-actions">
-              <div class="input-hints">
-                <div class="plus-menu-wrap">
-                  <button class="tool-button plus-trigger" id="plusMenuButton" type="button" aria-expanded="false" aria-controls="plusMenu" title="Buka alat">＋ <span class="tool-label">Alat</span></button>
-                  <div class="plus-menu" id="plusMenu" hidden>
-                    <div class="plus-menu-heading">Model AI</div>
-                    <button class="plus-menu-item model-choice" type="button" data-model-mode="standard" aria-pressed="true" title="Pilih Standar"><span class="plus-menu-icon">S</span><span><strong>Standar</strong><small>Percakapan sehari-hari</small></span></button>
-                    <div class="plus-menu-heading">Alat & fitur</div>
-                    <button class="plus-menu-item future-feature" type="button" data-feature="Lampiran" title="Lampiran"><span class="plus-menu-icon">↥</span><span><strong>Lampiran</strong><small>Upload dokumen dan file</small></span></button>
-                    <button class="plus-menu-item future-feature" type="button" data-feature="Gambar" title="Gambar"><span class="plus-menu-icon">▧</span><span><strong>Gambar</strong><small>Analisis atau gunakan gambar</small></span></button>
-                    <button class="plus-menu-item future-feature" type="button" data-feature="Pencarian web" title="Pencarian web"><span class="plus-menu-icon">⌕</span><span><strong>Pencarian web</strong><small>Jelajahi informasi di internet</small></span></button>
-                  </div>
-                </div>
-              </div>
-
-              <button class="send-button" id="send" type="submit"
+              <button class="send-button id="send" type="submit"
                 aria-label="Kirim pesan" title="Kirim pesan">↑</button>
             </div>
           </form>
@@ -1622,11 +1590,7 @@
     const CONVERSATION_STORAGE_KEY = "chocoCurrentConversationV1";
     try { localStorage.removeItem(CONVERSATION_STORAGE_KEY); } catch {}
     let history = [];
-    let modelMode = "standard";
-    try {
-      const savedModelMode = localStorage.getItem("chocoModelMode");
-      if (savedModelMode === "standard") modelMode = "standard";
-    } catch {}
+    const modelMode = "standard";
     let busy = false;
     let cooldownUntil = 0;
     let cooldownTimer = null;
@@ -1667,28 +1631,7 @@
     try { cooldownUntil = Math.max(0, Number(localStorage.getItem("chocoNextAllowedAt") || 0)); } catch {}
     if (cooldownUntil > Date.now()) { updateSendCooldown(); cooldownTimer = setInterval(updateSendCooldown, 250); }
 
-    const plusMenuButton = document.getElementById("plusMenuButton");
-    const plusMenu = document.getElementById("plusMenu");
-    function renderModelMode() {
-      document.querySelectorAll("[data-model-mode]").forEach(button => {
-        button.setAttribute("aria-pressed", String(button.dataset.modelMode === modelMode));
-      });
-    }
-    document.querySelectorAll("[data-model-mode]").forEach(button => {
-      button.addEventListener("click", () => {
-        modelMode = button.dataset.modelMode;
-        try { localStorage.setItem("chocoModelMode", modelMode); } catch {}
-        renderModelMode();
-        plusMenu.hidden = true;
-        plusMenuButton.setAttribute("aria-expanded", "false");
-        const names = { standard: "Standar", reasoning: "Penalaran", vision: "Analisis Gambar" };
-        showToast("Mode AI diubah ke " + names[modelMode] + ".");
-      });
-    });
-    renderModelMode();
-    plusMenuButton.addEventListener("click", () => { const open = plusMenu.hidden; plusMenu.hidden = !open; plusMenuButton.setAttribute("aria-expanded", String(open)); });
-    document.addEventListener("click", event => { if (!event.target.closest(".plus-menu-wrap")) { plusMenu.hidden = true; plusMenuButton.setAttribute("aria-expanded", "false"); } });
-    document.addEventListener("keydown", event => { if (event.key === "Escape") { plusMenu.hidden = true; plusMenuButton.setAttribute("aria-expanded", "false"); document.querySelectorAll(".modal-backdrop").forEach(backdrop => backdrop.hidden = true); } });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") document.querySelectorAll(".modal-backdrop").forEach(backdrop => backdrop.hidden = true); });
     loadPreferences();
     function updateWelcomeGreeting() {
       const heading = document.getElementById("welcomeHeading");
@@ -2133,17 +2076,6 @@
         input.value = button.dataset.prompt;
         resizeInput();
         input.focus();
-      });
-    });
-
-    document.querySelectorAll(".future-feature").forEach(button => {
-      button.addEventListener("click", event => {
-        event.preventDefault();
-        plusMenu.hidden = true;
-        plusMenuButton.setAttribute("aria-expanded", "false");
-        showToast(
-          button.dataset.feature + " belum aktif. Penempatan menunya sudah disiapkan, tetapi fungsi backend-nya belum tersedia."
-        );
       });
     });
 
