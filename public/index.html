@@ -1435,22 +1435,6 @@
         </div>
       </div>
 
-      <div class="sidebar-bottom">
-        <div class="account-menu-wrap">
-          <button class="profile account-trigger" id="accountMenuButton" type="button" aria-expanded="false" aria-controls="accountMenu">
-            <span class="profile-avatar" id="profileAvatar">?</span>
-            <span class="profile-copy">
-              <span class="profile-name" id="profileName">Pengguna</span>
-              <span class="profile-sub" id="profileSub">Tanpa akun</span>
-            </span>
-            <span class="account-chevron" aria-hidden="true">⌃</span>
-          </button>
-          <div class="account-menu" id="accountMenu" hidden>
-            <button type="button" class="account-menu-item" id="accountSettingsButton"><span>⚙</span> Pengaturan</button>
-            <button type="button" class="account-menu-item" id="accountPersonalityButton"><span>✦</span> Personalisasi</button>
-          </div>
-        </div>
-      </div>
     </aside>
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -1661,12 +1645,6 @@
     }
     function openPanel(name) { document.getElementById(name + "Backdrop").hidden = false; }
     document.querySelectorAll("[data-open-panel]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openPanel)));
-    const accountMenuButton = document.getElementById("accountMenuButton");
-    const accountMenu = document.getElementById("accountMenu");
-    accountMenuButton.addEventListener("click", () => { const expanded = accountMenu.hidden; accountMenu.hidden = !expanded; accountMenuButton.setAttribute("aria-expanded", String(expanded)); });
-    document.addEventListener("click", event => { if (!event.target.closest(".account-menu-wrap")) { accountMenu.hidden = true; accountMenuButton.setAttribute("aria-expanded", "false"); } });
-    document.getElementById("accountSettingsButton").addEventListener("click", () => { accountMenu.hidden = true; accountMenuButton.setAttribute("aria-expanded", "false"); openPanel("settings"); });
-    document.getElementById("accountPersonalityButton").addEventListener("click", () => { accountMenu.hidden = true; accountMenuButton.setAttribute("aria-expanded", "false"); openPanel("personality"); });
     document.querySelectorAll("[data-close-panel]").forEach(button => button.addEventListener("click", () => button.closest(".modal-backdrop").hidden = true));
     document.querySelectorAll(".modal-backdrop").forEach(backdrop => backdrop.addEventListener("click", event => { if (event.target === backdrop) backdrop.hidden = true; }));
     const saveSettingsButton = document.getElementById("saveSettings");
