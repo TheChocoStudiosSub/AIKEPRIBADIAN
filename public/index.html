@@ -410,7 +410,7 @@
       animation: welcome-ripple 1100ms 120ms ease-out;
     }
 
-    .welcome-mark {
+    .welcome-mark-wrap {
       display: block;
       width: 100%;
       height: 100%;
@@ -1073,7 +1073,7 @@
       }
 
       .welcome-line { gap: 16px; }
-      .welcome-mark {
+      .welcome-mark-wrap {
         flex-basis: 80px;
         width: 80px;
         height: 80px;
@@ -1273,7 +1273,7 @@
     .icon-button:hover { border-color:rgba(135,160,255,.32); background:rgba(120,145,255,.09); color:#fff; }
     .chat-content { width:min(880px,100%); padding:42px 32px 26px; }
     .welcome { max-width:760px; padding:32px 0 42px; }
-    .welcome-mark {
+    .welcome-mark-wrap {
       flex-basis:80px;
       width:80px;
       height:80px;
@@ -1407,7 +1407,7 @@
       .chat-content { padding:25px 18px 20px; }
       .welcome { padding:24px 0 30px; }
       .welcome-line { gap:14px; }
-      .welcome-mark { flex:0 0 80px; width:80px; height:80px; margin:0; border-radius:25px; }
+      .welcome-mark-wrap { flex:0 0 80px; width:80px; height:80px; margin:0; border-radius:25px; }
       .welcome h1 { font-size:clamp(29px,8vw,37px); letter-spacing:-1.4px; }
       .welcome-description { font-size:13px; }
       .suggestions { gap:9px; }
@@ -1432,7 +1432,7 @@
       .chat-content { padding-top:20px; }
       .welcome { padding-block:18px; }
       .welcome-line { gap:14px; }
-      .welcome-mark { flex:0 0 80px; width:80px; height:80px; margin:0; }
+      .welcome-mark-wrap { flex:0 0 80px; width:80px; height:80px; margin:0; }
       .welcome-description { margin-block:12px 18px; }
       .suggestion { min-height:78px; }
     }
@@ -1925,18 +1925,18 @@
 
     const welcomeMark = document.querySelector(".welcome-mark-wrap");
     if (welcomeMark) {
+      let rippleAnimationsFinished = 0;
       welcomeMark.addEventListener("pointerdown", () => {
+        rippleAnimationsFinished = 0;
         welcomeMark.classList.remove("is-rippling");
         void welcomeMark.offsetWidth;
         welcomeMark.classList.add("is-rippling");
       });
       welcomeMark.addEventListener("animationend", event => {
-        if (event.animationName === "welcome-ripple" &&
-            !welcomeMark.querySelector(":scope")) return;
-        if (event.animationName === "welcome-ripple" &&
-            !welcomeMark.matches(":hover")) welcomeMark.classList.remove("is-rippling");
+        if (event.animationName !== "welcome-ripple") return;
+        rippleAnimationsFinished += 1;
+        if (rippleAnimationsFinished >= 2) welcomeMark.classList.remove("is-rippling");
       });
-      welcomeMark.addEventListener("pointerleave", () => welcomeMark.classList.remove("is-rippling"));
     }
 
     function scrollToBottom() {
