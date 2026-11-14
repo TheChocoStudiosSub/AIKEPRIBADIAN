@@ -4,86 +4,59 @@ function send(res, status, data) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   return res.status(status).json(data);
 }
-function config() {
-  const base = String(process.env.TCS_SUPABASE_URL || "").replace(/\/+$/, "");
-  const key = process.env.SUPABASE_SECRET_KEY || "";
-  if (!base || !key) throw new Error("backend_unavailable");
+
+function sessionToken(req) {
+  const raw = String(req.headers.cookie || "");
+  for (const part of raw.split(";")) {
+    const separator = part.indexOf("=");
+    if (separator < 0 || part.slice(0, separator).trim() !== "tcs_admin_session") continue;
+    return part.slice(separator + 1).trim();
+  }
+  return "";
+}
+
+function configuration() {
+  const base = String(process.env.TCS_BACKEND_SUPABASE_URL || "").replace(/\/+$/, "");
+  const key = String(process.env.TCS_BACKEND_PUBLISHABLE_KEY || "");
+  if (!base || !key) throw new Error("backend_not_configured");
   return { base, key };
 }
-async function db(path, method = "GET", payload, prefer) {
-  const { base, key } = config();
-  const headers = { apikey: key, Authorization: "Bearer " + key, Accept: "application/json", "Content-Type": "application/json" };
-  if (prefer) headers.Prefer = prefer;
-  const r = await fetch(base + "/rest/v1/" + path, { method, headers, body: payload === undefined ? undefined : JSON.stringify(payload), cache: "no-store", signal: AbortSignal.timeout(12000) });
-  const data = await r.json().catch(() => null);
-  if (!r.ok) { console.error("TCS management DB error", { status: r.status, path: path.split("?")[0] }); throw new Error("database_error"); }
-  return data;
-}
-async function count(path) {
-  const { base, key } = config();
-  const r = await fetch(base + "/rest/v1/" + path, { method: "GET", headers: { apikey: key, Authorization: "Bearer " + key, Prefer: "count=exact", Range: "0-0" }, cache: "no-store", signal: AbortSignal.timeout(8000) });
-  if (!r.ok) throw new Error("database_error");
-  const range = r.headers.get("content-range") || "";
-  const total = Number(range.split("/").pop());
-  return Number.isFinite(total) ? total : 0;
-}
-function validId(v) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(v || "")); }
 
+export async function callAdminBridge(req, action, payload = {}) {
+  const { base, key } = configuration();
+  const origin = String(req.headers.origin || "https://tcs-admin-panel.vercel.app");
+  const token = sessionToken(req);
+  const response = await fetch(base + "/functions/v1/tcs-telemetry", {
+    method: "POST",
+    headers: {
+      apikey: key,
+      Authorization: "Bearer " + key,
+      "Content-Type": "application/json",
+      Origin: origin,
+      "x-tcs-admin-session": token
+    },
+    body: JSON.stringify({ action, payload }),
+    cache: "no-store",
+    signal: AbortSignal.timeout(18000)
+  });
+  const data = await response.json().catch(() => ({ ok: false, error: "invalid_backend_response" }));
+  return { status: response.status, data: data && typeof data === "object" ? data : { ok: false, error: "invalid_backend_response" } };
+}
+
+export async function proxyAdminDb(req, path, method = "GET", payload, prefer) {
+  const result = await callAdminBridge(req, "db_proxy", { path, method, payload, prefer });
+  if (result.status >= 400 || result.data?.ok === false) {
+    throw new Error(String(result.data?.error || "admin_database_unavailable"));
+  }
+  return result.data?.data ?? null;
+}
 
 export async function handleTcsManagement(req, res, input) {
-  if (!input || typeof input !== "object" || Array.isArray(input)) return send(res, 400, { ok: false, error: "invalid_json" });
   try {
-    const action = String(input.action || "");
-    if (action === "bootstrap") {
-      const [visits, downloads, brands, crawlerJobs, totalVisits, botVisits, humanVisits, totalDownloads, trafficSummary] = await Promise.all([
-        db("tcs_site_visits?select=id,site_key,page_path,referrer_host,user_agent,is_bot,bot_name,country_code,region_code,created_at&order=created_at.desc&limit=250"),
-        db("tcs_product_downloads?select=id,site_key,product_code,product_name,product_version,download_url,downloader_name,downloader_email,is_bot,created_at&order=created_at.desc&limit=250"),
-        db("tcs_brands?select=*&order=created_at.desc&limit=250"),
-        db("tcs_crawler_jobs?select=id,seed_url,status,max_pages,pages_crawled,pages_failed,created_at,last_activity_at&order=created_at.desc&limit=50"),
-        count("tcs_site_visits?select=id"),
-        count("tcs_site_visits?select=id&is_bot=eq.true"),
-        count("tcs_site_visits?select=id&is_bot=eq.false"),
-        count("tcs_product_downloads?select=id"),
-        db("rpc/tcs_analytics_summary", "POST", {})
-      ]);
-      const summary = Array.isArray(trafficSummary) ? trafficSummary : [];
-      const uniqueSessions = summary.reduce((n, row) => n + Number(row.unique_sessions || 0), 0);
-      const humanSessions = summary.reduce((n, row) => n + Number(row.human_sessions || 0), 0);
-      const botSessions = summary.reduce((n, row) => n + Number(row.bot_sessions || 0), 0);
-      const identifiedDownloads = summary.reduce((n, row) => n + Number(row.identified_downloads || 0), 0);
-      return send(res, 200, {
-        ok: true, visits, downloads, brands, crawlerJobs, trafficSummary: summary,
-        stats: { totalVisits, botVisits, humanVisits, totalDownloads, uniqueSessions, humanSessions, botSessions, identifiedDownloads }
-      });
-    }
-    if (action === "set_brand_status") {
-      if (!validId(input.id) || !["active","paused","archived"].includes(input.status)) throw new Error("invalid_input");
-      const result = await db("tcs_brands?id=eq." + encodeURIComponent(input.id), "PATCH", { status: input.status, updated_at: new Date().toISOString() }, "return=representation");
-      if (!result?.length) throw new Error("brand_not_found");
-      return send(res, 200, { ok: true, brand: result[0] });
-    }
-    if (action === "update_brand_security") {
-      if (!validId(input.id) || !["not_assessed","reviewing","secured","attention_required"].includes(input.security_status)) throw new Error("invalid_input");
-      const result = await db("tcs_brands?id=eq." + encodeURIComponent(input.id), "PATCH", {
-        security_status: input.security_status,
-        security_notes: typeof input.security_notes === "string" ? input.security_notes.trim().slice(0, 5000) || null : null,
-        updated_at: new Date().toISOString()
-      }, "return=representation");
-      if (!result?.length) throw new Error("brand_not_found");
-      return send(res, 200, { ok: true, brand: result[0] });
-    }
-    if (action === "crawler_control") {
-      if (!validId(input.id) || !["pause","resume"].includes(input.command)) throw new Error("invalid_input");
-      const status = input.command === "pause" ? "paused" : "running";
-      const result = await db("tcs_crawler_jobs?id=eq." + encodeURIComponent(input.id), "PATCH", { status, updated_at: new Date().toISOString() }, "return=representation");
-      if (!result?.length) throw new Error("job_not_found");
-      await db("tcs_crawler_events", "POST", [{ job_id: input.id, event_type: input.command, message: input.command === "pause" ? "Crawling dijeda oleh Owner" : "Crawling dilanjutkan oleh Owner", details: { actor: "owner_admin_panel" } }], "return=minimal");
-      return send(res, 200, { ok: true, job: result[0] });
-    }
-    return send(res, 400, { ok: false, error: "unknown_action" });
+    const result = await callAdminBridge(req, "management", input || {});
+    return send(res, result.status, result.data);
   } catch (error) {
-    const code = String(error?.message || "request_failed");
-    const status = code === "invalid_input" ? 400 : code === "brand_not_found" || code === "job_not_found" ? 404 : 500;
-    return send(res, status, { ok: false, error: status === 500 ? "management_request_failed" : code });
+    console.error("TCS management gateway failed", String(error?.message || error));
+    return send(res, 503, { ok: false, error: "management_backend_unavailable" });
   }
 }
