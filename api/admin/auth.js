@@ -81,7 +81,7 @@ export default async function handler(req, res) {
   if (action !== "login") return send(res, 400, { ok: false, error: "unknown_action" });
 
   const credential = typeof body.credential === "string" ? body.credential : "";
-  if (credential.length < 8 || credential.length > 200 || /[\u0000-\u001F\u007F]/.test(credential)) {
+  if (credential.length < 5 || credential.length > 200 || /[\u0000-\u001F\u007F]/.test(credential)) {
     return send(res, 400, { ok: false, error: "invalid_credential_format" });
   }
 
