@@ -38,23 +38,32 @@ async function readBody(req) {
 }
 
 async function checkLoginRateLimit(req) {
-  const base = String(process.env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
-  const publishableKey = String(process.env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "");
+  const base = String(process.env.TCS_BACKEND_SUPABASE_URL || "").replace(/\/+$/, "");
+  const publishableKey = String(process.env.TCS_BACKEND_PUBLISHABLE_KEY || "");
   const serverKey = String(process.env.TCS_OWNER_AUTH_SERVER_KEY || "");
-  if (!base || !publishableKey || !serverKey) return { ok: false };
-  const address = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim() || String(req.headers["x-real-ip"] || "unknown");
+  if (!base || !publishableKey || !/^[0-9a-f]{64}$/i.test(serverKey)) return { ok: false };
+  const address = String(req.headers["x-vercel-forwarded-for"] || req.headers["x-forwarded-for"] || req.headers["x-real-ip"] || "unknown")
+    .split(",")[0].trim().slice(0, 160);
+  const origin = String(req.headers.origin || "https://tcs-admin-panel.vercel.app");
   try {
-    const response = await fetch(base + "/rest/v1/rpc/tcs_owner_get_verifier", {
+    const response = await fetch(base + "/functions/v1/tcs-telemetry", {
       method: "POST",
-      headers: { apikey: publishableKey, "Content-Type": "application/json" },
+      headers: {
+        apikey: publishableKey,
+        Authorization: "Bearer " + publishableKey,
+        "Content-Type": "application/json",
+        Origin: origin
+      },
       cache: "no-store",
-      body: JSON.stringify({ p_client_hash: hash(address), p_server_key: serverKey }),
-      signal: AbortSignal.timeout(6000)
+      body: JSON.stringify({ action: "login_rate_limit", clientIp: address, serverKey }),
+      signal: AbortSignal.timeout(8000)
     });
     if (!response.ok) return { ok: false };
     const data = await response.json();
-    return { ok: true, limited: data?.error === "rate_limited" };
-  } catch { return { ok: false }; }
+    return { ok: true, limited: data?.limited === true };
+  } catch {
+    return { ok: false };
+  }
 }
 
 export default async function handler(req, res) {
