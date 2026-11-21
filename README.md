@@ -10,7 +10,7 @@ TCS's strategic focus is open-source software, applied technology, documentation
 
 Sheeblink is a handmade creative initiative integrated into the TCS ecosystem as part of TCS's expansion beyond technology. It retains its recognizable creative identity. The integration is not a marketplace arrangement.
 
-The initial TCS project formerly called Chocobot Guardian is now named **TCS LinkGuard**. The former 16-app catalogue is obsolete and must not be used as the current public portfolio.\n\nThe verified ecosystem also includes TCS UploadFit (local image preparation), TCS Template (browser-based document generators; deployment currently SSO-protected), Learn with TCS (Indonesian-language learning project in development), and TCS Engine (JavaScript game-engine foundation v0.1.0). Sheeblink is integrated into the TCS ecosystem. Prism Gaming Studios remains an independent game studio connected through collaboration.
+The initial TCS project formerly called Chocobot Guardian is now named **TCS LinkGuard**. The former 16-app catalogue is obsolete and must not be used as the current public portfolio.\n\nThe verified ecosystem also includes TCS UploadFit (local image preparation), TCS Template (browser-based document generators; deployment currently SSO-protected), Learn with TCS (Indonesian-language learning project in development), and TCS Engine (JavaScript game-engine foundation v0.1.0). Sheeblink is integrated into the TCS ecosystem. Prism Gaming Studios is the dedicated game-development subproject and branch of TCS. It retains its own Prism name and creative identity; its first submitted game project is a basic single-file browser implementation of Flappy Bird.
 
 ## Product role
 
