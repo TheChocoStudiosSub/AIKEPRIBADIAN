@@ -29,7 +29,7 @@
   {
     "id": "tcs-current-ecosystem",
     "title": "Komponen ekosistem TCS saat ini",
-    "content": "Komponen yang saat ini menjadi fokus identitas TCS adalah Choco AI, Sara AI, TCS LinkGuard, dan Sheeblink. Sheeblink terintegrasi di dalam ekosistem TCS, bukan diposisikan sebagai mitra eksternal atau brand independen yang mengajukan diri melalui formulir publik.",
+    "content": "Komponen ekosistem TCS mencakup Choco AI sebagai AI utama, Sara sebagai asisten dukungan Help Center, TCS LinkGuard, TCS UploadFit, TCS Template, Learn with TCS, dan TCS Engine. Sheeblink adalah brand handmade yang terintegrasi ke ekosistem TCS. Prism Gaming Studios terhubung melalui kolaborasi sebagai studio game independen, bukan produk atau departemen TCS.",
     "category": "tcs-ecosystem",
     "source": "curated-tcs-profile",
     "tags": [
@@ -94,7 +94,7 @@
   {
     "id": "tcs-official-sites",
     "title": "Situs resmi TCS",
-    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Situs informasi TCS: https://the-choco-studio-information.netlify.app/. Keduanya memiliki fungsi berbeda; situs informasi bukan situs resmi utama.",
+    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Pusat informasi TCS: https://the-choco-studios-information.vercel.app/. Keduanya memiliki fungsi berbeda; situs informasi bukan situs resmi utama.",
     "category": "tcs-contact",
     "source": "curated-tcs-profile",
     "tags": [
@@ -140,6 +140,140 @@
       "Sheeblink",
       "brand intake",
       "TCS ecosystem"
+    ]
+  },
+  {
+    "id": "tcs-current-project-map",
+    "title": "Peta proyek publik dan komponen ekosistem TCS",
+    "content": "The Choco Studios (TCS) adalah studio kreatif independen multisektor yang berfokus pada open-source, teknologi terapan, dokumentasi, pemeliharaan proyek, dan kolaborasi terstruktur. Proyek yang telah diverifikasi mencakup Choco AI (asisten AI utama), Sara (asisten dukungan Help Center), TCS LinkGuard (pemeriksa manual kualitas website), TCS UploadFit (pemroses gambar lokal), TCS Template (generator template browser yang deployment Vercel-nya masih dilindungi SSO pada audit terakhir), Learn with TCS (pembelajaran bahasa Indonesia), dan TCS Engine (fondasi game engine JS v0.1.0). Sheeblink adalah brand handmade yang terintegrasi di ekosistem TCS. Prism Gaming Studios adalah studio game independen yang terhubung melalui kolaborasi, bukan produk atau departemen internal TCS.",
+    "category": "tcs-ecosystem",
+    "source": "github-vercel-audit-2026-11-21",
+    "tags": [
+      "TCS",
+      "ecosystem",
+      "Choco AI",
+      "Sara",
+      "LinkGuard",
+      "UploadFit",
+      "TCS Template",
+      "Learn with TCS",
+      "TCS Engine",
+      "Sheeblink",
+      "Prism"
+    ]
+  },
+  {
+    "id": "tcs-current-url-map",
+    "title": "Alamat resmi TCS dan layanan publik",
+    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Pusat informasi TCS: https://the-choco-studios-information.vercel.app/. Choco AI: https://tcs-chocoai.vercel.app/. Choco AI Help Center dan Sara: https://choco-ai-help-center.vercel.app/ (Sara berada di /bot.html). TCS LinkGuard: https://tcs-linkguard.vercel.app/. TCS UploadFit: https://tcs-uploadfit.vercel.app/. Sheeblink: https://sheeblink.vercel.app/. Prism Gaming Studios: https://prism-gaming-studios.vercel.app/. TCS Template memiliki SSO pada deployment yang diperiksa, sehingga akses publik tidak boleh dijanjikan. Email publik TCS: thechocostudio@gmail.com.",
+    "category": "tcs-contact",
+    "source": "vercel-project-audit-2026-11-21",
+    "tags": [
+      "URL",
+      "website",
+      "official",
+      "Help Center",
+      "Sara",
+      "contact"
+    ]
+  },
+  {
+    "id": "tcs-uploadfit-status",
+    "title": "Status dan kemampuan TCS UploadFit",
+    "content": "TCS UploadFit menyiapkan gambar secara lokal di perangkat; isi gambar yang dipilih tidak dikirim ke server oleh aplikasi. Fungsi yang terdokumentasi meliputi resize dengan mode fit/crop/stretch, konversi JPEG/PNG/WebP, kontrol kualitas, target ukuran file, preview, batch hingga lima gambar, ekspor ZIP dan preset lokal. Batas input 15 MiB per gambar dan 20 megapiksel, sisi output maksimum 16.000 piksel, total output satu batch 40 MiB. BMP dan AVIF dapat diterima bila decoder sistem mendukungnya. GIF animasi dan SVG tidak didukung. Dokumentasi paket MSIX bukan bukti bahwa aplikasi telah diterbitkan di Microsoft Store.",
+    "category": "tcs-project",
+    "source": "github-repository-audit-2026-11-21",
+    "tags": [
+      "TCS UploadFit",
+      "image processing",
+      "privacy",
+      "local processing",
+      "MSIX"
+    ]
+  },
+  {
+    "id": "tcs-template-status",
+    "title": "Status TCS Template",
+    "content": "TCS Template adalah katalog sembilan kategori template digital dengan pencarian, filter, dan lima pertanyaan penyesuaian. Generator membuat spreadsheet XLSX yang dapat berisi rumus Excel dan dokumen Markdown/TXT langsung di browser tanpa akun, backend, atau database untuk proses generator. Deployment Vercel yang diperiksa masih memiliki proteksi SSO, sehingga akses umum belum boleh dijanjikan sampai pengaturan perlindungan diubah.",
+    "category": "tcs-project",
+    "source": "github-repository-and-vercel-audit-2026-11-21",
+    "tags": [
+      "TCS Template",
+      "template",
+      "XLSX",
+      "Markdown",
+      "TXT",
+      "SSO"
+    ]
+  },
+  {
+    "id": "learn-with-tcs-status",
+    "title": "Status Learn with TCS",
+    "content": "Learn with TCS (LWT) adalah proyek pembelajaran bahasa Indonesia bagi penutur dari berbagai bahasa. Arah pembelajaran satu arah: bahasa asal atau bahasa pengantar digunakan untuk mempelajari bahasa Indonesia; LWT bukan penerjemah dua arah. Audit 19 November 2026 mencatat Fase 1 mencakup Amerika Serikat, Jepang, dan Tiongkok, dengan 33 profil bahasa dan 499 entri pembelajaran: 397 reviewed, 102 draft, dan 0 verified. Status reviewed berarti materi diperiksa terhadap sumber yang dicantumkan, bukan validasi penutur asli atau ahli bahasa. Fase 1 masih dalam pengembangan.",
+    "category": "tcs-project",
+    "source": "github-repository-audit-2026-11-19",
+    "tags": [
+      "Learn with TCS",
+      "LWT",
+      "Indonesian language learning",
+      "reviewed",
+      "draft",
+      "verified"
+    ]
+  },
+  {
+    "id": "tcs-engine-status",
+    "title": "Status TCS Engine",
+    "content": "TCS Engine adalah fondasi game engine JavaScript modular untuk browser, dengan rilis publik awal v0.1.0. Repositori mendokumentasikan ECS, render 2D Canvas, render 3D Three.js, input keyboard/mouse/sentuh, audio, pemuatan aset, pengelolaan scene/UI, dan fisika AABB dasar. TCS Engine belum menjadi editor game lengkap; visual editor, visual scripting, dan multiplayer tidak termasuk cakupan terverifikasi. Lisensi dan kebijakan kontribusi khusus perlu diperiksa langsung pada repositori sebelum digunakan.",
+    "category": "tcs-project",
+    "source": "github-repository-audit-2026-11-21",
+    "tags": [
+      "TCS Engine",
+      "game engine",
+      "JavaScript",
+      "ECS",
+      "v0.1.0"
+    ]
+  },
+  {
+    "id": "prism-gaming-studios-status",
+    "title": "Prism Gaming Studios dalam ekosistem TCS",
+    "content": "Prism Gaming Studios adalah studio game independen yang terhubung melalui kolaborasi ekosistem, bukan produk atau departemen internal TCS. Repositori Prism mencatat game Flappy Bird berbasis browser dengan kontrol keyboard/touch, skor, best score lokal, dan audio sintetis. Prism Ops masih berupa fondasi teknis proyek FPS; repositorinya belum menunjukkan gameplay lengkap, aset game, atau engine terpilih. Situs: https://prism-gaming-studios.vercel.app/.",
+    "category": "tcs-ecosystem",
+    "source": "github-vercel-audit-2026-11-21",
+    "tags": [
+      "Prism Gaming Studios",
+      "Prism Ops",
+      "independent game studio",
+      "Flappy Bird"
+    ]
+  },
+  {
+    "id": "tcs-linkguard-limitations",
+    "title": "Batas pemeriksaan TCS LinkGuard",
+    "content": "TCS LinkGuard adalah pemeriksa manual kualitas website, bukan pemindai keamanan atau layanan monitoring otomatis. Batas yang didokumentasikan: maksimal 12 halaman HTML, 48 target tautan/gambar unik, crawl depth 2, timeout sekitar 5 detik per target, total execution sekitar 42 detik, dan tiga scan per IP dalam 10 menit. LinkGuard tidak login, melewati paywall/CAPTCHA, menjalankan JavaScript halaman, atau menemukan gambar latar CSS. Hasil 404/410 merupakan indikasi sumber hilang yang terkonfirmasi; 401, 403, 429, 5xx, dan timeout tidak otomatis berarti tautan rusak. Ekspor tersedia dalam CSV/JSON.",
+    "category": "tcs-project",
+    "source": "tcs-linkguard-repository-v1.2.0",
+    "tags": [
+      "LinkGuard",
+      "limitations",
+      "rate limit",
+      "HTTP status",
+      "CSV",
+      "JSON"
+    ]
+  },
+  {
+    "id": "prism-and-sheeblink-relationship",
+    "title": "Sheeblink dan Prism memiliki hubungan berbeda dengan TCS",
+    "content": "Sheeblink adalah brand handmade gantungan kunci dari Cirebon, didirikan Sima Mubarokah dan diintegrasikan ke ekosistem TCS pada 3 November 2026; identitas brand Sheeblink tetap dipertahankan. Catatan harga sebelumnya: book keychain Rp8.000 dan custom fee Rp2.000 per huruf; harga, stok, ongkir, dan waktu pengerjaan perlu konfirmasi langsung. Prism Gaming Studios adalah studio game independen yang terhubung melalui kolaborasi; Prism bukan unit internal TCS.",
+    "category": "tcs-ecosystem",
+    "source": "curated-tcs-profile-and-current-github-audit",
+    "tags": [
+      "Sheeblink",
+      "Prism Gaming Studios",
+      "ecosystem",
+      "collaboration"
     ]
   }
 ]

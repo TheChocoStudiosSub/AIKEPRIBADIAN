@@ -10,7 +10,7 @@ TCS's strategic focus is open-source software, applied technology, documentation
 
 Sheeblink is a handmade creative initiative integrated into the TCS ecosystem as part of TCS's expansion beyond technology. It retains its recognizable creative identity. The integration is not a marketplace arrangement.
 
-The initial TCS project formerly called Chocobot Guardian is now named **TCS LinkGuard**. The former 16-app catalogue is obsolete and must not be used as the current public portfolio.
+The initial TCS project formerly called Chocobot Guardian is now named **TCS LinkGuard**. The former 16-app catalogue is obsolete and must not be used as the current public portfolio.\n\nThe verified ecosystem also includes TCS UploadFit (local image preparation), TCS Template (browser-based document generators; deployment currently SSO-protected), Learn with TCS (Indonesian-language learning project in development), and TCS Engine (JavaScript game-engine foundation v0.1.0). Sheeblink is integrated into the TCS ecosystem. Prism Gaming Studios remains an independent game studio connected through collaboration.
 
 ## Product role
 
@@ -26,7 +26,7 @@ The above describes the product role. Capabilities that require integrations or 
 
 ## Current public endpoints
 
-- Choco AI: https://choco-ai-independent-seven.vercel.app/
+- Choco AI: https://tcs-chocoai.vercel.app/\n- TCS UploadFit: https://tcs-uploadfit.vercel.app/\n- TCS LinkGuard: https://tcs-linkguard.vercel.app/\n- Sheeblink: https://sheeblink.vercel.app/\n- Prism Gaming Studios: https://prism-gaming-studios.vercel.app/\n- TCS Template: https://tcs-template.vercel.app/ (deployment observed SSO-protected; public access not guaranteed)
 - Official TCS website: https://the-choco-studios-official.vercel.app/
 - TCS Information: https://the-choco-studios-information.vercel.app/
 - TCS LinkGuard: https://tcs-linkguard.vercel.app/
@@ -38,7 +38,7 @@ The above describes the product role. Capabilities that require integrations or 
 ## Architecture
 
 - Frontend: static web application in `public/`.
-- Hosting and serverless routes: Vercel project `aikepribadian`.
+- Hosting and serverless routes: Vercel project `choco-ai-independent-seven`.
 - Chat endpoint: `api/chat.js`, adapted to the shared request handler in `netlify/functions/chat.js`.
 - Inference: Groq API. `GROQ_API_KEY` is server-only; `GROQ_MODEL` selects the model, with `openai/gpt-oss-20b` as the code fallback.
 - Public TCS knowledge: Supabase Knowledge Hub RPC, restricted to documents explicitly marked public.
