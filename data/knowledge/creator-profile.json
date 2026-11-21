@@ -29,7 +29,7 @@
   {
     "id": "tcs-current-ecosystem",
     "title": "Komponen ekosistem TCS saat ini",
-    "content": "Komponen ekosistem TCS mencakup Choco AI sebagai AI utama, Sara sebagai asisten dukungan Help Center, TCS LinkGuard, TCS UploadFit, TCS Template, Learn with TCS, TCS Engine, Sheeblink, dan Prism Gaming Studios. Prism berasal dari inisiatif kreatif independen yang secara sukarela mengajukan diri untuk bergabung setelah melihat luasnya gagasan dan eksplorasi lintas bidang TCS. Kini Prism merupakan unit khusus sekaligus pelopor pengembangan game di dalam TCS, bukan studio yang dibentuk TCS atau kolaborator eksternal. Prism mempertahankan nama, logo, tagline, dan identitas kreatifnya.",
+    "content": "Komponen ekosistem TCS mencakup Choco AI sebagai AI utama, Sara sebagai asisten dukungan Help Center, TCS LinkGuard, TCS UploadFit, TCS Template, Learn with TCS, TCS Engine, Sheeblink, dan Vornika+- (nama sebelumnya Prism Gaming Studios). Vornika berasal dari inisiatif kreatif independen yang secara sukarela mengajukan diri untuk bergabung setelah melihat luasnya gagasan dan eksplorasi lintas bidang TCS. Kini Vornika merupakan unit khusus sekaligus pelopor pengembangan game di dalam TCS, bukan studio yang dibentuk TCS atau kolaborator eksternal. Vornika mempertahankan nama, logo, tagline, dan identitas kreatifnya.",
     "category": "tcs-ecosystem",
     "source": "tcs-prism-voluntary-integration-correction-2026-11-21",
     "tags": [
@@ -145,7 +145,7 @@
   {
     "id": "tcs-current-project-map",
     "title": "Peta proyek publik dan komponen ekosistem TCS",
-    "content": "The Choco Studios (TCS) adalah studio kreatif independen multisektor yang berfokus pada open-source, teknologi terapan, dokumentasi, pemeliharaan proyek, dan kolaborasi terstruktur. Proyek yang terverifikasi mencakup Choco AI, Sara, TCS LinkGuard, TCS UploadFit, TCS Template (deployment Vercel masih SSO-protected pada audit terakhir), Learn with TCS, TCS Engine v0.1.0, Sheeblink, dan Prism Gaming Studios. Prism berawal sebagai inisiatif kreatif independen yang secara sukarela bergabung setelah melihat cakupan gagasan TCS yang luas dan peluang perspektif lintas bidang untuk mengembangkan kreativitasnya. Kini Prism menjadi unit khusus sekaligus pelopor pengembangan game TCS. Proyek game pertamanya yang diserahkan untuk jalur Prism adalah Flappy Bird, implementasi browser satu file HTML dengan kontrol sentuh/keyboard, skor, best score lokal, dan efek suara; ini merupakan kontribusi awal, bukan bukti katalog game matang atau rilis Windows.",
+    "content": "The Choco Studios (TCS) adalah studio kreatif independen multisektor yang berfokus pada open-source, teknologi terapan, dokumentasi, pemeliharaan proyek, dan kolaborasi terstruktur. Proyek yang terverifikasi mencakup Choco AI, Sara, TCS LinkGuard, TCS UploadFit, TCS Template (deployment Vercel masih SSO-protected pada audit terakhir), Learn with TCS, TCS Engine v0.1.0, Sheeblink, dan Vornika+- (nama sebelumnya Prism Gaming Studios). Vornika berawal sebagai inisiatif kreatif independen yang secara sukarela bergabung setelah melihat cakupan gagasan TCS yang luas dan peluang perspektif lintas bidang untuk mengembangkan kreativitasnya. Kini Vornika menjadi unit khusus sekaligus pelopor pengembangan game TCS. Proyek game pertamanya yang diserahkan untuk jalur Vornika adalah Flappy Bird, implementasi browser satu file HTML dengan kontrol sentuh/keyboard, skor, best score lokal, dan efek suara; ini merupakan kontribusi awal, bukan bukti katalog game matang atau rilis Windows.",
     "category": "tcs-ecosystem",
     "source": "tcs-prism-voluntary-integration-correction-2026-11-21",
     "tags": [
@@ -159,13 +159,14 @@
       "Learn with TCS",
       "TCS Engine",
       "Sheeblink",
-      "Prism"
+      "Vornika",
+      "Prism Gaming Studios (nama sebelumnya)"
     ]
   },
   {
     "id": "tcs-current-url-map",
     "title": "Alamat resmi TCS dan layanan publik",
-    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Pusat informasi TCS: https://the-choco-studios-information.vercel.app/. Choco AI: https://tcs-chocoai.vercel.app/. Choco AI Help Center dan Sara: https://choco-ai-help-center.vercel.app/ (Sara berada di /bot.html). TCS LinkGuard: https://tcs-linkguard.vercel.app/. TCS UploadFit: https://tcs-uploadfit.vercel.app/. Sheeblink: https://sheeblink.vercel.app/. Prism Gaming Studios: https://prism-gaming-studios.vercel.app/. TCS Template memiliki SSO pada deployment yang diperiksa, sehingga akses publik tidak boleh dijanjikan. Email publik TCS: thechocostudios@gmail.com.",
+    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Pusat informasi TCS: https://the-choco-studios-information.vercel.app/. Choco AI: https://tcs-chocoai.vercel.app/. Choco AI Help Center dan Sara: https://choco-ai-help-center.vercel.app/ (Sara berada di /bot.html). TCS LinkGuard: https://tcs-linkguard.vercel.app/. TCS UploadFit: https://tcs-uploadfit.vercel.app/. Sheeblink: https://sheeblink.vercel.app/. Vornika+- (nama sebelumnya Prism Gaming Studios): https://vornika-games.vercel.app/. TCS Template memiliki SSO pada deployment yang diperiksa, sehingga akses publik tidak boleh dijanjikan. Email publik TCS: thechocostudios@gmail.com.",
     "category": "tcs-contact",
     "source": "vercel-project-audit-2026-11-21",
     "tags": [
@@ -237,16 +238,17 @@
   },
   {
     "id": "prism-gaming-studios-status",
-    "title": "Prism Gaming Studios dalam ekosistem TCS",
-    "content": "Prism Gaming Studios berawal sebagai inisiatif kreatif yang dikembangkan secara independen. Prism secara sukarela mengajukan diri untuk bergabung ke ekosistem The Choco Studios (TCS) setelah melihat bahwa TCS memiliki cakupan gagasan yang luas dan eksplorasi lintas bidang. Prism menilai lingkungan tersebut dapat menghadirkan perspektif baru dan ruang yang lebih besar bagi perkembangan kreatifnya. Kini Prism menjadi unit khusus sekaligus pelopor pengembangan game di dalam TCS. Ketika TCS mengembangkan proyek game, Prism menjadi jalur internal yang menginisiasi dan menangani pengembangannya. Prism tetap mempertahankan nama, logo, tagline 'Play Beyond the Ordinary.', dan identitas kreatifnya sendiri. Penjelasan publik berfokus pada kesempatan bertumbuh melalui gagasan TCS yang luas, bukan alasan pribadi di balik keputusan bergabung. Proyek game pertama yang diserahkan untuk pengembangan melalui Prism adalah Flappy Bird: satu file HTML mandiri yang dapat dimainkan di browser, dengan kontrol sentuh/keyboard, skor, best score lokal, dan efek suara yang dihasilkan. Ini merupakan titik awal, bukan portofolio game besar, bukan jaminan rilis Windows, dan bukan produk matang yang telah melalui seluruh siklus review/rilis. Situs Prism: https://prism-gaming-studios.vercel.app/.",
+    "title": "Vornika+- dalam ekosistem TCS",
+    "content": "Vornika+- (nama sebelumnya Prism Gaming Studios) berawal sebagai inisiatif kreatif yang dikembangkan secara independen. Vornika secara sukarela mengajukan diri untuk bergabung ke ekosistem The Choco Studios (TCS) setelah melihat bahwa TCS memiliki cakupan gagasan yang luas dan eksplorasi lintas bidang. Vornika menilai lingkungan tersebut dapat menghadirkan perspektif baru dan ruang yang lebih besar bagi perkembangan kreatifnya. Kini Vornika menjadi unit khusus sekaligus pelopor pengembangan game di dalam TCS. Ketika TCS mengembangkan proyek game, Vornika menjadi jalur internal yang menginisiasi dan menangani pengembangannya. Vornika tetap mempertahankan nama, logo, tagline 'Play Beyond the Ordinary.', dan identitas kreatifnya sendiri. Penjelasan publik berfokus pada kesempatan bertumbuh melalui gagasan TCS yang luas, bukan alasan pribadi di balik keputusan bergabung. Proyek game pertama yang diserahkan untuk pengembangan melalui Vornika adalah Flappy Bird: satu file HTML mandiri yang dapat dimainkan di browser, dengan kontrol sentuh/keyboard, skor, best score lokal, dan efek suara yang dihasilkan. Ini merupakan titik awal, bukan portofolio game besar, bukan jaminan rilis Windows, dan bukan produk matang yang telah melalui seluruh siklus review/rilis. Situs Vornika: https://vornika-games.vercel.app/.",
     "category": "tcs-ecosystem",
     "source": "tcs-prism-voluntary-integration-correction-2026-11-21",
     "tags": [
-      "Prism Gaming Studios",
+      "Vornika+-",
       "voluntary integration",
       "independent origin",
       "Flappy Bird",
-      "TCS game development"
+      "TCS game development",
+      "Prism Gaming Studios (nama sebelumnya)"
     ]
   },
   {
@@ -266,29 +268,31 @@
   },
   {
     "id": "prism-and-sheeblink-relationship",
-    "title": "Sheeblink dan Prism memiliki hubungan berbeda dengan TCS",
-    "content": "Sheeblink adalah brand handmade gantungan kunci dari Cirebon, didirikan Sima Mubarokah dan diintegrasikan ke ekosistem TCS pada 3 November 2026; identitas brand Sheeblink tetap dipertahankan. Catatan harga sebelumnya: book keychain Rp8.000 dan custom fee Rp2.000 per huruf; harga, stok, ongkir, dan waktu pengerjaan perlu konfirmasi langsung. Prism memiliki sejarah integrasi yang berbeda: Prism berawal sebagai inisiatif kreatif independen dan secara sukarela bergabung ke ekosistem TCS setelah melihat cakupan gagasan TCS yang luas. Kini Prism merupakan unit khusus sekaligus pelopor pengembangan game di TCS sambil mempertahankan identitas mereknya. Flappy Bird adalah proyek awal pada jalur game Prism.",
+    "title": "Sheeblink dan Vornika memiliki hubungan berbeda dengan TCS",
+    "content": "Sheeblink adalah brand handmade gantungan kunci dari Cirebon, didirikan Sima Mubarokah dan diintegrasikan ke ekosistem TCS pada 3 November 2026; identitas brand Sheeblink tetap dipertahankan. Catatan harga sebelumnya: book keychain Rp8.000 dan custom fee Rp2.000 per huruf; harga, stok, ongkir, dan waktu pengerjaan perlu konfirmasi langsung. Vornika memiliki sejarah integrasi yang berbeda: Vornika berawal sebagai inisiatif kreatif independen dan secara sukarela bergabung ke ekosistem TCS setelah melihat cakupan gagasan TCS yang luas. Kini Vornika merupakan unit khusus sekaligus pelopor pengembangan game di TCS sambil mempertahankan identitas mereknya. Flappy Bird adalah proyek awal pada jalur game Vornika.",
     "category": "tcs-ecosystem",
     "source": "tcs-prism-voluntary-integration-correction-2026-11-21",
     "tags": [
       "Sheeblink",
-      "Prism Gaming Studios",
+      "Vornika+-",
       "ecosystem",
-      "collaboration"
+      "collaboration",
+      "Prism Gaming Studios (nama sebelumnya)"
     ]
   },
   {
     "id": "prism-voluntary-integration-story",
-    "title": "Mengapa Prism Gaming Studios bergabung ke ekosistem TCS",
-    "content": "Prism Gaming Studios berawal sebagai inisiatif kreatif yang dikembangkan secara independen. Prism secara sukarela mengajukan diri untuk bergabung ke ekosistem The Choco Studios (TCS) setelah melihat bahwa TCS memiliki cakupan gagasan yang luas dan eksplorasi lintas bidang. Prism menilai lingkungan tersebut dapat menghadirkan perspektif baru dan ruang yang lebih besar bagi perkembangan kreatifnya. Kini Prism menjadi unit khusus sekaligus pelopor pengembangan game di dalam TCS. Ketika TCS mengembangkan proyek game, Prism menjadi jalur internal yang menginisiasi dan menangani pengembangannya. Prism tetap mempertahankan nama, logo, tagline 'Play Beyond the Ordinary.', dan identitas kreatifnya sendiri. Penjelasan publik berfokus pada kesempatan bertumbuh melalui gagasan TCS yang luas, bukan alasan pribadi di balik keputusan bergabung.",
+    "title": "Mengapa Vornika+- bergabung ke ekosistem TCS",
+    "content": "Vornika+- (nama sebelumnya Prism Gaming Studios) berawal sebagai inisiatif kreatif yang dikembangkan secara independen. Vornika secara sukarela mengajukan diri untuk bergabung ke ekosistem The Choco Studios (TCS) setelah melihat bahwa TCS memiliki cakupan gagasan yang luas dan eksplorasi lintas bidang. Vornika menilai lingkungan tersebut dapat menghadirkan perspektif baru dan ruang yang lebih besar bagi perkembangan kreatifnya. Kini Vornika menjadi unit khusus sekaligus pelopor pengembangan game di dalam TCS. Ketika TCS mengembangkan proyek game, Vornika menjadi jalur internal yang menginisiasi dan menangani pengembangannya. Vornika tetap mempertahankan nama, logo, tagline 'Play Beyond the Ordinary.', dan identitas kreatifnya sendiri. Penjelasan publik berfokus pada kesempatan bertumbuh melalui gagasan TCS yang luas, bukan alasan pribadi di balik keputusan bergabung.",
     "category": "tcs-ecosystem",
     "source": "owner-provided-public-narrative-correction-2026-11-21",
     "tags": [
-      "Prism Gaming Studios",
+      "Vornika+-",
       "voluntary integration",
       "independent origin",
       "TCS game development",
-      "creative growth"
+      "creative growth",
+      "Prism Gaming Studios (nama sebelumnya)"
     ]
   }
 ]
