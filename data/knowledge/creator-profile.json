@@ -106,7 +106,7 @@
   {
     "id": "tcs-contact",
     "title": "Kontak publik TCS",
-    "content": "Email kontak publik The Choco Studios adalah thechocostudio@gmail.com. Profil LinkedIn Hasby Prasetya Saprudin: https://www.linkedin.com/in/hasby-prasetya-tcs/.",
+    "content": "Email kontak publik The Choco Studios adalah thechocostudios@gmail.com. Profil LinkedIn Hasby Prasetya Saprudin: https://www.linkedin.com/in/hasby-prasetya-tcs/.",
     "category": "tcs-contact",
     "source": "curated-tcs-profile",
     "tags": [
@@ -165,7 +165,7 @@
   {
     "id": "tcs-current-url-map",
     "title": "Alamat resmi TCS dan layanan publik",
-    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Pusat informasi TCS: https://the-choco-studios-information.vercel.app/. Choco AI: https://tcs-chocoai.vercel.app/. Choco AI Help Center dan Sara: https://choco-ai-help-center.vercel.app/ (Sara berada di /bot.html). TCS LinkGuard: https://tcs-linkguard.vercel.app/. TCS UploadFit: https://tcs-uploadfit.vercel.app/. Sheeblink: https://sheeblink.vercel.app/. Prism Gaming Studios: https://prism-gaming-studios.vercel.app/. TCS Template memiliki SSO pada deployment yang diperiksa, sehingga akses publik tidak boleh dijanjikan. Email publik TCS: thechocostudio@gmail.com.",
+    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Pusat informasi TCS: https://the-choco-studios-information.vercel.app/. Choco AI: https://tcs-chocoai.vercel.app/. Choco AI Help Center dan Sara: https://choco-ai-help-center.vercel.app/ (Sara berada di /bot.html). TCS LinkGuard: https://tcs-linkguard.vercel.app/. TCS UploadFit: https://tcs-uploadfit.vercel.app/. Sheeblink: https://sheeblink.vercel.app/. Prism Gaming Studios: https://prism-gaming-studios.vercel.app/. TCS Template memiliki SSO pada deployment yang diperiksa, sehingga akses publik tidak boleh dijanjikan. Email publik TCS: thechocostudios@gmail.com.",
     "category": "tcs-contact",
     "source": "vercel-project-audit-2026-11-21",
     "tags": [
