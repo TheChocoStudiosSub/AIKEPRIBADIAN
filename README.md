@@ -10,7 +10,7 @@ TCS's strategic focus is open-source software, applied technology, documentation
 
 Sheeblink is a handmade creative initiative integrated into the TCS ecosystem as part of TCS's expansion beyond technology. It retains its recognizable creative identity. The integration is not a marketplace arrangement.
 
-The initial TCS project formerly called Chocobot Guardian is now named **TCS LinkGuard**. The former 16-app catalogue is obsolete and must not be used as the current public portfolio.\n\nThe verified ecosystem also includes TCS UploadFit (local image preparation), TCS Template (browser-based document generators; deployment currently SSO-protected), Learn with TCS (Indonesian-language learning project in development), and TCS Engine (JavaScript game-engine foundation v0.1.0). Sheeblink is integrated into the TCS ecosystem. Prism Gaming Studios began as an independently developed creative initiative and voluntarily joined TCS after recognising its broad range of ideas and cross-disciplinary exploration. Prism now serves as TCS's dedicated game-development unit and pioneer within the ecosystem, while retaining its name and creative identity. Its first game project through this unit is a basic single-file browser implementation of Flappy Bird.
+The initial TCS project formerly called Chocobot Guardian is now named **TCS LinkGuard**. The former 16-app catalogue is obsolete and must not be used as the current public portfolio.\n\nThe verified ecosystem also includes TCS UploadFit (local image preparation), TCS Template (browser-based document generators; deployment currently SSO-protected), Learn with TCS (Indonesian-language learning project in development), and TCS Engine (JavaScript game-engine foundation v0.1.0). Sheeblink is integrated into the TCS ecosystem. Vornika+- is the rebranded continuation of the unit previously known as Prism Gaming Studios, which began as an independently developed creative initiative and voluntarily joined TCS after recognising its broad range of ideas and cross-disciplinary exploration. Vornika now serves as TCS's dedicated game-development unit and pioneer within the ecosystem, while retaining its name and creative identity. Its first game project through this unit is a basic single-file browser implementation of Flappy Bird.
 
 ## Product role
 
@@ -26,7 +26,7 @@ The above describes the product role. Capabilities that require integrations or 
 
 ## Current public endpoints
 
-- Choco AI: https://tcs-chocoai.vercel.app/\n- TCS UploadFit: https://tcs-uploadfit.vercel.app/\n- TCS LinkGuard: https://tcs-linkguard.vercel.app/\n- Sheeblink: https://sheeblink.vercel.app/\n- Prism Gaming Studios: https://prism-gaming-studios.vercel.app/\n- TCS Template: https://tcs-template.vercel.app/ (deployment observed SSO-protected; public access not guaranteed)
+- Choco AI: https://tcs-chocoai.vercel.app/\n- TCS UploadFit: https://tcs-uploadfit.vercel.app/\n- TCS LinkGuard: https://tcs-linkguard.vercel.app/\n- Sheeblink: https://sheeblink.vercel.app/\n- Vornika+-: https://vornika-games.vercel.app/\n- TCS Template: https://tcs-template.vercel.app/ (deployment observed SSO-protected; public access not guaranteed)
 - Official TCS website: https://the-choco-studios-official.vercel.app/
 - TCS Information: https://the-choco-studios-information.vercel.app/
 - TCS LinkGuard: https://tcs-linkguard.vercel.app/
