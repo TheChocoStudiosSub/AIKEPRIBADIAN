@@ -107,30 +107,7 @@
       margin-top: 3px;
     }
 
-    .new-chat {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 1px solid rgba(125,145,255,.28);
-      border-radius: 13px;
-      background: linear-gradient(
-        110deg,
-        rgba(89,119,255,.17),
-        rgba(153,91,255,.12)
-      );
-      cursor: pointer;
-      transition: .2s;
-    }
 
-    .new-chat:hover {
-      border-color: rgba(145,145,255,.65);
-      background: rgba(104,119,255,.2);
-      transform: translateY(-1px);
-    }
 
     .nav-label {
       padding: 8px 11px;
@@ -1212,14 +1189,6 @@
     .brand-icon { width:42px; height:42px; flex-basis:42px; border-radius:14px; }
     .brand-name { font-size:17px; letter-spacing:-.55px; }
     .brand-version { color:#9aa8c4; font-size:11px; }
-    .new-chat {
-      min-height:46px;
-      border-radius:13px;
-      border-color:rgba(130,157,255,.3);
-      background:linear-gradient(110deg,rgba(94,133,255,.18),rgba(166,111,255,.12));
-      font-weight:650;
-    }
-    .new-chat:hover { border-color:rgba(153,174,255,.65); }
     .nav-label { color:#8997b5; letter-spacing:1.45px; }
     .nav-item {
       min-height:43px;
@@ -1464,14 +1433,7 @@
           <div class="page-title">Chat</div>
         </div>
 
-        <div class="top-actions">
-          <div class="status">
-            <span class="status-dot"></span>
-            <span>Choco AI</span>
-          </div>
-          <button class="icon-button" id="clearChat"
-            title="Obrolan baru" aria-label="Obrolan baru">＋</button>
-        </div>
+        <div class="top-actions"></div>
       </header>
 
       <section class="chat-scroll" id="chatScroll">
@@ -2030,37 +1992,6 @@
       }
     }
 
-    function resetChat() {
-      if (busy) {
-        showToast("Tunggu sampai jawaban selesai dulu.");
-        return;
-      }
-
-      history = [];
-      try { localStorage.removeItem(CONVERSATION_STORAGE_KEY); } catch {}
-      window.dispatchEvent(new CustomEvent("choco:new-chat"));
-      conversationTitle = "";
-      conversationStarted = false;
-
-      messages.replaceChildren();
-      welcome.style.display = "";
-      updateWelcomeGreeting();
-      input.value = "";
-      input.style.height = "auto";
-
-      recentList.replaceChildren();
-
-      const empty = document.createElement("div");
-      empty.className = "recent-item";
-      empty.style.color = "#737f99";
-      empty.textContent = "Belum ada obrolan";
-      recentList.appendChild(empty);
-
-      closeSidebar();
-      input.focus();
-      scrollToBottom();
-    }
-
     // Riwayat chat sengaja tidak dipulihkan setelah refresh.
 
     window.addEventListener("storage", event => {
@@ -2073,8 +2004,6 @@
         }
       }
     });
-
-    document.getElementById("clearChat").addEventListener("click", resetChat);
 
     document.querySelectorAll(".nav-item[data-page]").forEach(button => {
       button.addEventListener("click", () => {
