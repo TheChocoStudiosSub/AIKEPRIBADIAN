@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080b14">
+  <meta name="theme-color" content="#050505">
   <link rel="icon" type="image/png" sizes="512x512" href="/assets/choco-app-icon.png?v=20261111">
   <link rel="shortcut icon" type="image/png" href="/assets/choco-app-icon.png?v=20261111">
   <link rel="apple-touch-icon" href="/assets/choco-app-icon.png?v=20261111">
@@ -437,60 +437,12 @@
       line-height: 1.9;
     }
 
-    .suggestion-label {
-      margin-bottom: 12px;
-      color: #79849e;
-      font-size: 11px;
-    }
 
-    .suggestions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 11px;
-      max-width: 560px;
-    }
 
-    .suggestion {
-      min-height: 88px;
-      padding: 15px;
-      text-align: left;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: linear-gradient(
-        135deg,
-        rgba(255,255,255,.035),
-        rgba(255,255,255,.012)
-      );
-      cursor: pointer;
-      transition: .22s;
-    }
 
-    .suggestion:hover {
-      transform: translateY(-3px);
-      border-color: rgba(126,139,255,.42);
-      background: rgba(108,120,255,.075);
-    }
 
-    .suggestion-icon {
-      display: block;
-      margin-bottom: 9px;
-      font-size: 18px;
-    }
 
-    .suggestion-title {
-      display: block;
-      color: #e1e7fa;
-      font-size: 12px;
-      font-weight: 650;
-    }
 
-    .suggestion-desc {
-      display: block;
-      margin-top: 5px;
-      color: #7f8aa4;
-      font-size: 10px;
-      line-height: 1.6;
-    }
 
     /* ADSTERRA NATIVE BANNER */
     .native-ad-slot {
@@ -1045,22 +997,9 @@
         font-size: 12px;
       }
 
-      .suggestions {
-        gap: 8px;
-      }
 
-      .suggestion {
-        min-height: 83px;
-        padding: 12px;
-      }
 
-      .suggestion-title {
-        font-size: 11px;
-      }
 
-      .suggestion-desc {
-        font-size: 10px;
-      }
 
       .composer-wrap {
         padding: 8px 12px 12px;
@@ -1085,13 +1024,7 @@
         font-size: 28px;
       }
 
-      .suggestion {
-        padding: 10px;
-      }
 
-      .suggestion-icon {
-        font-size: 16px;
-      }
 
     }
 
@@ -1239,24 +1172,6 @@
       -webkit-background-clip:text;
     }
     .welcome-description { max-width:560px; color:#aab7d0; font-size:14px; line-height:1.85; }
-    .suggestion-label { color:#a4b0ca; font-size:12px; font-weight:650; }
-    .suggestions { max-width:620px; gap:12px; }
-    .suggestion {
-      min-height:102px;
-      padding:17px;
-      border-color:rgba(173,190,231,.15);
-      border-radius:16px;
-      background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),#111a2c;
-      box-shadow:0 9px 24px rgba(0,0,0,.1);
-    }
-    .suggestion:hover {
-      transform:translateY(-2px);
-      border-color:rgba(139,162,255,.52);
-      background:linear-gradient(145deg,rgba(109,139,255,.13),rgba(255,255,255,.02)),#142039;
-    }
-    .suggestion-icon { color:#bdc8ff; font-size:19px; }
-    .suggestion-title { color:#edf1ff; font-size:13px; }
-    .suggestion-desc { color:#a0aec9; font-size:11px; }
     #messages { gap:30px; padding:16px 0 30px; }
     .message { gap:14px; }
     .message.user .message-body {
@@ -1348,10 +1263,6 @@
       .welcome-mark-wrap { flex:0 0 80px; width:80px; height:80px; margin:0; border-radius:25px; }
       .welcome h1 { font-size:clamp(29px,8vw,37px); letter-spacing:-1.4px; }
       .welcome-description { font-size:13px; }
-      .suggestions { gap:9px; }
-      .suggestion { min-height:94px; padding:13px; }
-      .suggestion-title { font-size:12px; }
-      .suggestion-desc { font-size:10px; }
       .composer-wrap { padding:9px 13px 13px; }
       .input-box { padding:12px 11px 9px; border-radius:17px; }
       .tool-button { padding:7px; }
@@ -1362,8 +1273,6 @@
     @media (max-width: 390px) {
       .chat-content { padding-inline:14px; }
       .welcome h1 { font-size:28px; }
-      .suggestions { grid-template-columns:1fr; }
-      .suggestion { min-height:76px; }
       .input-actions { gap:6px; }
     }
     @media (max-height: 680px) and (min-width: 721px) {
@@ -1372,10 +1281,290 @@
       .welcome-line { gap:14px; }
       .welcome-mark-wrap { flex:0 0 80px; width:80px; height:80px; margin:0; }
       .welcome-description { margin-block:12px 18px; }
-      .suggestion { min-height:78px; }
     }
 
-  </style>
+  
+
+
+    /* TCS Bento-inspired workspace: layout and surfaces only.
+       No prompt tiles, extra action cards, or chat controls are introduced. */
+    :root {
+      color-scheme: dark;
+      --bg: #050505;
+      --sidebar: #080808;
+      --panel: #0d0d0c;
+      --panel-hover: #17140e;
+      --border: rgba(200,169,106,.17);
+      --text: #ece6d8;
+      --muted: #9a9484;
+      --blue: #c8a96a;
+      --purple: #e3cb94;
+      --gradient: linear-gradient(120deg,#b99350 0%,#c8a96a 56%,#e3cb94 100%);
+      --surface-shadow: 0 18px 48px rgba(0,0,0,.34);
+    }
+
+    html { color-scheme: dark; background: #050505; }
+    body {
+      color: var(--text);
+      background: #050505;
+      font-family: "Jost", Inter, ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    button, textarea, input, select { font-family: inherit; }
+    button:focus-visible, textarea:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--purple);
+      outline-offset: 3px;
+    }
+    ::selection { color:#080705; background:#c8a96a; }
+    * { scrollbar-color:rgba(200,169,106,.32) transparent; }
+
+    .app { background:#050505; }
+    .sidebar {
+      width:276px; flex-basis:276px; padding:25px 15px 17px;
+      background:linear-gradient(180deg,#090909 0%,#070707 100%);
+      border-right:1px solid rgba(200,169,106,.14);
+      box-shadow:inset -1px 0 rgba(255,255,255,.012);
+    }
+    .brand { gap:13px; padding:2px 8px 29px; }
+    .brand-icon {
+      width:42px; height:42px; flex-basis:42px;
+      border:1px solid rgba(200,169,106,.28); border-radius:12px;
+      background:#17130d; box-shadow:0 0 28px rgba(200,169,106,.09);
+    }
+    .brand-name {
+      color:#ece6d8; font-family:"Cormorant Garamond",Georgia,serif;
+      font-size:23px; font-weight:600; letter-spacing:-.45px;
+    }
+    .brand-version { margin-top:1px; color:#918a7b; font-size:10px; letter-spacing:.04em; }
+    .nav-label,.panel-heading,.ad-rail-heading {
+      color:#b79b65; font-family:"IBM Plex Mono",monospace;
+      font-size:9px; font-weight:500; letter-spacing:1.25px;
+    }
+    .nav-label { padding:9px 11px; }
+    .nav-item {
+      position:relative; min-height:43px; padding:11px 13px;
+      border:1px solid transparent; border-radius:10px;
+      color:#aaa394; font-size:13px;
+      transition:background .2s ease,border-color .2s ease,color .2s ease;
+    }
+    .nav-item::before {
+      position:absolute; top:10px; bottom:10px; left:0; width:2px;
+      border-radius:2px; background:transparent; content:"";
+    }
+    .nav-item:hover,.nav-item.active {
+      border-color:rgba(200,169,106,.15);
+      background:linear-gradient(100deg,rgba(200,169,106,.105),rgba(200,169,106,.025));
+      color:#eee7d8;
+    }
+    .nav-item.active::before { background:#c8a96a; }
+    .nav-icon { color:#c8a96a; }
+    .recent-section { margin-top:25px; padding-top:14px; border-top:1px solid rgba(200,169,106,.11); }
+    .recent-item { border-radius:8px; color:#938d80; font-size:12px; }
+    .recent-item:hover { background:rgba(200,169,106,.055); color:#ece6d8; }
+    .sidebar-bottom { border-top-color:rgba(200,169,106,.14); }
+    .profile { border-radius:10px; }
+    .profile:hover,.profile[aria-expanded="true"] {
+      border-color:rgba(200,169,106,.16); background:rgba(200,169,106,.055);
+    }
+    .profile-avatar { border:1px solid rgba(200,169,106,.3); background:#1d180f; color:#e3cb94; }
+    .profile-name { color:#e7dfcf; }
+    .profile-sub { color:#8e8778; }
+    .account-menu {
+      border-color:rgba(200,169,106,.2); border-radius:12px;
+      background:#10100e; box-shadow:0 22px 55px rgba(0,0,0,.55);
+    }
+    .account-menu-item { color:#e8e0d0; }
+    .account-menu-item:hover { background:rgba(200,169,106,.08); }
+
+    .main {
+      background:
+        radial-gradient(ellipse at 50% -18%,rgba(200,169,106,.085),transparent 56%),
+        linear-gradient(135deg,rgba(255,255,255,.012),transparent 42%),
+        #050505;
+    }
+    .topbar {
+      height:68px; flex-basis:68px; padding:0 30px;
+      border-bottom:1px solid rgba(200,169,106,.13);
+      background:rgba(5,5,5,.82); backdrop-filter:blur(18px);
+    }
+    .page-title {
+      color:#e9e2d3; font-family:"Cormorant Garamond",Georgia,serif;
+      font-size:23px; font-weight:500; letter-spacing:-.25px;
+    }
+    .chat-scroll { scrollbar-color:rgba(200,169,106,.27) transparent; }
+    .chat-content { width:min(900px,100%); padding:42px 34px 27px; }
+    .welcome { max-width:760px; padding:32px 0 42px; }
+    .welcome-line { gap:21px; }
+    .welcome-mark-wrap {
+      flex-basis:78px; width:78px; height:78px;
+      border:1px solid rgba(200,169,106,.34); border-radius:18px;
+      background:linear-gradient(145deg,rgba(200,169,106,.17),rgba(200,169,106,.035));
+      box-shadow:0 12px 40px rgba(200,169,106,.09),inset 0 0 22px rgba(200,169,106,.055);
+    }
+    .welcome-ripple { border-color:rgba(200,169,106,.3); }
+    .welcome-ripple:nth-of-type(2),.welcome-ripple:nth-of-type(4) { border-color:rgba(227,203,148,.25); }
+    @keyframes welcome-ripple {
+      0% { transform:scale(.96); opacity:.72; box-shadow:0 0 12px rgba(200,169,106,.32),inset 0 0 12px rgba(200,169,106,.12); }
+      45% { opacity:.28; }
+      100% { transform:scale(2.05); opacity:0; box-shadow:0 0 38px rgba(200,169,106,0),inset 0 0 26px rgba(200,169,106,0); }
+    }
+    .welcome h1 {
+      max-width:720px; color:#ece6d8;
+      font-family:"Cormorant Garamond",Georgia,serif;
+      font-size:clamp(35px,4.4vw,51px); font-weight:500;
+      letter-spacing:-1.15px; line-height:1.12;
+    }
+    .gradient-text {
+      color:#e3cb94;
+      background:linear-gradient(105deg,#c8a96a 0%,#e3cb94 76%,#f0dfb8 100%);
+      background-clip:text; -webkit-background-clip:text;
+    }
+
+    #messages { gap:30px; padding:16px 0 30px; }
+    .message { gap:14px; }
+    .message.user .message-body {
+      max-width:min(82%,720px); padding:14px 18px;
+      border:1px solid rgba(200,169,106,.19);
+      border-radius:18px 18px 5px 18px;
+      background:linear-gradient(145deg,rgba(200,169,106,.13),rgba(200,169,106,.065));
+      color:#f0e8d8; font-size:14px; line-height:1.82;
+    }
+    .message.assistant .message-body { color:#ded7c9; font-size:14px; line-height:1.9; }
+    .ai-avatar {
+      width:34px; height:34px;
+      border:1px solid rgba(200,169,106,.27); border-radius:11px;
+      background:#18140d; box-shadow:0 0 20px rgba(200,169,106,.07);
+    }
+    .message-name {
+      color:#d8bd84; font-family:"IBM Plex Mono",monospace;
+      font-size:9px; font-weight:500; letter-spacing:.1em;
+    }
+    .assistant-link { color:#e3cb94; text-decoration-color:rgba(227,203,148,.42); }
+    .assistant-link:hover { color:#f0dfb8; }
+    .typing span { background:#c8a96a; }
+
+    .composer-wrap {
+      padding:14px 28px 17px;
+      background:linear-gradient(0deg,#050505 72%,rgba(5,5,5,.9));
+    }
+    .composer { width:min(900px,100%); }
+    .input-box {
+      padding:14px 15px 11px;
+      border:1px solid rgba(200,169,106,.22); border-radius:17px;
+      background:linear-gradient(145deg,#11110f,#0b0b0a);
+      box-shadow:0 16px 44px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.025);
+    }
+    .input-box:focus-within {
+      border-color:rgba(227,203,148,.62);
+      box-shadow:0 0 0 3px rgba(200,169,106,.065),0 18px 48px rgba(0,0,0,.35);
+    }
+    #message { min-height:42px; padding:5px 4px 10px; color:#eee7d8; font-size:14px; line-height:1.75; }
+    #message::placeholder { color:#817b6e; }
+    .input-actions { gap:9px; }
+    .send-button {
+      width:39px; height:39px;
+      border:1px solid rgba(227,203,148,.35); border-radius:12px;
+      background:var(--gradient); color:#090806;
+      box-shadow:0 5px 20px rgba(200,169,106,.14);
+    }
+    .send-button:hover { transform:translateY(-1px); box-shadow:0 7px 24px rgba(200,169,106,.22); }
+    .send-button:disabled { opacity:.48; }
+    .disclaimer { color:#746e61; font-size:9px; }
+    .preference-link { color:#bba16e; }
+    .preference-link:hover { color:#e3cb94; }
+
+    .right-panel {
+      width:288px; flex-basis:288px; padding:25px 17px;
+      border-left:1px solid rgba(200,169,106,.14); background:#080808;
+    }
+    .ad-rail { margin-top:17px; padding-top:17px; border-top:1px solid rgba(200,169,106,.14); }
+    .ad-rail-heading { color:#c8a96a; }
+    .native-ad-label,.sponsor-link-label {
+      color:#8d826b; font-family:"IBM Plex Mono",monospace;
+      font-size:9px; letter-spacing:.1em;
+    }
+    .native-ad-content,.sponsor-link-slot {
+      border:1px solid rgba(200,169,106,.16);
+      border-radius:10px; background:rgba(200,169,106,.025);
+    }
+    .sponsor-link-slot a { color:#e3cb94; }
+    .all-sizes-ad-placeholder {
+      border-color:rgba(200,169,106,.2); border-radius:10px;
+      background:rgba(200,169,106,.025);
+    }
+
+    .settings-modal {
+      border:1px solid rgba(200,169,106,.2); border-radius:17px;
+      background:linear-gradient(145deg,#12110e,#0a0a09);
+      box-shadow:0 30px 100px rgba(0,0,0,.62);
+    }
+    .settings-header { border-bottom-color:rgba(200,169,106,.14); }
+    .settings-header h2 {
+      color:#ece6d8; font-family:"Cormorant Garamond",Georgia,serif;
+      font-size:25px; font-weight:500;
+    }
+    .settings-body,.setting-field,.setting-toggle { color:#e5dece; }
+    .setting-field select {
+      border-color:rgba(200,169,106,.2); border-radius:9px;
+      background:#090908; color:#ece6d8;
+    }
+    .setting-toggle input { accent-color:#c8a96a; }
+    .auth-button.primary {
+      border-color:rgba(227,203,148,.3); border-radius:10px;
+      background:var(--gradient); color:#080705;
+      box-shadow:0 5px 18px rgba(200,169,106,.12);
+    }
+    .modal-backdrop { background:rgba(0,0,0,.82); }
+    .toast {
+      border:1px solid rgba(200,169,106,.2); border-radius:10px;
+      background:#15130e; color:#ece6d8;
+      box-shadow:0 16px 42px rgba(0,0,0,.48);
+    }
+
+    @media (max-width:980px) {
+      .right-panel { display:none; }
+      .chat-content { width:min(940px,100%); }
+    }
+    @media (max-width:720px) {
+      .sidebar {
+        width:min(286px,86vw); padding:23px 15px 16px;
+        background:linear-gradient(180deg,#090909,#060606);
+        box-shadow:20px 0 55px rgba(0,0,0,.55);
+      }
+      .sidebar-overlay.open { background:rgba(0,0,0,.68); }
+      .topbar { height:61px; flex-basis:61px; padding:0 15px; }
+      .page-title { font-size:21px; }
+      .chat-content { padding:25px 18px 20px; }
+      .welcome { padding:24px 0 30px; }
+      .welcome-line { gap:16px; }
+      .welcome-mark-wrap { flex:0 0 70px; width:70px; height:70px; border-radius:16px; }
+      .welcome h1 { font-size:clamp(30px,8vw,39px); letter-spacing:-.8px; }
+      .composer-wrap { padding:9px 13px 13px; }
+      .input-box { padding:12px 11px 9px; border-radius:15px; }
+      .send-button { width:38px; height:38px; }
+      .message.user .message-body { max-width:91%; }
+      .message.assistant .message-body { font-size:13px; }
+    }
+    @media (max-width:390px) {
+      .chat-content { padding-inline:14px; }
+      .welcome h1 { font-size:28px; }
+      .input-actions { gap:6px; }
+    }
+    @media (max-height:680px) and (min-width:721px) {
+      .chat-content { padding-top:20px; }
+      .welcome { padding-block:18px; }
+      .welcome-line { gap:14px; }
+      .welcome-mark-wrap { flex:0 0 64px; width:64px; height:64px; margin:0; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .welcome-ripple { animation:none !important; }
+    }
+
+</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 
 <body>
