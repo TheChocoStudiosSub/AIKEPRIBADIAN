@@ -32,7 +32,7 @@ The above describes the product role. Capabilities that require integrations or 
 - TCS LinkGuard: https://tcs-linkguard.vercel.app/
 - Help Center / Sara: https://choco-ai-help-center.vercel.app/
 - Contribution guide: https://the-choco-studios-official.vercel.app/bergabung/
-- Contact: thechocostudio@gmail.com
+- Contact: thechocostudios@gmail.com
 - Founder LinkedIn: https://www.linkedin.com/in/hasby-prasetya-tcs/
 
 ## Architecture
