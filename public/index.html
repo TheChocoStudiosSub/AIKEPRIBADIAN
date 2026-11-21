@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080b14">
+  <meta name="theme-color" content="#050505">
   <link rel="icon" type="image/png" sizes="512x512" href="/assets/choco-app-icon.png?v=20261111">
   <link rel="shortcut icon" type="image/png" href="/assets/choco-app-icon.png?v=20261111">
   <link rel="apple-touch-icon" href="/assets/choco-app-icon.png?v=20261111">
@@ -1447,8 +1447,158 @@
       .suggestion { min-height:78px; }
     }
 
+  
+    /* TCS BENTO: visual-only refresh. Existing app handlers and ad placements remain intact. */
+    :root {
+      color-scheme:dark; --bg:#050505; --sidebar:#080808; --panel:#0b0b0b; --panel-hover:#14120f;
+      --border:rgba(200,169,106,.17); --text:#ece6d8; --muted:#9a9484; --blue:#c8a96a; --purple:#e3cb94;
+      --gradient:linear-gradient(125deg,#b99350 0%,#c8a96a 52%,#e3cb94 100%);
+      --tcs-accent:#c8a96a; --tcs-accent-bright:#e3cb94; --tcs-rule:rgba(200,169,106,.17);
+    }
+    html{background:var(--bg)}
+    body{color:var(--text);background:var(--bg);font-family:"Jost","Manrope",Arial,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    ::selection{background:var(--tcs-accent);color:#050505}
+    button:focus-visible,textarea:focus-visible,a:focus-visible{outline:1px solid var(--tcs-accent-bright);outline-offset:4px}
+    .app{background:var(--bg)}
+    .sidebar{background:#080808;border-right:1px solid var(--tcs-rule);box-shadow:inset -1px 0 0 rgba(255,255,255,.012)}
+    .brand{gap:13px;padding:3px 8px 30px}
+    .brand-icon{border:1px solid var(--tcs-rule);border-radius:13px;box-shadow:0 0 28px rgba(200,169,106,.09)}
+    .brand-name{color:var(--text);font-family:"Cormorant Garamond",Georgia,serif;font-size:23px;font-weight:600;letter-spacing:-.35px}
+    .brand-version{color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.02em}
+    .new-chat{border:1px solid rgba(200,169,106,.32);border-radius:2px;background:rgba(200,169,106,.075);color:var(--text);font-size:13px}
+    .new-chat:hover{border-color:var(--tcs-accent);background:rgba(200,169,106,.14);transform:translateY(-1px)}
+    .nav-label,.panel-heading,.ad-rail-heading{color:var(--tcs-accent);font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:500;letter-spacing:1.25px}
+    .nav-item{border-radius:2px;color:#aaa394;font-size:13px}
+    .nav-item:hover,.nav-item.active{border-color:rgba(200,169,106,.18);background:rgba(200,169,106,.075);color:var(--text)}
+    .nav-icon{color:var(--tcs-accent)}
+    .recent-item{color:#9a9484;border-radius:2px}
+    .recent-item:hover{background:rgba(200,169,106,.06);color:var(--text)}
+    .sidebar-bottom{border-top-color:var(--tcs-rule)}
+    .profile:hover,.profile[aria-expanded="true"]{border-color:var(--tcs-rule);background:rgba(200,169,106,.055)}
+    .profile-avatar{border-color:rgba(200,169,106,.32);background:#211d15;color:var(--tcs-accent-bright)}
+    .account-menu{border-color:var(--tcs-rule);border-radius:2px;background:#10100e}
+    .account-menu-item{color:var(--text)}
+    .account-menu-item:hover{background:rgba(200,169,106,.08)}
+    .main{background:radial-gradient(ellipse at 50% -18%,rgba(200,169,106,.075),transparent 58%),#050505}
+    .topbar{border-bottom:1px solid var(--tcs-rule);background:rgba(5,5,5,.88)}
+    .page-title{color:var(--text);font-family:"Cormorant Garamond",Georgia,serif;font-size:22px;font-weight:500;letter-spacing:-.2px}
+    .icon-button{border-color:var(--tcs-rule);border-radius:2px;background:rgba(200,169,106,.035);color:#c7bfae}
+    .icon-button:hover{border-color:rgba(200,169,106,.4);background:rgba(200,169,106,.09);color:var(--tcs-accent-bright)}
+    .status{color:var(--muted);font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase}
+    .status-dot{background:var(--tcs-accent);box-shadow:0 0 10px rgba(200,169,106,.42)}
+    .chat-content{width:min(1030px,100%);padding:clamp(30px,4vw,58px) clamp(18px,3vw,36px) 32px}
+    .welcome{display:block;width:100%;margin:auto 0;padding:18px 0 30px;animation:appear .55s ease both}
+    .welcome-topline{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding-bottom:32px;border-bottom:1px solid var(--tcs-rule)}
+    .welcome-brand-lockup{display:flex;align-items:center;gap:22px;min-width:0}
+    .welcome-mark-wrap{flex:0 0 76px;width:76px;height:76px;margin:0;overflow:visible;border:1px solid rgba(200,169,106,.35);border-radius:2px;background:linear-gradient(145deg,rgba(200,169,106,.16),rgba(200,169,106,.035));box-shadow:0 0 42px rgba(200,169,106,.08),inset 0 0 22px rgba(200,169,106,.06)}
+    .welcome-mark{border-radius:1px}
+    .welcome-ripple{border-color:rgba(200,169,106,.32)}
+    .welcome-ripple:nth-of-type(2),.welcome-ripple:nth-of-type(4){border-color:rgba(227,203,148,.28)}
+    @keyframes welcome-ripple{0%{transform:scale(.96);opacity:.72;box-shadow:0 0 12px rgba(200,169,106,.32),inset 0 0 12px rgba(200,169,106,.12)}45%{opacity:.28}100%{transform:scale(2.05);opacity:0;box-shadow:0 0 38px rgba(200,169,106,0),inset 0 0 26px rgba(200,169,106,0)}}
+    .welcome-copy{min-width:0}
+    .tcs-eyebrow,.bento-kicker,.bento-card-meta,.welcome-footnote{font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:400;letter-spacing:.12em;line-height:1.6}
+    .tcs-eyebrow{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-bottom:10px;color:var(--tcs-accent)}
+    .eyebrow-divider{color:#65563b}
+    .welcome h1{margin:0;color:var(--text);font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(36px,4.2vw,58px);font-weight:500;letter-spacing:-.035em;line-height:.98}
+    .gradient-text{color:var(--tcs-accent-bright);background:linear-gradient(105deg,#c8a96a,#e3cb94 78%,#f0dfb8);background-clip:text;-webkit-background-clip:text}
+    .welcome-description{max-width:570px;margin:13px 0 0;color:var(--muted);font-size:13px;line-height:1.85}
+    .welcome-status{display:inline-flex;align-items:center;gap:9px;flex:0 0 auto;margin-top:5px;padding:8px 11px;border:1px solid var(--tcs-rule);color:#c7bfae;font-family:"IBM Plex Mono",monospace;font-size:8px;letter-spacing:.09em;white-space:nowrap}
+    .welcome-status-dot{width:6px;height:6px;border-radius:50%;background:var(--tcs-accent);box-shadow:0 0 9px rgba(200,169,106,.5)}
+    .bento-intro{display:flex;align-items:end;justify-content:space-between;gap:24px;margin:34px 0 18px}
+    .bento-kicker{display:block;margin-bottom:8px;color:var(--tcs-accent)}
+    .bento-intro h2{margin:0;color:var(--text);font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(28px,3vw,39px);font-weight:500;letter-spacing:-.025em;line-height:1.05}
+    .bento-intro h2 span{color:var(--tcs-accent-bright)}
+    .bento-intro>p{max-width:260px;margin:0 0 2px;color:#8e887a;font-size:11px;line-height:1.7;text-align:right}
+    .bento-grid{display:grid;grid-template-columns:1.15fr 1fr 1fr;grid-template-rows:repeat(2,minmax(150px,auto));gap:11px}
+    .bento-card{position:relative;display:flex;min-width:0;min-height:150px;flex-direction:column;align-items:flex-start;padding:17px 18px;overflow:hidden;border:1px solid var(--tcs-rule);border-radius:2px;background:linear-gradient(145deg,rgba(255,255,255,.026),rgba(255,255,255,.008));color:var(--text);text-align:left;cursor:pointer;transition:background .22s ease,border-color .22s ease,transform .22s ease}
+    .bento-card::after{position:absolute;right:-34px;bottom:-48px;width:126px;height:126px;border:1px solid rgba(200,169,106,.08);border-radius:50%;content:"";pointer-events:none;transition:transform .3s ease,border-color .3s ease}
+    .bento-card:hover{transform:translateY(-3px);border-color:rgba(200,169,106,.46);background:linear-gradient(145deg,rgba(200,169,106,.095),rgba(200,169,106,.025))}
+    .bento-card:hover::after{transform:scale(1.2);border-color:rgba(200,169,106,.2)}
+    .bento-card-primary{grid-row:span 2;min-height:311px;padding:21px 22px;border-color:rgba(200,169,106,.32);background:radial-gradient(circle at 85% 85%,rgba(200,169,106,.11),transparent 43%),linear-gradient(145deg,#14120e,#0a0a09 78%)}
+    .bento-card-meta{display:flex;width:100%;align-items:center;justify-content:space-between;gap:8px;color:#a99a7b;font-size:8px}
+    .bento-card-arrow{color:var(--tcs-accent-bright);font-size:15px}
+    .bento-card-icon{display:grid;place-items:center;width:34px;height:34px;margin:22px 0 13px;border:1px solid rgba(200,169,106,.23);color:var(--tcs-accent-bright);font-size:19px}
+    .bento-card-title{display:block;max-width:100%;color:var(--text);font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(19px,1.8vw,25px);font-weight:500;line-height:1.08}
+    .bento-card-primary .bento-card-title{max-width:270px;font-size:clamp(28px,3vw,39px);line-height:1.02}
+    .bento-card-description{display:block;max-width:340px;margin-top:9px;color:#9a9484;font-size:11px;line-height:1.7}
+    .bento-card-primary .bento-card-description{max-width:300px;font-size:12px}
+    .bento-card-action{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:22px;color:var(--tcs-accent-bright);font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.04em}
+    .bento-card-action span{font-size:14px}
+    .welcome-footnote{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:22px;color:#716b5f;font-size:8px}
+    .welcome-footnote a{color:var(--tcs-accent);text-decoration:none}
+    .welcome-footnote a:hover{color:var(--tcs-accent-bright)}
+    #messages{gap:28px}
+    .message.user .message-body{border:1px solid rgba(200,169,106,.2);border-radius:2px 2px 0 2px;background:rgba(200,169,106,.09);color:#ece6d8}
+    .message.assistant .message-body{color:#d8d1c3}
+    .message-name{color:var(--tcs-accent-bright);font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.05em}
+    .ai-avatar{border:1px solid rgba(200,169,106,.25);border-radius:2px;background:#17130c;box-shadow:0 0 18px rgba(200,169,106,.08);color:var(--tcs-accent-bright)}
+    .typing span{background:var(--tcs-accent)}
+    .composer-wrap{padding:12px 24px 15px;background:linear-gradient(0deg,#050505 72%,rgba(5,5,5,.92))}
+    .input-box{border:1px solid rgba(200,169,106,.22);border-radius:2px;background:linear-gradient(135deg,#11110f,#0b0b0a);box-shadow:0 12px 38px rgba(0,0,0,.24)}
+    .input-box:focus-within{border-color:rgba(200,169,106,.58);box-shadow:0 0 0 3px rgba(200,169,106,.06),0 12px 42px rgba(0,0,0,.28)}
+    #message{color:var(--text);font-family:"Jost","Manrope",Arial,sans-serif}
+    #message::placeholder{color:#777164}
+    .send-button{border:1px solid rgba(200,169,106,.48);border-radius:2px;background:var(--gradient);color:#080705;box-shadow:0 4px 18px rgba(200,169,106,.12)}
+    .send-button:hover{background:linear-gradient(125deg,#d3b778,#f0dfb8)}
+    .disclaimer{color:#716b5f;font-size:9px}
+    .preference-link{color:#a99a7b}
+    .preference-link:hover{color:var(--tcs-accent-bright)}
+    .right-panel{border-left:1px solid var(--tcs-rule);background:#080808}
+    .panel-heading{color:var(--tcs-accent)}
+    .identity-card{border:1px solid var(--tcs-rule);border-radius:2px;background:linear-gradient(145deg,rgba(200,169,106,.09),rgba(200,169,106,.018)),#0d0d0c}
+    .identity-title{color:var(--text);font-family:"Cormorant Garamond",Georgia,serif;font-size:21px;font-weight:500}
+    .identity-description{color:var(--muted)}
+    .feature-name{color:#d6cfbf}
+    .feature-status{color:#938b7a}
+    .tip-card{border:1px solid var(--tcs-rule);border-radius:2px;background:rgba(200,169,106,.035)}
+    .tip-title{color:var(--tcs-accent-bright)}
+    .tip-text{color:var(--muted)}
+    .ad-rail{border-top-color:var(--tcs-rule)}
+    .ad-rail-heading{color:var(--tcs-accent)}
+    .native-ad-content,.sponsor-link-slot{border-color:var(--tcs-rule);border-radius:2px;background:rgba(200,169,106,.025)}
+    .sponsor-link-slot a{color:var(--tcs-accent-bright)}
+    .all-sizes-ad-placeholder{border-color:rgba(200,169,106,.2);border-radius:2px;background:rgba(200,169,106,.025)}
+    .settings-modal{border:1px solid var(--tcs-rule);border-radius:2px;background:#0c0c0b}
+    .settings-header{border-bottom-color:var(--tcs-rule)}
+    .settings-header h2{color:var(--text);font-family:"Cormorant Garamond",Georgia,serif;font-weight:500}
+    .settings-body{color:var(--text)}
+    .setting-field{color:#d7cfbf}
+    .setting-field input,.setting-field select,.setting-field textarea{border-color:var(--tcs-rule);border-radius:2px;background:#080808;color:var(--text)}
+    .setting-toggle{border-color:var(--tcs-rule);border-radius:2px}
+    .modal-backdrop{background:rgba(0,0,0,.82)}
+    @media(max-width:1120px){.chat-content{width:min(960px,100%)}.bento-grid{grid-template-columns:1.1fr 1fr 1fr}}
+    @media(max-width:980px){.right-panel{display:none}.chat-content{width:min(980px,100%)}}
+    @media(max-width:720px){
+      .sidebar{background:#080808}.topbar{border-bottom-color:var(--tcs-rule)}
+      .chat-content{padding:25px 17px 20px}.welcome{padding:13px 0 24px}
+      .welcome-topline{align-items:flex-start;flex-direction:column;gap:18px;padding-bottom:24px}
+      .welcome-brand-lockup{align-items:flex-start;gap:15px}
+      .welcome-mark-wrap{flex:0 0 58px;width:58px;height:58px;border-radius:2px}
+      .welcome h1{font-size:clamp(34px,9vw,45px);line-height:1}
+      .welcome-description{margin-top:10px;font-size:12px}
+      .welcome-status{margin:0 0 0 73px}
+      .bento-intro{align-items:flex-start;flex-direction:column;gap:8px;margin-top:27px}
+      .bento-intro>p{max-width:420px;text-align:left}
+      .bento-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto;gap:9px}
+      .bento-card{min-height:164px;padding:13px}
+      .bento-card-primary{grid-column:1/-1;grid-row:auto;min-height:220px;padding:17px}
+      .bento-card-icon{margin:15px 0 10px}
+      .bento-card-title{font-size:20px}
+      .bento-card-primary .bento-card-title{max-width:310px;font-size:31px}
+      .bento-card-description{font-size:10px}
+      .welcome-footnote{align-items:flex-start;flex-direction:column;margin-top:18px}
+      .composer-wrap{padding:9px 13px 13px}.input-box{border-radius:2px}
+    }
+    @media(max-width:430px){
+      .bento-grid{grid-template-columns:1fr}.bento-card{min-height:145px}
+      .bento-card-primary{min-height:205px}.bento-card-primary .bento-card-title{font-size:29px}
+      .welcome-brand-lockup{gap:12px}.welcome-mark-wrap{flex-basis:52px;width:52px;height:52px}
+      .welcome h1{font-size:32px}.welcome-status{margin-left:64px}.welcome-footnote{font-size:7px}
+    }
+    @media(prefers-reduced-motion:reduce){.welcome-ripple,.bento-card::after{animation:none!important;transition:none!important}.bento-card:hover{transform:none}}
+
   </style>
-</head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">\n  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">\n</head>
 
 <body>
   <div class="app">
@@ -1458,7 +1608,7 @@
         <img class="brand-icon" src="/assets/choco-app-icon.png?v=20261111" alt="Logo Choco AI" width="39" height="39">
         <div>
           <div class="brand-name">Choco AI</div>
-          <span class="brand-version">Your assistant in TCS</span>
+          <span class="brand-version">Asisten utama The Choco Studios</span>
         </div>
       </div>
 
@@ -1485,7 +1635,7 @@
         <div class="top-left">
           <button class="icon-button mobile-menu" id="menuButton"
             aria-label="Buka menu">☰</button>
-          <div class="page-title">Chat</div>
+          <div class="page-title">Ruang kerja</div>
         </div>
 
         <div class="top-actions">
@@ -1502,9 +1652,70 @@
         <div class="chat-content">
 
           <section class="welcome" id="welcome">
-            <div class="welcome-line">
-              <span class="welcome-mark-wrap" aria-label="Logo Choco AI" role="img"><span class="welcome-ripple" aria-hidden="true"></span><span class="welcome-ripple" aria-hidden="true"></span><span class="welcome-ripple" aria-hidden="true"></span><span class="welcome-ripple" aria-hidden="true"></span><span class="welcome-ripple" aria-hidden="true"></span><img class="welcome-mark" src="/assets/choco-app-icon.png?v=20261111" alt="" width="70" height="70"></span>
-              <h1 id="welcomeHeading">Selamat datang di <span class="gradient-text">Choco AI</span></h1>
+            <div class="welcome-topline">
+              <div class="welcome-brand-lockup">
+                <span class="welcome-mark-wrap" aria-label="Logo Choco AI" role="img">
+                  <span class="welcome-ripple" aria-hidden="true"></span>
+                  <span class="welcome-ripple" aria-hidden="true"></span>
+                  <span class="welcome-ripple" aria-hidden="true"></span>
+                  <span class="welcome-ripple" aria-hidden="true"></span>
+                  <span class="welcome-ripple" aria-hidden="true"></span>
+                  <img class="welcome-mark" src="/assets/choco-app-icon.png?v=20261111" alt="" width="70" height="70">
+                </span>
+                <div class="welcome-copy">
+                  <div class="tcs-eyebrow"><span>THE CHOCO STUDIOS</span><span class="eyebrow-divider" aria-hidden="true">/</span><span>AI ASSISTANT</span></div>
+                  <h1 id="welcomeHeading">Selamat datang di <span class="gradient-text">Choco AI</span></h1>
+                  <p class="welcome-description">Ruang kerja cerdas untuk mengembangkan gagasan, menyusun tulisan, menganalisis persoalan, dan mengeksplorasi teknologi bersama ekosistem TCS.</p>
+                </div>
+              </div>
+              <div class="welcome-status"><span class="welcome-status-dot"></span><span>SIAP MEMBANTU</span></div>
+            </div>
+
+            <div class="bento-intro">
+              <div>
+                <span class="bento-kicker">RUANG KERJA</span>
+                <h2>Mulai dari sebuah <span>gagasan.</span></h2>
+              </div>
+              <p>Pilih titik awal. Percakapan dapat dikembangkan sesuai kebutuhan Anda.</p>
+            </div>
+
+            <div class="bento-grid" aria-label="Pilihan awal percakapan">
+              <button type="button" class="bento-card bento-card-primary" data-prompt="Saya memiliki sebuah gagasan. Bantu saya mengembangkannya menjadi konsep yang jelas, rencana kerja bertahap, dan hasil yang bisa diwujudkan.">
+                <span class="bento-card-meta"><span>01 / IDE &amp; PERENCANAAN</span><span class="bento-card-arrow" aria-hidden="true">↗</span></span>
+                <span class="bento-card-icon" aria-hidden="true">✳</span>
+                <span class="bento-card-title">Ubah gagasan menjadi rencana.</span>
+                <span class="bento-card-description">Mulai dari ide mentah, petakan kemungkinan, lalu susun langkah yang masuk akal untuk mewujudkannya.</span>
+                <span class="bento-card-action">Mulai percakapan <span aria-hidden="true">↗</span></span>
+              </button>
+              <button type="button" class="bento-card" data-prompt="Bantu saya menulis atau menyunting sebuah teks. Perhatikan tujuan, struktur, kejelasan, dan gaya bahasa yang sesuai.">
+                <span class="bento-card-meta"><span>02 / MENULIS</span><span class="bento-card-arrow" aria-hidden="true">↗</span></span>
+                <span class="bento-card-icon" aria-hidden="true">⌁</span>
+                <span class="bento-card-title">Tulisan yang lebih tajam.</span>
+                <span class="bento-card-description">Susun, rapikan, dan pertajam pesan agar lebih jelas dan efektif.</span>
+              </button>
+              <button type="button" class="bento-card" data-prompt="Saya ingin menganalisis suatu persoalan. Bantu saya mengurai konteks, membandingkan pilihan, melihat risiko, dan menentukan keputusan berdasarkan alasan yang jelas.">
+                <span class="bento-card-meta"><span>03 / ANALISIS</span><span class="bento-card-arrow" aria-hidden="true">↗</span></span>
+                <span class="bento-card-icon" aria-hidden="true">◌</span>
+                <span class="bento-card-title">Pahami masalahnya.</span>
+                <span class="bento-card-description">Urai informasi, bandingkan pilihan, dan lihat konsekuensi sebelum mengambil keputusan.</span>
+              </button>
+              <button type="button" class="bento-card" data-prompt="Bantu saya mengerjakan persoalan teknologi atau pemrograman. Jelaskan pendekatannya, periksa kemungkinan masalah, dan berikan solusi yang bisa diuji.">
+                <span class="bento-card-meta"><span>04 / TEKNOLOGI</span><span class="bento-card-arrow" aria-hidden="true">↗</span></span>
+                <span class="bento-card-icon" aria-hidden="true">⌘</span>
+                <span class="bento-card-title">Bangun dan pecahkan.</span>
+                <span class="bento-card-description">Telusuri konsep teknis, pahami kode, dan pecahkan persoalan secara sistematis.</span>
+              </button>
+              <button type="button" class="bento-card" data-prompt="Jelaskan The Choco Studios (TCS), arah open-source, ekosistem, dan proyek-proyeknya berdasarkan informasi publik yang tersedia.">
+                <span class="bento-card-meta"><span>05 / EKOSISTEM TCS</span><span class="bento-card-arrow" aria-hidden="true">↗</span></span>
+                <span class="bento-card-icon" aria-hidden="true">⌂</span>
+                <span class="bento-card-title">Jelajahi ekosistem TCS.</span>
+                <span class="bento-card-description">Kenali identitas, proyek, dokumentasi, dan arah pengembangan The Choco Studios.</span>
+              </button>
+            </div>
+
+            <div class="welcome-footnote">
+              <span>BUILT WITHIN THE CHOCO STUDIOS</span>
+              <a href="https://the-choco-studios-official.vercel.app/" target="_blank" rel="noopener noreferrer">Kunjungi TCS Official <span aria-hidden="true">↗</span></a>
             </div>
           </section>
 
