@@ -29,9 +29,9 @@
   {
     "id": "tcs-current-ecosystem",
     "title": "Komponen ekosistem TCS saat ini",
-    "content": "Komponen ekosistem TCS mencakup Choco AI sebagai AI utama, Sara sebagai asisten dukungan Help Center, TCS LinkGuard, TCS UploadFit, TCS Template, Learn with TCS, dan TCS Engine. Sheeblink adalah brand handmade yang terintegrasi ke ekosistem TCS. Prism Gaming Studios terhubung melalui kolaborasi sebagai studio game independen, bukan produk atau departemen TCS.",
+    "content": "Komponen ekosistem TCS mencakup Choco AI sebagai AI utama, Sara sebagai asisten dukungan Help Center, TCS LinkGuard, TCS UploadFit, TCS Template, Learn with TCS, dan TCS Engine. Sheeblink adalah brand handmade yang terintegrasi di ekosistem TCS. Prism Gaming Studios adalah subproyek/cabang khusus pengembangan game di dalam TCS, bukan studio independen di luar TCS. Prism mempertahankan nama, logo, tagline, dan identitas kreatifnya sebagai identitas cabang game.",
     "category": "tcs-ecosystem",
-    "source": "curated-tcs-profile",
+    "source": "tcs-project-structure-update-2026-11-21",
     "tags": [
       "Choco AI",
       "Sara AI",
@@ -145,9 +145,9 @@
   {
     "id": "tcs-current-project-map",
     "title": "Peta proyek publik dan komponen ekosistem TCS",
-    "content": "The Choco Studios (TCS) adalah studio kreatif independen multisektor yang berfokus pada open-source, teknologi terapan, dokumentasi, pemeliharaan proyek, dan kolaborasi terstruktur. Proyek yang telah diverifikasi mencakup Choco AI (asisten AI utama), Sara (asisten dukungan Help Center), TCS LinkGuard (pemeriksa manual kualitas website), TCS UploadFit (pemroses gambar lokal), TCS Template (generator template browser yang deployment Vercel-nya masih dilindungi SSO pada audit terakhir), Learn with TCS (pembelajaran bahasa Indonesia), dan TCS Engine (fondasi game engine JS v0.1.0). Sheeblink adalah brand handmade yang terintegrasi di ekosistem TCS. Prism Gaming Studios adalah studio game independen yang terhubung melalui kolaborasi, bukan produk atau departemen internal TCS.",
+    "content": "The Choco Studios (TCS) adalah studio kreatif independen multisektor yang berfokus pada open-source, teknologi terapan, dokumentasi, pemeliharaan proyek, dan kolaborasi terstruktur. Proyek yang terverifikasi mencakup Choco AI, Sara, TCS LinkGuard, TCS UploadFit, TCS Template (deployment Vercel masih SSO-protected pada audit terakhir), Learn with TCS, TCS Engine v0.1.0, Sheeblink, dan Prism Gaming Studios sebagai cabang/subproyek TCS khusus game. Prism bukan studio independen di luar TCS. Proyek game pertama yang diserahkan untuk cabang Prism adalah Flappy Bird dalam bentuk implementasi browser satu file HTML yang memiliki kontrol sentuh/keyboard, skor, best score lokal, dan efek suara; ini merupakan kontribusi awal, bukan bukti katalog game matang atau rilis Windows.",
     "category": "tcs-ecosystem",
-    "source": "github-vercel-audit-2026-11-21",
+    "source": "tcs-project-structure-update-2026-11-21",
     "tags": [
       "TCS",
       "ecosystem",
@@ -238,9 +238,9 @@
   {
     "id": "prism-gaming-studios-status",
     "title": "Prism Gaming Studios dalam ekosistem TCS",
-    "content": "Prism Gaming Studios adalah studio game independen yang terhubung melalui kolaborasi ekosistem, bukan produk atau departemen internal TCS. Repositori Prism mencatat game Flappy Bird berbasis browser dengan kontrol keyboard/touch, skor, best score lokal, dan audio sintetis. Prism Ops masih berupa fondasi teknis proyek FPS; repositorinya belum menunjukkan gameplay lengkap, aset game, atau engine terpilih. Situs: https://prism-gaming-studios.vercel.app/.",
+    "content": "Prism Gaming Studios adalah subproyek sekaligus cabang pengembangan game di dalam The Choco Studios (TCS), bukan studio independen di luar TCS. Prism mempertahankan nama, logo, tagline 'Play Beyond the Ordinary.', dan identitas kreatifnya sebagai label khusus game TCS. Proyek game pertama yang diserahkan untuk cabang Prism adalah Flappy Bird: satu file HTML mandiri yang dapat dimainkan di browser, dengan kontrol sentuh/keyboard, skor, best score lokal, dan efek suara yang dihasilkan. Ini adalah kontribusi awal dan titik mulai, bukan portofolio game besar, bukan jaminan rilis Windows, dan bukan produk matang yang telah melalui seluruh siklus review/rilis. Situs Prism: https://prism-gaming-studios.vercel.app/.",
     "category": "tcs-ecosystem",
-    "source": "github-vercel-audit-2026-11-21",
+    "source": "tcs-project-structure-update-2026-11-21",
     "tags": [
       "Prism Gaming Studios",
       "Prism Ops",
@@ -266,9 +266,9 @@
   {
     "id": "prism-and-sheeblink-relationship",
     "title": "Sheeblink dan Prism memiliki hubungan berbeda dengan TCS",
-    "content": "Sheeblink adalah brand handmade gantungan kunci dari Cirebon, didirikan Sima Mubarokah dan diintegrasikan ke ekosistem TCS pada 3 November 2026; identitas brand Sheeblink tetap dipertahankan. Catatan harga sebelumnya: book keychain Rp8.000 dan custom fee Rp2.000 per huruf; harga, stok, ongkir, dan waktu pengerjaan perlu konfirmasi langsung. Prism Gaming Studios adalah studio game independen yang terhubung melalui kolaborasi; Prism bukan unit internal TCS.",
+    "content": "Sheeblink adalah brand handmade gantungan kunci dari Cirebon, didirikan Sima Mubarokah dan diintegrasikan ke ekosistem TCS pada 3 November 2026; identitas brand Sheeblink tetap dipertahankan. Catatan harga sebelumnya: book keychain Rp8.000 dan custom fee Rp2.000 per huruf; harga, stok, ongkir, dan waktu pengerjaan perlu konfirmasi langsung. Prism Gaming Studios berbeda: Prism adalah subproyek/cabang TCS khusus pengembangan game, bukan studio eksternal yang hanya berkolaborasi. Prism mempertahankan brand-nya sebagai identitas cabang game TCS, dan Flappy Bird adalah proyek awal yang diserahkan.",
     "category": "tcs-ecosystem",
-    "source": "curated-tcs-profile-and-current-github-audit",
+    "source": "tcs-project-structure-update-2026-11-21",
     "tags": [
       "Sheeblink",
       "Prism Gaming Studios",
