@@ -1590,6 +1590,48 @@
       background:transparent; box-shadow:none;
     }
 
+    /* Logo-shaped water ripples: use the PNG alpha as the outline mask. */
+    .welcome-ripple {
+      inset:0;
+      border:0;
+      border-radius:0;
+      background:rgba(200,169,106,.82);
+      -webkit-mask-image:
+        url("/assets/choco-app-icon.png?v=20261121"),
+        url("/assets/choco-app-icon.png?v=20261121");
+      -webkit-mask-size:100% 100%, 88% 88%;
+      -webkit-mask-position:center center, center center;
+      -webkit-mask-repeat:no-repeat, no-repeat;
+      -webkit-mask-composite:xor;
+      mask-image:
+        url("/assets/choco-app-icon.png?v=20261121"),
+        url("/assets/choco-app-icon.png?v=20261121");
+      mask-mode:alpha, alpha;
+      mask-size:100% 100%, 88% 88%;
+      mask-position:center center, center center;
+      mask-repeat:no-repeat, no-repeat;
+      mask-composite:exclude;
+      filter:drop-shadow(0 0 7px rgba(200,169,106,.34));
+      will-change:transform, opacity, filter;
+    }
+    .welcome-ripple:nth-of-type(2),
+    .welcome-ripple:nth-of-type(4) {
+      background:rgba(227,203,148,.78);
+    }
+    @keyframes welcome-ripple {
+      0% {
+        transform:scale(.96);
+        opacity:.74;
+        filter:drop-shadow(0 0 8px rgba(200,169,106,.36));
+      }
+      45% { opacity:.3; }
+      100% {
+        transform:scale(2.05);
+        opacity:0;
+        filter:drop-shadow(0 0 22px rgba(200,169,106,0));
+      }
+    }
+
 </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
