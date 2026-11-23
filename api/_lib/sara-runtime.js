@@ -275,7 +275,7 @@ export default async function handler(req, res) {
         chunk.choices[0].delta && chunk.choices[0].delta.content;
       if (typeof delta === "string" && delta.length && !outputBlocked) {
         answer += delta;
-        if (containsInternalTechnicalDisclosure(answer)) {
+        if (containsInternalTechnicalDisclosure(answer, question)) {
           outputBlocked = true;
           answer = INTERNAL_TECHNICAL_REPLY;
           outputBuffer = "";
@@ -310,7 +310,7 @@ export default async function handler(req, res) {
     if (buffer.trim() && !disconnected) await handleFrame(buffer);
 
     if (!disconnected && !outputBlocked && outputBuffer) {
-      if (containsInternalTechnicalDisclosure(answer)) {
+      if (containsInternalTechnicalDisclosure(answer, question)) {
         outputBlocked = true;
         answer = INTERNAL_TECHNICAL_REPLY;
         await writeEvent(res, "replace", { text: answer }, () => disconnected);
