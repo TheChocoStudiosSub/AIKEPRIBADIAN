@@ -160,7 +160,7 @@ async function retrieveTcsKnowledge(query, env) {
       appName: String(document.app_name || "Produk TCS").slice(0, 100),
       title: String(document.title || "Referensi").slice(0, 180),
       content: String(document.content || "").slice(0, 1800)
-    })).filter((document) => document.content.trim());
+    })).filter((document) => document.content.trim() && !isRestrictedInternalContent(document));
   } catch {
     return [];
   }
@@ -178,7 +178,7 @@ async function retrieveOwnerKnowledge(query, env) {
     title: String(document.title || "Referensi internal").slice(0, 180),
     source: String(document.source_repo_path || "READMEGPT.md").slice(0, 120),
     content: String(document.content || "").slice(0, 2200)
-  })).filter((document) => document.content.trim());
+  })).filter((document) => document.content.trim() && !isRestrictedInternalContent(document));
 }
 export default async (request) => {
     const env = process.env;
@@ -389,7 +389,7 @@ export default async (request) => {
           const waitMessage = retryAfter > 0 ? " Tunggu sekitar " + retryAfter + " detik sebelum mencoba kembali." : " Tunggu sebentar sebelum mencoba kembali.";
           return json({ error: "Batas penggunaan layanan AI sedang tercapai." + waitMessage, retryAfter }, 429);
         }
-        return json({ error: data?.error?.message || "Layanan AI mengembalikan HTTP " + response.status + "." }, response.status >= 400 && response.status < 600 ? response.status : 502);
+        return json({ error: "Layanan AI sementara tidak dapat memproses permintaan." }, response.status >= 400 && response.status < 600 ? response.status : 502);
       }
       if (streamRequested) {
         if (!response.body) return json({ error: "Layanan AI tidak mengirimkan aliran respons." }, 502);
@@ -435,7 +435,7 @@ export default async (request) => {
       }
       return json({ reply, truncated: finishReason === "length" });
     } catch (error) {
-      console.error("Groq request failed:", error?.name || "Error");
+      console.error("AI service request failed:", error?.name || "Error");
       return json({ error: "Layanan AI tidak dapat dijangkau saat ini." }, 502);
     }
 };
