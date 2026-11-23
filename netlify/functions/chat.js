@@ -3,7 +3,7 @@ import FACTS from "../../data/knowledge/facts.json" with { type: "json" };
 import CONCEPTS from "../../data/knowledge/concepts.json" with { type: "json" };
 import EXPERIENCES from "../../data/knowledge/experiences.json" with { type: "json" };
 import { createHash, pbkdf2Sync, randomBytes, timingSafeEqual } from "node:crypto";
-import { INTERNAL_TECHNICAL_REPLY, isInternalDisclosureQuestion, isRestrictedInternalContent } from "../../api/_lib/ai-confidentiality.js";
+import { INTERNAL_TECHNICAL_REPLY, containsInternalTechnicalDisclosure, isInternalDisclosureQuestion, isRestrictedInternalContent, protectOpenAiSseStream } from "../../api/_lib/ai-confidentiality.js";
 
 const MODEL_ID = "openai/gpt-oss-20b";
 const MAX_MESSAGE_CHARS = 4000;
@@ -393,7 +393,7 @@ export default async (request) => {
       }
       if (streamRequested) {
         if (!response.body) return json({ error: "Layanan AI tidak mengirimkan aliran respons." }, 502);
-        return new Response(response.body, {
+        return new Response(protectOpenAiSseStream(response.body), {
           status: 200,
           headers: {
             "Content-Type": "text/event-stream; charset=utf-8",
@@ -433,6 +433,7 @@ export default async (request) => {
           // Jawaban pertama tetap dikembalikan jika permintaan lanjutan gagal.
         }
       }
+      if (containsInternalTechnicalDisclosure(reply)) reply = INTERNAL_TECHNICAL_REPLY;
       return json({ reply, truncated: finishReason === "length" });
     } catch (error) {
       console.error("AI service request failed:", error?.name || "Error");
