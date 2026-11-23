@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import {
   INTERNAL_TECHNICAL_REPLY,
   isInternalDisclosureQuestion,
-  isRestrictedInternalContent
+  isRestrictedInternalContent,
+  protectOpenAiSseStream
 } from "../api/_lib/ai-confidentiality.js";
 
 test("blocks direct questions about Choco AI and Sara internals", () => {
@@ -40,4 +41,26 @@ test("retains safe public product and ecosystem facts", () => {
 test("uses one neutral non-disclosure response", () => {
   assert.match(INTERNAL_TECHNICAL_REPLY, /tidak dipublikasikan/);
   assert.doesNotMatch(INTERNAL_TECHNICAL_REPLY, /Groq|Supabase|Vercel|Netlify|API|database/i);
+});
+
+test("replaces provider and infrastructure disclosures in streamed output", async () => {
+  const encoder = new TextEncoder();
+  const events = [
+    { choices: [{ delta: { content: "Informasi ini diproses oleh layanan " } }] },
+    { choices: [{ delta: { content: "Groq dan Supabase." } }] }
+  ];
+  const chunks = [
+    ...events.map(event => "data: " + JSON.stringify(event) + "\n\n"),
+    "data: [DONE]\n\n"
+  ];
+  const source = new ReadableStream({
+    start(controller) {
+      chunks.forEach(chunk => controller.enqueue(encoder.encode(chunk)));
+      controller.close();
+    }
+  });
+  const output = await new Response(protectOpenAiSseStream(source, 5)).text();
+  assert.doesNotMatch(output, /Groq|Supabase/i);
+  assert.match(output, /Detail teknologi dan pengelolaan internal TCS tidak dipublikasikan/);
+  assert.match(output, /data: \[DONE\]/);
 });
