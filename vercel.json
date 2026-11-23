@@ -9,6 +9,39 @@
   },
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "tcs-chocoai.vercel.app"
+        }
+      ],
+      "destination": "https://chocoai.thechocostudios.bond/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "tcs-choco-ai.vercel.app"
+        }
+      ],
+      "destination": "https://chocoai.thechocostudios.bond/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "choco-ai-independent-seven.vercel.app"
+        }
+      ],
+      "destination": "https://chocoai.thechocostudios.bond/:path*",
+      "permanent": true
+    },
+    {
       "source": "/checkout",
       "destination": "/",
       "permanent": true
