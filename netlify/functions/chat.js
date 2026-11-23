@@ -393,7 +393,7 @@ export default async (request) => {
       }
       if (streamRequested) {
         if (!response.body) return json({ error: "Layanan AI tidak mengirimkan aliran respons." }, 502);
-        return new Response(protectOpenAiSseStream(response.body), {
+        return new Response(protectOpenAiSseStream(response.body, 120, message), {
           status: 200,
           headers: {
             "Content-Type": "text/event-stream; charset=utf-8",
@@ -433,7 +433,7 @@ export default async (request) => {
           // Jawaban pertama tetap dikembalikan jika permintaan lanjutan gagal.
         }
       }
-      if (containsInternalTechnicalDisclosure(reply)) reply = INTERNAL_TECHNICAL_REPLY;
+      if (containsInternalTechnicalDisclosure(reply, message)) reply = INTERNAL_TECHNICAL_REPLY;
       return json({ reply, truncated: finishReason === "length" });
     } catch (error) {
       console.error("AI service request failed:", error?.name || "Error");
