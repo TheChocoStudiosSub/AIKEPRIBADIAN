@@ -21,6 +21,11 @@ test("keeps public ecosystem questions available", () => {
   assert.equal(isInternalDisclosureQuestion("Apa fungsi Sara di Help Center?"), false);
   assert.equal(isInternalDisclosureQuestion("Bagaimana cara menggunakan TCS UploadFit?"), false);
   assert.equal(isInternalDisclosureQuestion("Apa itu database secara umum?"), false);
+  assert.equal(isInternalDisclosureQuestion("Apa itu OpenAI secara umum?"), false);
+  assert.equal(isInternalDisclosureQuestion("Apa itu Groq?"), false);
+  assert.equal(isInternalDisclosureQuestion("Bagaimana cara kerja API secara umum?"), false);
+  assert.equal(isInternalDisclosureQuestion("Which model do you use?"), true);
+  assert.equal(isInternalDisclosureQuestion("AI apa yang kamu gunakan?"), true);
 });
 
 test("filters provider, credential, endpoint and infrastructure details from context", () => {
@@ -29,7 +34,9 @@ test("filters provider, credential, endpoint and infrastructure details from con
   assert.equal(isRestrictedInternalContent("GROQ_API_KEY wajib diatur."), true);
   assert.equal(isRestrictedInternalContent("Panggil /rest/v1/rpc/tcs_public_search_knowledge."), true);
   assert.equal(isRestrictedInternalContent("Tabel profiles memakai RLS."), true);
-  assert.equal(isRestrictedInternalContent("The system uses backend services."), true);
+  assert.equal(isRestrictedInternalContent("The TCS system uses backend services."), true);
+  assert.equal(isRestrictedInternalContent("OpenAI is a public AI company."), false);
+  assert.equal(isRestrictedInternalContent("An API is an application programming interface."), false);
 });
 
 test("retains safe public product and ecosystem facts", () => {
@@ -46,7 +53,7 @@ test("uses one neutral non-disclosure response", () => {
 test("replaces provider and infrastructure disclosures in streamed output", async () => {
   const encoder = new TextEncoder();
   const events = [
-    { choices: [{ delta: { content: "Informasi ini diproses oleh layanan " } }] },
+    { choices: [{ delta: { content: "Informasi untuk TCS ini diproses oleh layanan " } }] },
     { choices: [{ delta: { content: "Groq dan Supabase." } }] }
   ];
   const chunks = [
