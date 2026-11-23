@@ -196,7 +196,7 @@ export default async function handler(req, res) {
     if (disconnected) return;
     keepAlive = setInterval(() => {
       if (!disconnected && !res.destroyed && !res.writableEnded) {
-        try { res.write(": keep-alive\\n\\n"); } catch { /* client may have disconnected */ }
+        try { res.write(": keep-alive" + String.fromCharCode(10, 10)); } catch { /* client may have disconnected */ }
       }
     }, 8000);
 
