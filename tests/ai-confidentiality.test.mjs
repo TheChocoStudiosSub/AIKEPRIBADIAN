@@ -33,9 +33,9 @@ test("filters provider, credential, endpoint and infrastructure details from con
   assert.equal(isRestrictedInternalContent("Catatan disimpan melalui Supabase."), true);
   assert.equal(isRestrictedInternalContent("GROQ_API_KEY wajib diatur."), true);
   assert.equal(isRestrictedInternalContent("Panggil /rest/v1/rpc/tcs_public_search_knowledge."), true);
-  assert.equal(isRestrictedInternalContent("Tabel profiles memakai RLS."), true);
+  assert.equal(isRestrictedInternalContent("Tabel profiles TCS memakai RLS."), true);
   assert.equal(isRestrictedInternalContent("The TCS system uses backend services."), true);
-  assert.equal(isRestrictedInternalContent("OpenAI is a public AI company."), false);
+  assert.equal(isRestrictedInternalContent("Apa itu OpenAI secara umum?"), false);
   assert.equal(isRestrictedInternalContent("An API is an application programming interface."), false);
 });
 
