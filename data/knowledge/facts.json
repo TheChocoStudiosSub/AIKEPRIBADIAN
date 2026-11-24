@@ -45,7 +45,7 @@
   {
     "id": "model-provider",
     "title": "Model dan penyedia inferensi",
-    "content": "Choco AI menggunakan Groq API untuk inferensi. Nama model dapat ditentukan melalui variabel lingkungan GROQ_MODEL; nilai fallback dalam fungsi chat saat ini adalah openai/gpt-oss-20b. Mengganti model API tidak sama dengan melatih model fondasi sendiri.",
+    "content": "Choco AI menggunakan Groq API untuk inferensi. Nama model dapat ditentukan melalui variabel lingkungan GROQ_MODEL; nilai fallback dalam fungsi chat saat ini adalah openai/gpt-oss-20b. UI publik saat ini menggunakan mode standard tetap, bukan pemilih tiga mode. Jalur chat publik hanya menerima teks; image/vision input, pembacaan file, dan penelusuran web langsung belum diimplementasikan. Mengganti model API tidak sama dengan melatih model fondasi sendiri.",
     "category": "model",
     "source": "netlify/functions/chat.js",
     "tags": [
@@ -180,6 +180,45 @@
       "TCS game development",
       "creative growth",
       "Prism Gaming Studios (nama sebelumnya)"
+    ]
+  },
+  {
+    "id": "choco-ai-current-capabilities",
+    "title": "Batas kemampuan Choco AI pada implementasi saat ini",
+    "content": "UI publik Choco AI menetapkan modelMode standard secara tetap. Model inferensi dipilih server-side melalui GROQ_MODEL. Tidak ada pemilih mode standar/penalaran/analisis gambar yang terverifikasi. Jalur chat publik hanya menerima teks; unggah gambar, vision input, pembacaan file, dan penelusuran web langsung belum diimplementasikan. Jangan menyatakan fitur tersebut tersedia sebelum UI, backend, izin, dan pengujiannya selesai.",
+    "category": "product-status",
+    "source": "current-code-audit",
+    "tags": [
+      "capabilities",
+      "model-mode",
+      "image",
+      "files",
+      "web"
+    ]
+  },
+  {
+    "id": "choco-ai-rate-limit-scope",
+    "title": "Cakupan rate limit chat publik Choco AI",
+    "content": "Handler chat publik saat ini memakai Map in-memory dengan batas 20 permintaan per bucket 10 menit per instance runtime serverless. Karena data batas tidak dibagikan antarinstrance dan dapat hilang saat cold start, ini adalah pembatasan best-effort, bukan kuota global atau perlindungan abuse yang kuat.",
+    "category": "security",
+    "source": "netlify/functions/chat.js",
+    "tags": [
+      "rate-limit",
+      "serverless",
+      "abuse-prevention"
+    ]
+  },
+  {
+    "id": "tcs-engine-license-status",
+    "title": "Status lisensi TCS Engine",
+    "content": "Repository TCS-ENGINE bersifat publik tetapi tidak memiliki file LICENSE pada audit 24 November 2026. Kode belum memiliki lisensi open-source yang jelas. Jangan menyebut TCS Engine sebagai proyek open-source berlisensi atau mengasumsikan hak penggunaan, modifikasi, maupun distribusi sebelum TCS menetapkan lisensi.",
+    "category": "project-status",
+    "source": "GitHub repository audit 2026-11-24",
+    "tags": [
+      "TCS Engine",
+      "license",
+      "open-source",
+      "governance"
     ]
   }
 ]
