@@ -1,4 +1,3 @@
-import { createHash, pbkdf2Sync, timingSafeEqual } from "node:crypto";
 import { clearAdminSessionCookie, createAdminSessionCookie, validateAdminSession } from "../_lib/admin-auth.js";
 
 function send(res, status, payload) {
@@ -6,10 +5,6 @@ function send(res, status, payload) {
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   return res.status(status).json(payload);
-}
-
-function hash(value) {
-  return createHash("sha256").update(String(value), "utf8").digest("hex");
 }
 
 function sameOrigin(req) {
@@ -37,20 +32,25 @@ async function readBody(req) {
   });
 }
 
-async function checkLoginRateLimit(req) {
-  const base = String(process.env.TCS_BACKEND_SUPABASE_URL || "").replace(/\/+$/, "");
+function backendConfig() {
+  const base = String(process.env.TCS_BACKEND_SUPABASE_URL || "").replace(/\\/+$/, "");
   const publishableKey = String(process.env.TCS_BACKEND_PUBLISHABLE_KEY || "");
+  return base && publishableKey ? { base, publishableKey } : null;
+}
+
+async function checkLoginRateLimit(req) {
+  const config = backendConfig();
   const serverKey = String(process.env.TCS_OWNER_AUTH_SERVER_KEY || "");
-  if (!base || !publishableKey || !/^[0-9a-f]{64}$/i.test(serverKey)) return { ok: false };
+  if (!config || !/^[0-9a-f]{64}$/i.test(serverKey)) return { ok: false };
   const address = String(req.headers["x-vercel-forwarded-for"] || req.headers["x-forwarded-for"] || req.headers["x-real-ip"] || "unknown")
     .split(",")[0].trim().slice(0, 160);
   const origin = String(req.headers.origin || "https://tcs-admin-panel.vercel.app");
   try {
-    const response = await fetch(base + "/functions/v1/tcs-telemetry", {
+    const response = await fetch(config.base + "/functions/v1/tcs-telemetry", {
       method: "POST",
       headers: {
-        apikey: publishableKey,
-        Authorization: "Bearer " + publishableKey,
+        apikey: config.publishableKey,
+        Authorization: "Bearer " + config.publishableKey,
         "Content-Type": "application/json",
         Origin: origin
       },
@@ -63,6 +63,36 @@ async function checkLoginRateLimit(req) {
     return { ok: true, limited: data?.limited === true };
   } catch {
     return { ok: false };
+  }
+}
+
+async function verifyOwnerWithTcsAccount(username, password) {
+  const config = backendConfig();
+  if (!config) return { ok: false, unavailable: true };
+
+  try {
+    const response = await fetch(config.base + "/functions/v1/tcs-account", {
+      method: "POST",
+      headers: {
+        apikey: config.publishableKey,
+        Authorization: "Bearer " + config.publishableKey,
+        "Content-Type": "application/json"
+      },
+      cache: "no-store",
+      body: JSON.stringify({ action: "owner-login", username, password }),
+      signal: AbortSignal.timeout(10000)
+    });
+    const data = await response.json().catch(() => null);
+    if (response.status === 429) return { ok: false, rateLimited: true };
+    if (response.status === 401) return { ok: false, invalid: true };
+    if (!response.ok || data?.ok !== true || !data?.account?.id || !data?.session?.access_token) {
+      return { ok: false, unavailable: true };
+    }
+    // Keep the Supabase session server-side. Only the separate HttpOnly admin
+    // session is issued to the browser; access and refresh tokens are discarded.
+    return { ok: true };
+  } catch {
+    return { ok: false, unavailable: true };
   }
 }
 
@@ -80,15 +110,15 @@ export default async function handler(req, res) {
   }
   if (action !== "login") return send(res, 400, { ok: false, error: "unknown_action" });
 
-  const credential = typeof body.credential === "string" ? body.credential : "";
-  if (credential.length < 5 || credential.length > 200 || /[\u0000-\u001F\u007F]/.test(credential)) {
-    return send(res, 400, { ok: false, error: "invalid_credential_format" });
+  const username = typeof body.username === "string" ? body.username.trim().toLowerCase() : "";
+  const password = typeof body.password === "string" ? body.password : "";
+  if (!/^[a-z0-9][a-z0-9_-]{2,23}$/.test(username) || password.length < 1 || password.length > 128 ||
+      /[\\u0000-\\u001F\\u007F]/.test(password)) {
+    return send(res, 401, { ok: false, error: "invalid_credentials" });
   }
 
-  const salt = String(process.env.TCS_OWNER_PANEL_CREDENTIAL_SALT || "");
-  const verifier = String(process.env.TCS_OWNER_PANEL_CREDENTIAL_HASH || "");
   const sessionSecret = String(process.env.TCS_ADMIN_PANEL_SESSION_SECRET || "");
-  if (!/^[0-9a-f]{32}$/i.test(salt) || !/^[0-9a-f]{64}$/i.test(verifier) || !/^[0-9a-f]{64}$/i.test(sessionSecret)) {
+  if (!/^[0-9a-f]{64}$/i.test(sessionSecret)) {
     return send(res, 503, { ok: false, error: "owner_panel_auth_not_configured" });
   }
 
@@ -96,11 +126,13 @@ export default async function handler(req, res) {
   if (!rateLimit.ok) return send(res, 503, { ok: false, error: "owner_auth_unavailable" });
   if (rateLimit.limited) return send(res, 429, { ok: false, error: "rate_limited" });
 
-  const candidate = pbkdf2Sync(credential, Buffer.from(salt, "hex"), 310000, 32, "sha256");
-  const expected = Buffer.from(verifier, "hex");
-  if (candidate.length !== expected.length || !timingSafeEqual(candidate, expected)) {
-    return send(res, 401, { ok: false, error: "invalid_credentials" });
+  const verification = await verifyOwnerWithTcsAccount(username, password);
+  if (verification.rateLimited) return send(res, 429, { ok: false, error: "rate_limited" });
+  if (verification.invalid) return send(res, 401, { ok: false, error: "invalid_credentials" });
+  if (!verification.ok) return send(res, 503, { ok: false, error: "owner_auth_unavailable" });
+
+  try { createAdminSessionCookie(res); } catch {
+    return send(res, 503, { ok: false, error: "owner_panel_auth_not_configured" });
   }
-  try { createAdminSessionCookie(res); } catch { return send(res, 503, { ok: false, error: "owner_panel_auth_not_configured" }); }
   return send(res, 200, { ok: true, authenticated: true, expiresIn: 8 * 60 * 60 });
 }
