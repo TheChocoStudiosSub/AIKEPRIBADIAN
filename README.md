@@ -4,13 +4,15 @@ Choco AI is the primary AI assistant and digital representation of Choco within 
 
 ## Identity and TCS direction
 
-The Choco Studios (TCS) is an independent multisector creative studio founded, owned, and independently managed by Hasby Prasetya Saprudin. TCS is not a collective that owns or houses all independent creators, and it is not a generic marketplace or creator showcase platform.
+The Choco Studios (TCS) is an independent multisector creative studio founded, owned, and independently managed by Hasby Prasetya Saprudin. TCS is not a creator collective, a marketplace, or a generic showcase platform.
 
 TCS's strategic focus is open-source software, applied technology, documentation, project stewardship, and structured collaboration. TCS may continue to develop applications, but application production is no longer its central strategic focus.
 
 Sheeblink is a handmade creative initiative integrated into the TCS ecosystem as part of TCS's expansion beyond technology. It retains its recognizable creative identity. The integration is not a marketplace arrangement.
 
-The initial TCS project formerly called Chocobot Guardian is now named **TCS LinkGuard**. The former 16-app catalogue is obsolete and must not be used as the current public portfolio.\n\nThe verified ecosystem also includes TCS UploadFit (local image preparation), TCS Template (browser-based document generators; deployment currently SSO-protected), Learn with TCS (Indonesian-language learning project in development), and TCS Engine (JavaScript game-engine foundation v0.1.0). Sheeblink is integrated into the TCS ecosystem. Vornika+- is the rebranded continuation of the unit previously known as Prism Gaming Studios, which began as an independently developed creative initiative and voluntarily joined TCS after recognising its broad range of ideas and cross-disciplinary exploration. Vornika now serves as TCS's dedicated game-development unit and pioneer within the ecosystem, while retaining its name and creative identity. Its first game project through this unit is a basic single-file browser implementation of Flappy Bird.
+The initial TCS project formerly called Chocobot Guardian is now named **TCS LinkGuard**. The former 16-app catalogue is obsolete and must not be used as the current public portfolio.
+
+The ecosystem also includes TCS UploadFit (local image preparation), TCS Template (browser-based document generators), Learn with TCS (learning project), and TCS Engine (JavaScript game-engine and game-development work). Vornika+- is the rebranded continuation of the unit previously known as Prism Gaming Studios. It is TCS's dedicated game-development unit and retains its own name and creative identity.
 
 ## Product role
 
@@ -26,19 +28,23 @@ The above describes the product role. Capabilities that require integrations or 
 
 ## Current public endpoints
 
-- Choco AI: https://tcs-chocoai.vercel.app/\n- TCS UploadFit: https://tcs-uploadfit.vercel.app/\n- TCS LinkGuard: https://tcs-linkguard.vercel.app/\n- Sheeblink: https://sheeblink.vercel.app/\n- Vornika+-: https://vornika-games.vercel.app/\n- TCS Template: https://tcs-template.vercel.app/ (deployment observed SSO-protected; public access not guaranteed)
-- Official TCS website: https://the-choco-studios-official.vercel.app/
-- TCS Information: https://the-choco-studios-information.vercel.app/
-- TCS LinkGuard: https://tcs-linkguard.vercel.app/
-- Help Center / Sara: https://choco-ai-help-center.vercel.app/
-- Contribution guide: https://the-choco-studios-official.vercel.app/bergabung/
+- Choco AI: https://chocoai.thechocostudios.bond/
+- TCS UploadFit: https://tcs-uploadfit.vercel.app/
+- TCS LinkGuard: https://linkguard.thechocostudios.bond/
+- Sheeblink: https://sheeblink.thechocostudios.bond/
+- Vornika+: https://vornika.thechocostudios.bond/
+- TCS Template: https://tcs-template.vercel.app/ (deployment observed SSO-protected; public access is not guaranteed)
+- Official TCS website: https://thechocostudios.bond/
+- TCS Information: https://information.thechocostudios.bond/
+- Help Center / Sara: https://helpcenter.thechocostudios.bond/
+- Contribution guide: https://thechocostudios.bond/bergabung/
 - Contact: thechocostudios@gmail.com
 - Founder LinkedIn: https://www.linkedin.com/in/hasby-prasetya-tcs/
 
 ## Architecture
 
 - Frontend: static web application in `public/`.
-- Hosting and serverless routes: Vercel project `choco-ai-independent-seven`.
+- Hosting: Vercel, connected to this repository; the canonical public domain is listed above.
 - Chat endpoint: `api/chat.js`, adapted to the shared request handler in `netlify/functions/chat.js`.
 - Inference: Groq API. `GROQ_API_KEY` is server-only; `GROQ_MODEL` selects the model, with `openai/gpt-oss-20b` as the code fallback.
 - Public TCS knowledge: Supabase Knowledge Hub RPC, restricted to documents explicitly marked public.
@@ -64,7 +70,7 @@ The public TCS Knowledge Hub is the canonical source for public TCS identity and
 
 ## Development and deployment
 
-The production Vercel project is `aikepribadian`. Changes to API routes must preserve the existing Vercel adapter, server-only environment variables, Supabase authorization boundaries, license endpoints, and payment safeguards. Test API behavior, rate limits, Owner-session validation, RAG retrieval, and the public frontend before promoting a deployment.
+Changes to API routes must preserve the existing Vercel adapter, server-only environment variables, Supabase authorization boundaries, license endpoints, and payment safeguards. Test API behavior, rate limits, Owner-session validation, RAG retrieval, and the public frontend before promoting a deployment.
 
 ## Payment and public onboarding
 
