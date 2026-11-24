@@ -29,8 +29,8 @@ jobs:
         run: |
           node --check netlify/functions/chat.js
           node --check api/chat.js
-  node --check api/license.js
-  node --check api/_lib/tcs-public.js
+          node --check api/license.js
+          node --check api/_lib/tcs-public.js
           node --check netlify/functions/core/retrieval.mjs
       - name: Check inline frontend JavaScript
         run: node scripts/check-inline-scripts.mjs
