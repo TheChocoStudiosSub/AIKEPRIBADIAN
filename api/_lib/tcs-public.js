@@ -1,4 +1,10 @@
 const ALLOWED_ORIGINS = new Set([
+  "https://thechocostudios.bond",
+  "https://information.thechocostudios.bond",
+  "https://chocoai.thechocostudios.bond",
+  "https://helpcenter.thechocostudios.bond",
+  "https://linkguard.thechocostudios.bond",
+  "https://sheeblink.thechocostudios.bond",
   "https://the-choco-studios-official.vercel.app",
   "https://the-choco-studios-information.vercel.app",
   "https://the-choco-studios-information.netlify.app",
