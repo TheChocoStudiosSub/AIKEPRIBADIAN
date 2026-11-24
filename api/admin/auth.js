@@ -33,7 +33,7 @@ async function readBody(req) {
 }
 
 function backendConfig() {
-  const base = String(process.env.TCS_BACKEND_SUPABASE_URL || "").replace(/\\/+$/, "");
+  const base = String(process.env.TCS_BACKEND_SUPABASE_URL || "").replace(/\/+$/, "");
   const publishableKey = String(process.env.TCS_BACKEND_PUBLISHABLE_KEY || "");
   return base && publishableKey ? { base, publishableKey } : null;
 }
@@ -113,7 +113,7 @@ export default async function handler(req, res) {
   const username = typeof body.username === "string" ? body.username.trim().toLowerCase() : "";
   const password = typeof body.password === "string" ? body.password : "";
   if (!/^[a-z0-9][a-z0-9_-]{2,23}$/.test(username) || password.length < 1 || password.length > 128 ||
-      /[\\u0000-\\u001F\\u007F]/.test(password)) {
+      password.split("").some((character) => character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)) {
     return send(res, 401, { ok: false, error: "invalid_credentials" });
   }
 
