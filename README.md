@@ -32,15 +32,15 @@ The above describes the product role. Capabilities that require integrations or 
 
 ## Current public endpoints
 
-- Choco AI: https://tcs-chocoai.vercel.app/
+- Choco AI: https://chocoai.thechocostudios.bond/
 - TCS UploadFit: https://tcs-uploadfit.vercel.app/
-- TCS LinkGuard: https://tcs-linkguard.vercel.app/
+- TCS LinkGuard: https://linkguard.thechocostudios.bond/
 - Sheeblink: https://sheeblink.thechocostudios.bond/
 - Vornika+-: https://vornika-games.vercel.app/
 - TCS Template: https://tcs-template.vercel.app/ (deployment observed SSO-protected; public access is not guaranteed)
 - Official TCS website: https://thechocostudios.bond/
 - TCS Information: https://information.thechocostudios.bond/
-- Help Center / Sara: https://choco-ai-help-center.vercel.app/
+- Help Center / Sara: https://helpcenter.thechocostudios.bond/
 - Contribution guide: https://thechocostudios.bond/bergabung/
 - Contact: thechocostudios@gmail.com
 - Founder LinkedIn: https://www.linkedin.com/in/hasby-prasetya-tcs/
