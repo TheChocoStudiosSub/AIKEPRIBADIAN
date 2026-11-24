@@ -45,6 +45,14 @@ The above describes the product role. Capabilities that require integrations or 
 - Contact: thechocostudios@gmail.com
 - Founder LinkedIn: https://www.linkedin.com/in/hasby-prasetya-tcs/
 
+## Current implementation boundaries
+
+The public chat interface currently uses a fixed `standard` mode. The inference model is selected server-side through `GROQ_MODEL`; the UI does not yet provide a verified three-mode router for standard, reasoning, and image analysis.
+
+The current chat request path is text-only. Image upload/vision input, file reading, and live web browsing are not implemented in this repository's public chat flow. Do not advertise image analysis or file/web access as available features until the corresponding backend, UI, permissions, and tests exist.
+
+The public chat rate limiter uses an in-memory map inside the serverless runtime (20 requests per 10-minute bucket per runtime instance). It is a best-effort local limit, not a globally coordinated quota across all serverless instances. Do not describe it as abuse-proof or as a strict global rate limit.
+
 ## Architecture
 
 - Frontend: static web application in `public/`.
