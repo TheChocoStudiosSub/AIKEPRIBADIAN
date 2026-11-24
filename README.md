@@ -36,7 +36,7 @@ The above describes the product role. Capabilities that require integrations or 
 - TCS UploadFit: https://tcs-uploadfit.vercel.app/
 - TCS LinkGuard: https://linkguard.thechocostudios.bond/
 - Sheeblink: https://sheeblink.thechocostudios.bond/
-- Vornika+-: https://vornika-games.vercel.app/
+- Vornika+-: https://vornika.thechocostudios.bond/
 - TCS Template: https://tcs-template.vercel.app/ (deployment observed SSO-protected; public access is not guaranteed)
 - Official TCS website: https://thechocostudios.bond/
 - TCS Information: https://information.thechocostudios.bond/
