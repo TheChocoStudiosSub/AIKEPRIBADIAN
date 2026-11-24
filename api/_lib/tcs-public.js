@@ -1,4 +1,11 @@
 const ALLOWED_ORIGINS = new Set([
+  // Canonical TCS production domains.
+  "https://thechocostudios.bond",
+  "https://information.thechocostudios.bond",
+  "https://chocoai.thechocostudios.bond",
+  "https://helpcenter.thechocostudios.bond",
+  // Existing admin-panel origin and legacy aliases retained for compatibility.
+  "https://tcs-admin-panel.vercel.app",
   "https://the-choco-studios-official.vercel.app",
   "https://the-choco-studios-information.vercel.app",
   "https://the-choco-studios-information.netlify.app",
