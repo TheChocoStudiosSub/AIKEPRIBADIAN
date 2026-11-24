@@ -67,7 +67,7 @@
   {
     "id": "tcs-linkguard-status",
     "title": "Status TCS LinkGuard",
-    "content": "TCS LinkGuard adalah penerus proyek awal TCS yang sebelumnya bernama Chocobot Guardian. Versi 1.2.0 merupakan pemindai manual kualitas website untuk memeriksa tautan, gambar, metadata dasar, dan sinyal aksesibilitas. TCS LinkGuard bukan pemindai keamanan, tidak menjalankan monitoring otomatis, dan tidak boleh dipromosikan sebagai crawler berkelanjutan.",
+    "content": "TCS LinkGuard adalah penerus proyek awal TCS yang sebelumnya bernama Chocobot Guardian. Versi 1.2.0 merupakan demo fungsional pra-produksi untuk pemindai manual kualitas website untuk memeriksa tautan, gambar, metadata dasar, dan sinyal aksesibilitas. TCS LinkGuard bukan pemindai keamanan, tidak menjalankan monitoring otomatis, dan tidak boleh dipromosikan sebagai crawler berkelanjutan.",
     "category": "tcs-project",
     "source": "curated-tcs-profile",
     "tags": [
@@ -94,7 +94,7 @@
   {
     "id": "tcs-official-sites",
     "title": "Situs resmi TCS",
-    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Pusat informasi TCS: https://the-choco-studios-information.vercel.app/. Keduanya memiliki fungsi berbeda; situs informasi bukan situs resmi utama.",
+    "content": "Situs resmi The Choco Studios: https://thechocostudios.bond/. Pusat informasi TCS: https://information.thechocostudios.bond/. Keduanya memiliki fungsi berbeda; situs informasi bukan situs resmi utama.",
     "category": "tcs-contact",
     "source": "curated-tcs-profile",
     "tags": [
@@ -145,7 +145,7 @@
   {
     "id": "tcs-current-project-map",
     "title": "Peta proyek publik dan komponen ekosistem TCS",
-    "content": "The Choco Studios (TCS) adalah studio kreatif independen multisektor yang berfokus pada open-source, teknologi terapan, dokumentasi, pemeliharaan proyek, dan kolaborasi terstruktur. Proyek yang terverifikasi mencakup Choco AI, Sara, TCS LinkGuard, TCS UploadFit, TCS Template (deployment Vercel masih SSO-protected pada audit terakhir), Learn with TCS, TCS Engine v0.1.0, Sheeblink, dan Vornika+- (nama sebelumnya Prism Gaming Studios). Vornika berawal sebagai inisiatif kreatif independen yang secara sukarela bergabung setelah melihat cakupan gagasan TCS yang luas dan peluang perspektif lintas bidang untuk mengembangkan kreativitasnya. Kini Vornika menjadi unit khusus sekaligus pelopor pengembangan game TCS. Proyek game pertamanya yang diserahkan untuk jalur Vornika adalah Flappy Bird, implementasi browser satu file HTML dengan kontrol sentuh/keyboard, skor, best score lokal, dan efek suara; ini merupakan kontribusi awal, bukan bukti katalog game matang atau rilis Windows.",
+    "content": "The Choco Studios (TCS) adalah studio kreatif independen multisektor yang berfokus pada open-source, teknologi terapan, dokumentasi, pemeliharaan proyek, dan kolaborasi terstruktur. Proyek yang terverifikasi mencakup Choco AI, Sara, TCS LinkGuard, TCS UploadFit, TCS Template (deployment Vercel masih SSO-protected pada audit terakhir), Learn with TCS, TCS Engine v0.2.0, Sheeblink, dan Vornika+- (nama sebelumnya Prism Gaming Studios). Vornika berawal sebagai inisiatif kreatif independen yang secara sukarela bergabung setelah melihat cakupan gagasan TCS yang luas dan peluang perspektif lintas bidang untuk mengembangkan kreativitasnya. Kini Vornika menjadi unit khusus sekaligus pelopor pengembangan game TCS. Proyek game pertamanya yang diserahkan untuk jalur Vornika adalah Flappy Bird, implementasi browser satu file HTML dengan kontrol sentuh/keyboard, skor, best score lokal, dan efek suara; ini merupakan kontribusi awal, bukan bukti katalog game matang atau rilis Windows.",
     "category": "tcs-ecosystem",
     "source": "tcs-prism-voluntary-integration-correction-2026-11-21",
     "tags": [
@@ -166,7 +166,7 @@
   {
     "id": "tcs-current-url-map",
     "title": "Alamat resmi TCS dan layanan publik",
-    "content": "Situs resmi The Choco Studios: https://the-choco-studios-official.vercel.app/. Pusat informasi TCS: https://the-choco-studios-information.vercel.app/. Choco AI: https://tcs-chocoai.vercel.app/. Choco AI Help Center dan Sara: https://choco-ai-help-center.vercel.app/ (Sara berada di /bot.html). TCS LinkGuard: https://tcs-linkguard.vercel.app/. TCS UploadFit: https://tcs-uploadfit.vercel.app/. Sheeblink: https://sheeblink.vercel.app/. Vornika+- (nama sebelumnya Prism Gaming Studios): https://vornika-games.vercel.app/. TCS Template memiliki SSO pada deployment yang diperiksa, sehingga akses publik tidak boleh dijanjikan. Email publik TCS: thechocostudios@gmail.com.",
+    "content": "Situs resmi The Choco Studios: https://thechocostudios.bond/. Pusat informasi TCS: https://information.thechocostudios.bond/. Choco AI: https://chocoai.thechocostudios.bond/. Choco AI Help Center dan Sara: https://helpcenter.thechocostudios.bond/ (Sara berada di /bot.html). TCS LinkGuard: https://linkguard.thechocostudios.bond/. TCS UploadFit: https://tcs-uploadfit.vercel.app/. Sheeblink: https://sheeblink.thechocostudios.bond/. Vornika+- (nama sebelumnya Prism Gaming Studios): https://vornika-games.vercel.app/. TCS Template memiliki SSO pada deployment yang diperiksa, sehingga akses publik tidak boleh dijanjikan. Email publik TCS: thechocostudios@gmail.com.",
     "category": "tcs-contact",
     "source": "vercel-project-audit-2026-11-21",
     "tags": [
@@ -225,7 +225,7 @@
   {
     "id": "tcs-engine-status",
     "title": "Status TCS Engine",
-    "content": "TCS Engine adalah fondasi game engine JavaScript modular untuk browser, dengan rilis publik awal v0.1.0. Repositori mendokumentasikan ECS, render 2D Canvas, render 3D Three.js, input keyboard/mouse/sentuh, audio, pemuatan aset, pengelolaan scene/UI, dan fisika AABB dasar. TCS Engine belum menjadi editor game lengkap; visual editor, visual scripting, dan multiplayer tidak termasuk cakupan terverifikasi. Lisensi dan kebijakan kontribusi khusus perlu diperiksa langsung pada repositori sebelum digunakan.",
+    "content": "TCS Engine adalah fondasi game engine JavaScript modular untuk browser, didokumentasikan pada v0.2.0; repository juga memuat integrasi game FREKUENSI 03:17. Lisensi publik belum ditetapkan. Repositori mendokumentasikan ECS, render 2D Canvas, render 3D Three.js, input keyboard/mouse/sentuh, audio, pemuatan aset, pengelolaan scene/UI, dan fisika AABB dasar. TCS Engine belum menjadi editor game lengkap; visual editor, visual scripting, dan multiplayer tidak termasuk cakupan terverifikasi. Lisensi dan kebijakan kontribusi khusus perlu diperiksa langsung pada repositori sebelum digunakan.",
     "category": "tcs-project",
     "source": "github-repository-audit-2026-11-21",
     "tags": [
