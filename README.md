@@ -8,9 +8,15 @@ The Choco Studios (TCS) is an independent multisector creative studio founded, o
 
 TCS's strategic focus is open-source software, applied technology, documentation, project stewardship, and structured collaboration. TCS may continue to develop applications, but application production is no longer its central strategic focus.
 
-Sheeblink is a handmade creative initiative integrated into the TCS ecosystem as part of TCS's expansion beyond technology. It retains its recognizable creative identity. The integration is not a marketplace arrangement.
+Sheeblink is a handmade creative initiative integrated into the TCS ecosystem as part of TCS's expansion beyond technology. It retains its recognizable creative identity. The initial TCS project formerly called Chocobot Guardian is now named **TCS LinkGuard**. The former 16-app catalogue is obsolete and must not be used as the current public portfolio.
 
-The initial TCS project formerly called Chocobot Guardian is now named **TCS LinkGuard**. The former 16-app catalogue is obsolete and must not be used as the current public portfolio.\n\nThe verified ecosystem also includes TCS UploadFit (local image preparation), TCS Template (browser-based document generators; deployment currently SSO-protected), Learn with TCS (Indonesian-language learning project in development), and TCS Engine (JavaScript game-engine foundation v0.1.0). Sheeblink is integrated into the TCS ecosystem. Vornika+- is the rebranded continuation of the unit previously known as Prism Gaming Studios, which began as an independently developed creative initiative and voluntarily joined TCS after recognising its broad range of ideas and cross-disciplinary exploration. Vornika now serves as TCS's dedicated game-development unit and pioneer within the ecosystem, while retaining its name and creative identity. Its first game project through this unit is a basic single-file browser implementation of Flappy Bird.
+The verified ecosystem also includes:
+- **TCS UploadFit:** local image preparation for Windows.
+- **TCS Template:** browser-based document generators; current public accessibility must be checked before describing it as publicly available.
+- **Learn with TCS:** Indonesian-language learning project in development.
+- **TCS Engine:** JavaScript game-engine foundation, currently documented at v0.2.0.
+- **Vornika+-:** TCS's dedicated game-development unit, continuing the identity previously known as Prism Gaming Studios.
+- **Sheeblink:** integrated handmade initiative within the TCS ecosystem.
 
 ## Product role
 
@@ -26,14 +32,26 @@ The above describes the product role. Capabilities that require integrations or 
 
 ## Current public endpoints
 
-- Choco AI: https://tcs-chocoai.vercel.app/\n- TCS UploadFit: https://tcs-uploadfit.vercel.app/\n- TCS LinkGuard: https://tcs-linkguard.vercel.app/\n- Sheeblink: https://sheeblink.vercel.app/\n- Vornika+-: https://vornika-games.vercel.app/\n- TCS Template: https://tcs-template.vercel.app/ (deployment observed SSO-protected; public access not guaranteed)
-- Official TCS website: https://the-choco-studios-official.vercel.app/
-- TCS Information: https://the-choco-studios-information.vercel.app/
-- TCS LinkGuard: https://tcs-linkguard.vercel.app/
-- Help Center / Sara: https://choco-ai-help-center.vercel.app/
-- Contribution guide: https://the-choco-studios-official.vercel.app/bergabung/
+- Choco AI: https://chocoai.thechocostudios.bond/
+- TCS UploadFit: https://tcs-uploadfit.vercel.app/
+- TCS LinkGuard: https://linkguard.thechocostudios.bond/
+- Sheeblink: https://sheeblink.thechocostudios.bond/
+- Vornika+-: https://vornika.thechocostudios.bond/
+- TCS Template: https://tcs-template.vercel.app/ (deployment observed SSO-protected; public access is not guaranteed)
+- Official TCS website: https://thechocostudios.bond/
+- TCS Information: https://information.thechocostudios.bond/
+- Help Center / Sara: https://helpcenter.thechocostudios.bond/
+- Contribution guide: https://thechocostudios.bond/bergabung/
 - Contact: thechocostudios@gmail.com
 - Founder LinkedIn: https://www.linkedin.com/in/hasby-prasetya-tcs/
+
+## Current implementation boundaries
+
+The public chat interface currently uses a fixed `standard` mode. The inference model is selected server-side through `GROQ_MODEL`; the UI does not yet provide a verified three-mode router for standard, reasoning, and image analysis.
+
+The current chat request path is text-only. Image upload/vision input, file reading, and live web browsing are not implemented in this repository's public chat flow. Do not advertise image analysis or file/web access as available features until the corresponding backend, UI, permissions, and tests exist.
+
+The public chat rate limiter uses an in-memory map inside the serverless runtime (20 requests per 10-minute bucket per runtime instance). It is a best-effort local limit, not a globally coordinated quota across all serverless instances. Do not describe it as abuse-proof or as a strict global rate limit.
 
 ## Architecture
 

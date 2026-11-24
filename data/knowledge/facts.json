@@ -2,7 +2,7 @@
   {
     "id": "project-stack",
     "title": "Arsitektur dan hosting aktif Choco AI",
-    "content": "Choco AI berjalan di Vercel project choco-ai-independent-seven (repository TheChocoStudiosSub/AIKEPRIBADIAN), dengan frontend statis, endpoint api/chat.js, dan shared server handler netlify/functions/chat.js. Endpoint produksi utama: https://tcs-chocoai.vercel.app/. Inferensi memakai Groq. Rahasia GROQ_API_KEY, TCS_OWNER_AUTH_SERVER_KEY, dan kredensial Supabase dikelola sebagai environment variables server-side.",
+    "content": "Choco AI berjalan di Vercel project choco-ai-independent-seven (repository TheChocoStudiosSub/AIKEPRIBADIAN), dengan frontend statis, endpoint api/chat.js, dan shared server handler netlify/functions/chat.js. Endpoint produksi utama: https://chocoai.thechocostudios.bond/. Inferensi memakai Groq. Rahasia GROQ_API_KEY, TCS_OWNER_AUTH_SERVER_KEY, dan kredensial Supabase dikelola sebagai environment variables server-side.",
     "category": "architecture",
     "source": "repository-and-deployment-check",
     "tags": [
@@ -45,7 +45,7 @@
   {
     "id": "model-provider",
     "title": "Model dan penyedia inferensi",
-    "content": "Choco AI menggunakan Groq API untuk inferensi. Nama model dapat ditentukan melalui variabel lingkungan GROQ_MODEL; nilai fallback dalam fungsi chat saat ini adalah openai/gpt-oss-20b. Mengganti model API tidak sama dengan melatih model fondasi sendiri.",
+    "content": "Choco AI menggunakan Groq API untuk inferensi. Nama model dapat ditentukan melalui variabel lingkungan GROQ_MODEL; nilai fallback dalam fungsi chat saat ini adalah openai/gpt-oss-20b. UI publik saat ini menggunakan mode standard tetap, bukan pemilih tiga mode. Jalur chat publik hanya menerima teks; image/vision input, pembacaan file, dan penelusuran web langsung belum diimplementasikan. Mengganti model API tidak sama dengan melatih model fondasi sendiri.",
     "category": "model",
     "source": "netlify/functions/chat.js",
     "tags": [
@@ -72,7 +72,7 @@
   {
     "id": "tcs-brand-contact",
     "title": "Kontak resmi The Choco Studios",
-    "content": "Email kontak publik The Choco Studios adalah thechocostudios@gmail.com. Situs resmi TCS: https://the-choco-studios-official.vercel.app/. Pusat informasi TCS: https://the-choco-studios-information.vercel.app/. Profil LinkedIn Hasby Prasetya Saprudin: https://www.linkedin.com/in/hasby-prasetya-tcs/. Jangan menyebarkan nomor pribadi atau mengarang kanal kontak lain.",
+    "content": "Email kontak publik The Choco Studios adalah thechocostudios@gmail.com. Situs resmi TCS: https://thechocostudios.bond/. Pusat informasi TCS: https://information.thechocostudios.bond/. Profil LinkedIn Hasby Prasetya Saprudin: https://www.linkedin.com/in/hasby-prasetya-tcs/. Jangan menyebarkan nomor pribadi atau mengarang kanal kontak lain.",
     "category": "brand-contact",
     "source": "curated-creator-profile",
     "tags": [
@@ -86,7 +86,7 @@
   {
     "id": "tcs-product-catalogue",
     "title": "Katalog produk digital TCS",
-    "content": "Direktori proyek terkini yang telah diverifikasi mencakup Choco AI, Sara Help Center, TCS LinkGuard, TCS UploadFit, TCS Template, Learn with TCS, TCS Engine, Sheeblink, serta Vornika+- (nama sebelumnya Prism Gaming Studios) sebagai unit khusus sekaligus pelopor pengembangan game TCS. Vornika berasal dari inisiatif kreatif independen dan secara sukarela bergabung setelah melihat luasnya gagasan serta eksplorasi lintas bidang TCS. Vornika mempertahankan identitas mereknya. Proyek game pertama melalui Vornika adalah Flappy Bird, berupa implementasi browser satu file HTML dengan kontrol keyboard/touch, skor, best score lokal, dan efek suara. Ini adalah kontribusi awal, bukan bukti katalog game matang atau rilis Windows. Status berbeda-beda: TCS Template memiliki deployment SSO; Learn with TCS masih mengembangkan materi dan belum memiliki entri verified; TCS Engine v0.1.0 adalah fondasi engine, bukan editor lengkap; Prism Ops masih fondasi teknis. Katalog lama 16 aplikasi bukan katalog publik aktif. TCS UMKM Stock & Sales Tracker telah ditinggalkan. Jangan menyebut demo, arsip, proyek privat, atau fondasi belum selesai sebagai produk publik yang siap dipakai.",
+    "content": "Direktori proyek terkini yang telah diverifikasi mencakup Choco AI, Sara Help Center, TCS LinkGuard, TCS UploadFit, TCS Template, Learn with TCS, TCS Engine, Sheeblink, serta Vornika+- (nama sebelumnya Prism Gaming Studios) sebagai unit khusus sekaligus pelopor pengembangan game TCS. Vornika berasal dari inisiatif kreatif independen dan secara sukarela bergabung setelah melihat luasnya gagasan serta eksplorasi lintas bidang TCS. Vornika mempertahankan identitas mereknya. Proyek game pertama melalui Vornika adalah Flappy Bird, berupa implementasi browser satu file HTML dengan kontrol keyboard/touch, skor, best score lokal, dan efek suara. Ini adalah kontribusi awal, bukan bukti katalog game matang atau rilis Windows. Status berbeda-beda: TCS Template memiliki deployment SSO; Learn with TCS masih mengembangkan materi dan belum memiliki entri verified; TCS Engine v0.2.0 adalah fondasi engine, bukan editor lengkap; Prism Ops masih fondasi teknis. Katalog lama 16 aplikasi bukan katalog publik aktif. TCS UMKM Stock & Sales Tracker telah ditinggalkan. Jangan menyebut demo, arsip, proyek privat, atau fondasi belum selesai sebagai produk publik yang siap dipakai.",
     "category": "products",
     "source": "tcs-prism-voluntary-integration-correction-2026-11-21",
     "tags": [
@@ -139,7 +139,7 @@
   {
     "id": "tcs-website-routes",
     "title": "Alamat layanan dan produk TCS",
-    "content": "Situs resmi https://the-choco-studios-official.vercel.app/ ; pusat informasi https://the-choco-studios-information.vercel.app/ ; Choco AI https://tcs-chocoai.vercel.app/ ; Help Center/Sara https://choco-ai-help-center.vercel.app/ ; TCS LinkGuard https://tcs-linkguard.vercel.app/ ; TCS UploadFit https://tcs-uploadfit.vercel.app/ ; Sheeblink https://sheeblink.vercel.app/ ; Vornika+- (nama sebelumnya Prism Gaming Studios) https://vornika-games.vercel.app/ . Vornika berawal dari inisiatif independen dan bergabung secara sukarela ke TCS sebagai unit khusus pengembangan game. TCS Template https://tcs-template.vercel.app/ saat pemeriksaan memerlukan akses melalui SSO. Gunakan URL kanonis, bukan domain Netlify/Vercel lama yang sudah tidak dipakai.",
+    "content": "Situs resmi https://thechocostudios.bond/ ; pusat informasi https://information.thechocostudios.bond/ ; Choco AI https://chocoai.thechocostudios.bond/ ; Help Center/Sara https://helpcenter.thechocostudios.bond/ ; TCS LinkGuard https://linkguard.thechocostudios.bond/ ; TCS UploadFit https://tcs-uploadfit.vercel.app/ ; Sheeblink https://sheeblink.thechocostudios.bond/ ; Vornika+- (nama sebelumnya Prism Gaming Studios) https://vornika.thechocostudios.bond/ . Vornika berawal dari inisiatif independen dan bergabung secara sukarela ke TCS sebagai unit khusus pengembangan game. TCS Template https://tcs-template.vercel.app/ saat pemeriksaan memerlukan akses melalui SSO. Gunakan URL kanonis, bukan domain Netlify/Vercel lama yang sudah tidak dipakai.",
     "category": "brand-contact",
     "source": "tcs-prism-voluntary-integration-correction-2026-11-21",
     "tags": [
@@ -154,7 +154,7 @@
   {
     "id": "prism-tcs-game-branch",
     "title": "Vornika+-: cabang pengembangan game TCS",
-    "content": "Vornika+- (nama sebelumnya Prism Gaming Studios) berawal sebagai inisiatif kreatif yang dikembangkan secara independen. Vornika secara sukarela mengajukan diri untuk bergabung ke ekosistem The Choco Studios (TCS) setelah melihat bahwa TCS memiliki cakupan gagasan yang luas dan eksplorasi lintas bidang. Vornika menilai lingkungan tersebut dapat menghadirkan perspektif baru dan ruang yang lebih besar bagi perkembangan kreatifnya. Kini Vornika menjadi unit khusus sekaligus pelopor pengembangan game di dalam TCS. Ketika TCS mengembangkan proyek game, Vornika menjadi jalur internal yang menginisiasi dan menangani pengembangannya. Vornika tetap mempertahankan nama, logo, tagline 'Play Beyond the Ordinary.', dan identitas kreatifnya sendiri. Penjelasan publik berfokus pada kesempatan bertumbuh melalui gagasan TCS yang luas, bukan alasan pribadi di balik keputusan bergabung. Proyek pertama melalui jalur game Vornika adalah Flappy Bird, implementasi browser satu file HTML dengan kontrol sentuh/keyboard, skor, best score lokal, dan efek suara hasil generate. Ini adalah kontribusi awal dan titik mulai, bukan bukti katalog game besar atau rilis Windows terpisah. Situs: https://vornika-games.vercel.app/.",
+    "content": "Vornika+- (nama sebelumnya Prism Gaming Studios) berawal sebagai inisiatif kreatif yang dikembangkan secara independen. Vornika secara sukarela mengajukan diri untuk bergabung ke ekosistem The Choco Studios (TCS) setelah melihat bahwa TCS memiliki cakupan gagasan yang luas dan eksplorasi lintas bidang. Vornika menilai lingkungan tersebut dapat menghadirkan perspektif baru dan ruang yang lebih besar bagi perkembangan kreatifnya. Kini Vornika menjadi unit khusus sekaligus pelopor pengembangan game di dalam TCS. Ketika TCS mengembangkan proyek game, Vornika menjadi jalur internal yang menginisiasi dan menangani pengembangannya. Vornika tetap mempertahankan nama, logo, tagline 'Play Beyond the Ordinary.', dan identitas kreatifnya sendiri. Penjelasan publik berfokus pada kesempatan bertumbuh melalui gagasan TCS yang luas, bukan alasan pribadi di balik keputusan bergabung. Proyek pertama melalui jalur game Vornika adalah Flappy Bird, implementasi browser satu file HTML dengan kontrol sentuh/keyboard, skor, best score lokal, dan efek suara hasil generate. Ini adalah kontribusi awal dan titik mulai, bukan bukti katalog game besar atau rilis Windows terpisah. Situs: https://vornika.thechocostudios.bond/.",
     "category": "tcs-ecosystem",
     "source": "tcs-prism-voluntary-integration-correction-2026-11-21",
     "tags": [
@@ -180,6 +180,45 @@
       "TCS game development",
       "creative growth",
       "Prism Gaming Studios (nama sebelumnya)"
+    ]
+  },
+  {
+    "id": "choco-ai-current-capabilities",
+    "title": "Batas kemampuan Choco AI pada implementasi saat ini",
+    "content": "UI publik Choco AI menetapkan modelMode standard secara tetap. Model inferensi dipilih server-side melalui GROQ_MODEL. Tidak ada pemilih mode standar/penalaran/analisis gambar yang terverifikasi. Jalur chat publik hanya menerima teks; unggah gambar, vision input, pembacaan file, dan penelusuran web langsung belum diimplementasikan. Jangan menyatakan fitur tersebut tersedia sebelum UI, backend, izin, dan pengujiannya selesai.",
+    "category": "product-status",
+    "source": "current-code-audit",
+    "tags": [
+      "capabilities",
+      "model-mode",
+      "image",
+      "files",
+      "web"
+    ]
+  },
+  {
+    "id": "choco-ai-rate-limit-scope",
+    "title": "Cakupan rate limit chat publik Choco AI",
+    "content": "Handler chat publik saat ini memakai Map in-memory dengan batas 20 permintaan per bucket 10 menit per instance runtime serverless. Karena data batas tidak dibagikan antarinstrance dan dapat hilang saat cold start, ini adalah pembatasan best-effort, bukan kuota global atau perlindungan abuse yang kuat.",
+    "category": "security",
+    "source": "netlify/functions/chat.js",
+    "tags": [
+      "rate-limit",
+      "serverless",
+      "abuse-prevention"
+    ]
+  },
+  {
+    "id": "tcs-engine-license-status",
+    "title": "Status lisensi TCS Engine",
+    "content": "Repository TCS-ENGINE bersifat publik tetapi tidak memiliki file LICENSE pada audit 24 November 2026. Kode belum memiliki lisensi open-source yang jelas. Jangan menyebut TCS Engine sebagai proyek open-source berlisensi atau mengasumsikan hak penggunaan, modifikasi, maupun distribusi sebelum TCS menetapkan lisensi.",
+    "category": "project-status",
+    "source": "GitHub repository audit 2026-11-24",
+    "tags": [
+      "TCS Engine",
+      "license",
+      "open-source",
+      "governance"
     ]
   }
 ]
