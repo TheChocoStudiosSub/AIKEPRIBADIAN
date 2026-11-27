@@ -45,9 +45,6 @@
   .page-title {
     font-size: 21px;
   }
-  .topbar-context {
-    font-size: 7px;
-  }
   .workspace-status {
     display: none;
   }
@@ -118,9 +115,6 @@
   .input-actions {
     gap: 5px;
   }
-  .composer-hint {
-    letter-spacing: 0;
-  }
 }
 @media (max-height: 680px) and (min-width: 761px) {
   .chat-content {
@@ -149,9 +143,6 @@
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
-  }
-  .welcome-ripple {
-    animation: none !important;
   }
 }
 @media (min-width: 721px) {
