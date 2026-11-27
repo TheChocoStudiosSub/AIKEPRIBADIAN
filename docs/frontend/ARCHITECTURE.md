@@ -51,9 +51,9 @@ Urutan link CSS di HTML adalah kontrak: tokens harus dimuat sebelum file yang me
 | `#chatScroll`, `#welcome`, `#welcomeHeading`, `#messages` | Chat controller | Area percakapan dan welcome state |
 | `#form`, `#message`, `#send` | Chat controller + keyboard handler | Mengirim input ke API chat |
 | `[data-open-panel]`, `[data-close-panel]` | Chat controller | Menampilkan dan menutup modal |
-| `#sitePreferenceBackdrop`, `#savePersonality`, dan kontrol preferensi turunannya | Chat controller + site preferences | Mengatur preferensi respons dan persetujuan iklan |
+| `#personalityBackdrop` dan preferensi turunannya | Chat controller | Mengatur preferensi respons lokal |
 | `#settingsBackdrop` | HTML/modal | Status menu pengaturan umum; saat ini belum tersedia |
-| `#languageControl`, `#chocoLanguageToggle`, `#chocoLanguageMenu`, `[data-language]` | `language.js` | Membuka menu bahasa, mengganti bahasa antarmuka, dan menyimpan pilihan lokal |
+| `#sitePreferenceBackdrop` | Site preferences | Persetujuan iklan pihak ketiga |
 | `#nativeAdPlacement`, `#sponsorLinkSlot` | Ads scripts | Slot iklan yang dikontrol persetujuan |
 | `#mobileAdPopup` dan turunannya | Mobile sponsor popup | Popup sponsor untuk layar mobile |
 
@@ -67,7 +67,6 @@ Perubahan nama/hapus hook di atas harus disertai pembaruan JavaScript, dokumenta
 - `cooldownUntil`: jeda pengiriman pesan yang dibagikan melalui key `chocoNextAllowedAt`.
 - `tcs_license_request`: data request token sementara di sessionStorage.
 - `choco_site_preferences_v1`: persetujuan iklan pada localStorage.
-- `choco-language-v1`: bahasa antarmuka pada localStorage.
 
 Tidak ada kontrak penyimpanan riwayat percakapan permanen untuk halaman web ini. Tombol Percakapan baru hanya membersihkan konteks percakapan di halaman saat itu; ia tidak menghapus data pada backend.
 
@@ -95,6 +94,4 @@ The public workspace keeps response personalization and site-consent controls in
 
 The chat composer uses a progressively increasing client-side send cooldown after each completed request: 12 seconds, then 20 seconds, then 28 seconds, increasing by 8 seconds until a 60-second ceiling. The progression resets after 30 minutes without a send attempt and is stored locally so a page refresh does not reset an active pacing level. This is a browser-side pacing safeguard only. It does not replace Groq's account/model rate limits, backend request validation, or HTTP 429 handling and retry policy.
 
-The top bar provides a language button that opens a compact menu for Indonesian (default), English, and Mandarin (Simplified Chinese). The selected language is stored in localStorage under `choco-language-v1`. Only public interface text is translated; user messages and model replies in the conversation stream remain untouched.
-
-Avoid ornamental separator symbols, repeated micro-branding, and visual shortcut labels that do not trigger a real action. Keep symbols only when they identify an actual control or convey useful state.
+The interface keeps the language selector for Indonesian (default), English, and Simplified Chinese. It translates public interface text only; user messages and model replies in the conversation stream remain untouched.
