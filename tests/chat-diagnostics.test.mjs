@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   inspectSseFrame,
+  observeChatStream,
   resolveChatDiagnosticIdentity,
   verifyChatIdentityCookie
 } from "../netlify/functions/core/chat-diagnostics.mjs";
@@ -66,4 +67,45 @@ test("SSE diagnostic parser detects length truncation and provider errors", () =
   const error = inspectSseFrame('data: {"error":{"message":"rate limited"}}');
   assert.equal(truncated.finishReason, "length");
   assert.equal(error.error, true);
+});
+
+
+test("observed SSE stream completes only after finish reason and DONE", async () => {
+  const encoder = new TextEncoder();
+  const frames = [
+    'data: {"choices":[{"delta":{"content":"Halo"}}]}\n\n',
+    'data: {"choices":[{"delta":{},"finish_reason":"stop"}]}\n\n',
+    "data: [DONE]\n\n"
+  ];
+  const upstream = new ReadableStream({
+    start(controller) {
+      for (const frame of frames) controller.enqueue(encoder.encode(frame));
+      controller.close();
+    }
+  });
+  let finalStats;
+  const response = new Response(observeChatStream(upstream, async (stats) => { finalStats = stats; }));
+  const text = await response.text();
+  assert.match(text, /Halo/);
+  assert.equal(finalStats.requestStatus, "completed");
+  assert.equal(finalStats.responseCharacters, 4);
+  assert.equal(finalStats.streamDoneReceived, true);
+  assert.equal(finalStats.finishReason, "stop");
+});
+
+test("observed SSE stream is marked truncated when DONE is absent or finish reason is length", async () => {
+  const encoder = new TextEncoder();
+  const upstream = new ReadableStream({
+    start(controller) {
+      controller.enqueue(encoder.encode('data: {"choices":[{"delta":{"content":"Terpotong"}}]}\n\n'));
+      controller.enqueue(encoder.encode('data: {"choices":[{"delta":{},"finish_reason":"length"}]}\n\n'));
+      controller.close();
+    }
+  });
+  let finalStats;
+  await new Response(observeChatStream(upstream, async (stats) => { finalStats = stats; })).text();
+  assert.equal(finalStats.requestStatus, "truncated");
+  assert.equal(finalStats.responseCharacters, 9);
+  assert.equal(finalStats.streamDoneReceived, false);
+  assert.equal(finalStats.finishReason, "length");
 });
