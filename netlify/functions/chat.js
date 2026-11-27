@@ -429,7 +429,7 @@ export default async (request) => {
           max_completion_tokens: ({ short: 500, balanced: 1000, detailed: 2000 })[responseLength],
           stream: streamRequested
         }),
-        signal: AbortSignal.timeout(20000)
+        signal: AbortSignal.timeout(18000)
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
@@ -467,7 +467,7 @@ export default async (request) => {
               messages: [...messages, { role: "assistant", content: reply }, { role: "user", content: "Jawaban sebelumnya terhenti karena batas keluaran. Lanjutkan tepat dari bagian terakhir yang sudah ditulis. Jangan mengulang pembukaan, paragraf, atau daftar yang sudah ada. Selesaikan semua bagian yang masih belum terjawab dan akhiri dengan wajar." }],
               max_completion_tokens: 1000
             }),
-            signal: AbortSignal.timeout(6000)
+            signal: AbortSignal.timeout(5000)
           });
           if (continuation.ok) {
             const continuationData = await continuation.json();
