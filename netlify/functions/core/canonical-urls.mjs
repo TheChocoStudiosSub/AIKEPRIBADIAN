@@ -8,7 +8,9 @@ const LEGACY_URLS = [
   ["https://choco-ai-help-center.netlify.app", "https://helpcenter.thechocostudios.bond"],
   ["https://tcs-linkguard.vercel.app", "https://linkguard.thechocostudios.bond"],
   ["https://sheeblink.vercel.app", "https://sheeblink.thechocostudios.bond"],
-  ["https://vornika-games.vercel.app", "https://vornika.thechocostudios.bond"]
+  ["https://vornika-games.vercel.app", "https://vornika.thechocostudios.bond"],
+  ["https://tcs-uploadfit.vercel.app", "https://apps.microsoft.com/detail/9MZ61KZF53LW"],
+  ["https://tcs-template.vercel.app", "TCS Template is currently SSO-protected; no verified public access URL is available"]
 ];
 
 const MAX_LEGACY_URL_LENGTH = Math.max(...LEGACY_URLS.map(([url]) => url.length));
