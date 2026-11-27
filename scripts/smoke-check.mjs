@@ -29,8 +29,8 @@ const requiredFiles = [
   "supabase/config.toml",
   "supabase/migrations/20261019010000_account_sync.sql",
   "supabase/migrations/20261021010000_knowledge_rag.sql",
-  "supabase/migrations/20261127193000_choco_ai_distributed_chat_rate_limit.sql",
-  "supabase/migrations/20261127194000_harden_private_owner_auth_tables.sql",
+  "supabase/migrations/20261127134844_choco_ai_distributed_chat_rate_limit.sql",
+  "supabase/migrations/20261127134852_harden_private_owner_auth_tables.sql",
   "tests/rate-limit.test.mjs",
   "tests/chat-backend.test.mjs",
   "tests/license-api.test.mjs"
