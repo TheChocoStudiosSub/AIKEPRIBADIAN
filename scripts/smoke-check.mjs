@@ -6,8 +6,23 @@ import {
 } from "../netlify/functions/core/retrieval.mjs";
 
 const requiredFiles = [
+  "README.md",
+  "frontend/README.md",
+  "docs/frontend/ARCHITECTURE.md",
+  "docs/frontend/INTEGRATION-CONTRACTS.md",
+  "docs/frontend/DEVELOPER-HANDOFF.md",
   "netlify.toml",
   "public/index.html",
+  "public/assets/css/tokens.css",
+  "public/assets/css/base.css",
+  "public/assets/css/workspace.css",
+  "public/assets/css/components.css",
+  "public/assets/css/responsive.css",
+  "public/assets/js/chat-keyboard.js",
+  "public/assets/js/ads-loader.js",
+  "public/assets/js/chat-controller.js",
+  "public/assets/js/site-preferences.js",
+  "public/assets/js/mobile-sponsor-popup.js",
   "netlify/functions/chat.js",
   "supabase/config.toml",
   "supabase/migrations/20261019010000_account_sync.sql",
