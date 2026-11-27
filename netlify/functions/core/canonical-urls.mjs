@@ -46,6 +46,12 @@ export function canonicalizeTcsStream(stream) {
           if (done) break;
           const combined = carry + decoder.decode(value, { stream: true });
           let safeLength = Math.max(0, combined.length - MAX_LEGACY_URL_LENGTH);
+          for (const [legacy] of LEGACY_URLS) {
+            const crossingStart = combined.lastIndexOf(legacy, safeLength - 1);
+            if (crossingStart >= 0 && crossingStart + legacy.length > safeLength) {
+              safeLength = crossingStart;
+            }
+          }
           if (safeLength > 0 && /[\uD800-\uDBFF]/.test(combined.charAt(safeLength - 1))) safeLength -= 1;
           if (safeLength > 0) {
             controller.enqueue(encoder.encode(canonicalizeTcsUrls(combined.slice(0, safeLength))));
