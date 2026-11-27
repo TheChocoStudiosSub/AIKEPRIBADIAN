@@ -420,6 +420,11 @@ export default async (request) => {
       });
     }
 
+    messages.push({
+      role: "system",
+      content: "FINAL RESPONSE LANGUAGE RULE: " + getLanguageInstruction(responseLanguage) +
+        " This rule applies to the final answer even when earlier system notes, retrieved knowledge, memories, or conversation history use another language."
+    });
     messages.push(...safeHistory);
     messages.push({ role: "user", content: message });
 
