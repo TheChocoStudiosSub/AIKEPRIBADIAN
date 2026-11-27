@@ -51,7 +51,6 @@ checks.push(
   { name: "distributed chat rate-limit table is private and RLS-enabled", ok: chatRateLimit.includes("alter table private.tcs_chat_rate_limits enable row level security") },
   { name: "distributed chat rate-limit table has no direct client grants", ok: chatRateLimit.includes("revoke all on table private.tcs_chat_rate_limits") && chatRateLimit.includes("from public, anon, authenticated, service_role") },
   { name: "distributed chat rate-limit RPC is a server-key-gated definer", ok: chatRateLimit.includes("create or replace function public.tcs_chat_consume_rate_limit") && chatRateLimit.includes("security definer") && chatRateLimit.includes("private._tcs_owner_check_server_key(p_server_key)") },
-  { name: "distributed chat rate-limit RPC is a server-key-gated definer", ok: chatRateLimit.includes("create or replace function public.tcs_chat_consume_rate_limit") && chatRateLimit.includes("security definer") && chatRateLimit.includes("private._tcs_owner_check_server_key(p_server_key)") },
   { name: "private Owner auth hardening migration exists", ok: Boolean(ownerAuthHardening) },
   { name: "Owner login attempts table enables RLS", ok: ownerAuthHardening.includes("alter table private.tcs_owner_auth_attempts enable row level security") },
   { name: "Owner auth config table enables RLS", ok: ownerAuthHardening.includes("alter table private.tcs_owner_auth_config enable row level security") },
