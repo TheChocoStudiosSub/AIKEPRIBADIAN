@@ -28,8 +28,8 @@ for (const filename of migrationFiles) {
 
 const base = sqlByFile.get("20261019010000_account_sync.sql") || "";
 const rag = sqlByFile.get("20261021010000_knowledge_rag.sql") || "";
-const chatRateLimit = sqlByFile.get("20261127193000_choco_ai_distributed_chat_rate_limit.sql") || "";
-const ownerAuthHardening = sqlByFile.get("20261127194000_harden_private_owner_auth_tables.sql") || "";
+const chatRateLimit = sqlByFile.get("20261127134844_choco_ai_distributed_chat_rate_limit.sql") || "";
+const ownerAuthHardening = sqlByFile.get("20261127134852_harden_private_owner_auth_tables.sql") || "";
 
 for (const table of ["profiles", "conversations", "messages", "memories"]) {
   checks.push({
