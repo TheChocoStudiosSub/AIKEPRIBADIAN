@@ -2,9 +2,9 @@ name: AI Quality Checks
 
 on:
   push:
-    branches: [main]
+    branches: [main, backend/choco-ai-integration]
   pull_request:
-    branches: [main]
+    branches: [main, redesign/choco-ai-premium-workspace]
   workflow_dispatch:
 
 permissions:
