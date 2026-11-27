@@ -30,7 +30,7 @@ jobs:
           node --check netlify/functions/chat.js
           node --check api/chat.js
           node --check netlify/functions/core/retrieval.mjs
-      - name: Check inline frontend JavaScript
+      - name: Check inline and external frontend JavaScript
         run: node scripts/check-inline-scripts.mjs
       - name: Validate knowledge data
         run: node scripts/validate-knowledge.mjs
@@ -40,5 +40,5 @@ jobs:
         run: node --test tests/*.test.mjs
       - name: Evaluate retrieval baseline
         run: node scripts/evaluate-retrieval.mjs
-      - name: Smoke-test repository configuration and real knowledge corpus
+      - name: Smoke-test repository configuration, frontend handoff, and real knowledge corpus
         run: node scripts/smoke-check.mjs

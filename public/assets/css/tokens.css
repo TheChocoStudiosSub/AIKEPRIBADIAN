@@ -1,0 +1,31 @@
+:root {
+  color-scheme: dark;
+  --bg: #070705;
+  --bg-raised: #0b0a08;
+  --sidebar: #0a0907;
+  --surface: #11100d;
+  --surface-raised: #17150f;
+  --surface-hover: #1d1a12;
+  --line: rgba(200, 169, 106, .16);
+  --line-strong: rgba(200, 169, 106, .28);
+  --text: #ece6d8;
+  --text-soft: #c7bfae;
+  --muted: #968e7d;
+  --muted-deep: #756e60;
+  --gold: #c8a96a;
+  --gold-light: #e3cb94;
+  --gold-pale: #f0dfb8;
+  --gold-gradient: linear-gradient(118deg, #b99350 0%, #c8a96a 55%, #e3cb94 100%);
+  --gold-wash: linear-gradient(110deg, rgba(200,169,106,.12), rgba(200,169,106,.035));
+  --danger: #e69a8c;
+  --success: #8eb99a;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Jost", Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --sidebar-width: 278px;
+  --context-width: 304px;
+  --shadow-soft: 0 18px 48px rgba(0,0,0,.34);
+  --shadow-deep: 0 28px 90px rgba(0,0,0,.58);
+  --motion-fast: 160ms ease;
+  --motion: 220ms ease;
+}
