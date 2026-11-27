@@ -460,3 +460,48 @@ test("retired aliases in model-generated non-stream replies are canonicalized", 
   const payload = await response.json();
   assert.equal(payload.reply, "Sara is available at https://helpcenter.thechocostudios.bond/bot.html");
 });
+
+
+test("retired aliases in streamed model replies are canonicalized across chunks", async () => {
+  configureChatIntegration();
+  const baseFetch = globalThis.fetch;
+  const source = 'data: {"choices":[{"delta":{"content":"Sara: https://choco-ai-help-center.vercel.app/bot.html"}}]}\n\n' +
+    'data: [DONE]\n\n';
+  const splitAt = source.indexOf("choco-ai-help-center") + 7;
+  const encoder = new TextEncoder();
+  globalThis.fetch = async (url, init = {}) => {
+    if (url === "https://api.groq.com/openai/v1/chat/completions") {
+      const stream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode(source.slice(0, splitAt)));
+          controller.enqueue(encoder.encode(source.slice(splitAt)));
+          controller.close();
+        }
+      });
+      return new Response(stream, {
+        status: 200,
+        headers: { "Content-Type": "text/event-stream; charset=utf-8" }
+      });
+    }
+    return baseFetch(url, init);
+  };
+
+  const response = await chatHandler(new Request("https://chocoai.test/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: "What is Sara AI?",
+      history: [],
+      memories: [],
+      preferences: {},
+      modelMode: "standard",
+      client: "chatbot",
+      stream: true
+    })
+  }));
+
+  assert.equal(response.status, 200);
+  const payload = await response.text();
+  assert.match(payload, /https:\/\/helpcenter\.thechocostudios\.bond\/bot\.html/);
+  assert.doesNotMatch(payload, /choco-ai-help-center\.vercel\.app/i);
+});
