@@ -1,6 +1,6 @@
 const WORDS = {
   en: new Set([
-    "the", "and", "you", "your", "who", "what", "where", "when", "why", "how",
+    "the", "and", "you", "your", "who", "what", "where", "when", "why", "how", "yes", "yeah", "ok", "okay", "i", "we", "our", "my",
     "is", "are", "was", "were", "can", "could", "would", "should", "this", "that",
     "these", "those", "tell", "me", "please", "do", "does", "did", "have", "has",
     "created", "creator", "made", "make", "find", "found", "from", "with", "for",
@@ -32,7 +32,7 @@ const MESSAGES = {
     ownerInvalidCredential: "Kredensial Owner tidak valid.",
     ownerSessionFailed: "Sesi Owner belum dapat dibuat. Silakan coba kembali.",
     ownerVerified: "Identitas Owner berhasil diverifikasi. Sesi Owner aktif selama 8 jam pada browser ini.",
-    rateLimit: "Batas penggunaan sementara tercapai. Coba lagi dalam sekitar {seconds} detik.",
+    rateLimit: "Batas sementara tercapai. Coba lagi dalam sekitar {seconds} detik.",
     groqRateLimitWait: "Batas penggunaan Groq sedang tercapai. Tunggu sekitar {seconds} detik sebelum mencoba kembali.",
     groqRateLimit: "Batas penggunaan Groq sedang tercapai. Tunggu sebentar sebelum mencoba kembali.",
     groqHttp: "Layanan Groq mengembalikan HTTP {status}. Coba lagi nanti.",
