@@ -21,7 +21,7 @@ test("rewrites retired TCS deployment aliases to canonical domains", () => {
   assert.ok(result.includes("https://linkguard.thechocostudios.bond/"));
   assert.ok(result.includes("https://sheeblink.thechocostudios.bond/"));
   assert.ok(result.includes("https://vornika.thechocostudios.bond/"));
-  assert.doesNotMatch(result, /(?:tcs-chocoai|the-choco-studios|choco-ai-help-center|tcs-linkguard|sheeblink|vornika-games)\\.vercel\\.app/i);
+  assert.doesNotMatch(result, /(?:tcs-chocoai|the-choco-studios|choco-ai-help-center|tcs-linkguard|sheeblink|vornika-games)\.vercel\.app/i);
 });
 
 test("keeps aliases without an established replacement unchanged", () => {
