@@ -25,24 +25,24 @@ The chat response exposes the following headers:
 - X-Choco-Conversation-ID
 
 The frontend can report what it actually received by POSTing to /api/chat-diagnostics:
-\`\`\`json
+```json
 {
   "action": "client_report",
   "diagnosticId": "<X-Choco-Diagnostic-ID>",
   "receivedCharacters": 1234,
   "receivedDone": true
 }
-\`\`\`
+```
 This report is client telemetry, not authoritative proof. The Owner compares it with the server-side response character count and [DONE] state.
 
 ## Owner lookup
 
 POST /api/owner/chat-diagnostics with a valid Owner session cookie:
-\`\`\`json
+```json
 {
   "action": "lookup",
   "diagnosticId": "<diagnostic-id>",
   "limit": 20
 }
-\`\`\`
+```
 You can filter by conversationId, visitorId, or ipAddress instead. IP and User-Agent are only returned to the verified Owner endpoint.
