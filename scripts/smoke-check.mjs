@@ -24,9 +24,12 @@ const requiredFiles = [
   "public/assets/js/site-preferences.js",
   "public/assets/js/mobile-sponsor-popup.js",
   "netlify/functions/chat.js",
+  "netlify/functions/core/rate-limit.mjs",
+  "docs/backend/README.md",
   "supabase/config.toml",
   "supabase/migrations/20261019010000_account_sync.sql",
-  "supabase/migrations/20261021010000_knowledge_rag.sql"
+  "supabase/migrations/20261021010000_knowledge_rag.sql",
+  "supabase/migrations/20261127193000_choco_ai_distributed_chat_rate_limit.sql"
 ];
 
 for (const file of requiredFiles) {
