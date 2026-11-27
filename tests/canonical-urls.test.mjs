@@ -10,7 +10,9 @@ test("rewrites retired TCS deployment aliases to canonical domains", () => {
     "https://choco-ai-help-center.vercel.app/bot.html",
     "https://tcs-linkguard.vercel.app/",
     "https://sheeblink.vercel.app/",
-    "https://vornika-games.vercel.app/"
+    "https://vornika-games.vercel.app/",
+    "https://tcs-uploadfit.vercel.app/",
+    "https://tcs-template.vercel.app/"
   ].join(" ");
 
   const result = canonicalizeTcsUrls(input);
@@ -21,12 +23,17 @@ test("rewrites retired TCS deployment aliases to canonical domains", () => {
   assert.ok(result.includes("https://linkguard.thechocostudios.bond/"));
   assert.ok(result.includes("https://sheeblink.thechocostudios.bond/"));
   assert.ok(result.includes("https://vornika.thechocostudios.bond/"));
-  assert.doesNotMatch(result, /(?:tcs-chocoai|the-choco-studios|choco-ai-help-center|tcs-linkguard|sheeblink|vornika-games)\.vercel\.app/i);
+  assert.ok(result.includes("https://apps.microsoft.com/detail/9MZ61KZF53LW/"));
+  assert.ok(result.includes("TCS Template is currently SSO-protected; no verified public access URL is available"));
+  assert.doesNotMatch(result, /(?:tcs-chocoai|the-choco-studios|choco-ai-help-center|tcs-linkguard|sheeblink|vornika-games|tcs-uploadfit|tcs-template)\.vercel\.app/i);
 });
 
 test("keeps aliases without an established replacement unchanged", () => {
   const input = "https://tcs-uploadfit.vercel.app/ https://tcs-template.vercel.app/";
-  assert.equal(canonicalizeTcsUrls(input), input);
+  const result = canonicalizeTcsUrls(input);
+  assert.ok(result.includes("https://apps.microsoft.com/detail/9MZ61KZF53LW/"));
+  assert.ok(result.includes("no verified public access URL is available"));
+  assert.doesNotMatch(result, /tcs-(?:uploadfit|template)\.vercel\.app/i);
 });
 
 test("rewrites URLs split across SSE chunks", async () => {
