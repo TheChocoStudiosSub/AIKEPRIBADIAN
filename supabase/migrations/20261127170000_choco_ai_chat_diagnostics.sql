@@ -61,8 +61,9 @@ begin
   end if;
 
   if p_stage = 'start' then
-    if p_conversation_title is null or char_length(p_conversation_title) < 1
-       or char_length(p_conversation_title) > 36 or p_request_mode not in ('stream', 'json') then
+    if p_conversation_id is null or p_conversation_title is null or char_length(p_conversation_title) < 1
+       or char_length(p_conversation_title) > 36 or p_request_mode is null
+       or p_request_mode not in ('stream', 'json') then
       return pg_catalog.jsonb_build_object('ok', false, 'error', 'invalid_start_arguments');
     end if;
     if p_ip_address is not null and p_ip_address <> '' then
@@ -90,7 +91,8 @@ begin
   end if;
 
   if p_stage = 'finish' then
-    if p_request_status not in ('completed', 'truncated', 'failed', 'cancelled') then
+    if p_conversation_id is null or p_request_status is null
+       or p_request_status not in ('completed', 'truncated', 'failed', 'cancelled') then
       return pg_catalog.jsonb_build_object('ok', false, 'error', 'invalid_request_status');
     end if;
     update private.tcs_chat_diagnostics
@@ -110,8 +112,7 @@ begin
   update private.tcs_chat_diagnostics
   set client_received_characters = greatest(0, coalesce(p_client_received_characters, client_received_characters)),
       client_received_done = coalesce(p_client_received_done, client_received_done)
-  where diagnostic_id = p_diagnostic_id and visitor_id = p_visitor_id
-    and conversation_id = p_conversation_id;
+  where diagnostic_id = p_diagnostic_id and visitor_id = p_visitor_id;
   return pg_catalog.jsonb_build_object('ok', found, 'stage', 'client_report');
 end;
 $function$;
