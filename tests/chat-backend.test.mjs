@@ -221,8 +221,9 @@ test("chat endpoint preserves the non-stream JSON contract and TCS-only system s
 });
 
 test("chat endpoint preserves OpenAI-compatible SSE streaming", async () => {
-  const integration = configureChatIntegration();
+  configureChatIntegration();
   const encoder = new TextEncoder();
+  let streamGroqPayload = null;
 
   globalThis.fetch = async (url, init = {}) => {
     if (url.endsWith("/rpc/tcs_chat_consume_rate_limit")) {
@@ -234,7 +235,7 @@ test("chat endpoint preserves OpenAI-compatible SSE streaming", async () => {
       return new Response("[]", { status: 200, headers: { "Content-Type": "application/json" } });
     }
     if (url === "https://api.groq.com/openai/v1/chat/completions") {
-      integration.groqPayload = JSON.parse(init.body);
+      streamGroqPayload = JSON.parse(init.body);
       const stream = new ReadableStream({
         start(controller) {
           controller.enqueue(encoder.encode('data: {"choices":[{"delta":{"content":"Halo"}}]}\n\n'));
@@ -269,6 +270,8 @@ test("chat endpoint preserves OpenAI-compatible SSE streaming", async () => {
   assert.match(response.headers.get("Content-Type"), /text\/event-stream/i);
   assert.equal(response.headers.get("Cache-Control"), "no-cache, no-store, no-transform");
   assert.equal(response.headers.get("X-Choco-Stream"), "groq");
+  assert.equal(streamGroqPayload.stream, true);
+  assert.equal(streamGroqPayload.model, "openai/gpt-oss-20b");
   const streamText = await response.text();
   assert.match(streamText, /"content":"Halo"/);
   assert.match(streamText, /"content":" TCS"/);
