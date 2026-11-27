@@ -224,8 +224,10 @@ test("chat endpoint preserves OpenAI-compatible SSE streaming", async () => {
   configureChatIntegration();
   const encoder = new TextEncoder();
   let streamGroqPayload = null;
+  let mockFetchError = null;
 
   globalThis.fetch = async (url, init = {}) => {
+    try {
     if (url.endsWith("/rpc/tcs_chat_consume_rate_limit")) {
       return new Response(JSON.stringify({
         ok: true, allowed: true, remaining: 18, retry_after_seconds: 590
@@ -250,6 +252,10 @@ test("chat endpoint preserves OpenAI-compatible SSE streaming", async () => {
       });
     }
     throw new Error("Unexpected upstream request: " + url);
+    } catch (error) {
+      mockFetchError = { name: error?.name, message: error?.message };
+      throw error;
+    }
   };
 
   const response = await chatHandler(new Request("https://chocoai.test/api/chat", {
@@ -266,7 +272,7 @@ test("chat endpoint preserves OpenAI-compatible SSE streaming", async () => {
     })
   }));
 
-  assert.equal(response.status, 200);
+  assert.equal(response.status, 200, JSON.stringify(mockFetchError));
   assert.match(response.headers.get("Content-Type"), /text\/event-stream/i);
   assert.equal(response.headers.get("Cache-Control"), "no-cache, no-store, no-transform");
   assert.equal(response.headers.get("X-Choco-Stream"), "groq");
