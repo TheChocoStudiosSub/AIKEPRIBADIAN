@@ -66,7 +66,11 @@ export default async function handler(req, res) {
     const result = await upstream.json().catch(() => ({}));
     if (!upstream.ok) {
       const status = upstream.status === 404 ? 404 : upstream.status >= 500 ? 503 : upstream.status;
-      return send(res, status, { error: result.error || "license_request_failed" });
+      const publicError = typeof result.error === "string" &&
+        /^[a-z][a-z0-9_]{1,63}$/.test(result.error)
+        ? result.error
+        : "license_request_failed";
+      return send(res, status, { error: publicError });
     }
 
     if (action === "submit_purchase_reference") {
