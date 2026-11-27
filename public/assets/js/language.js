@@ -5,7 +5,7 @@ const TRANSLATIONS={"Your assistant in TCS":{"en":"Your assistant in TCS","zh":"
 const originals=new WeakMap(),lastText=new WeakMap(),originalAttrs=new WeakMap(),lastAttrs=new WeakMap();
 let language='id';
 const normalize=value=>String(value||'').replace(/\s+/g,' ').trim();
-function excluded(node){const parent=node.parentElement;return !parent||parent.closest('#messages,script,style,noscript,textarea,input,select,option,pre,code,[data-no-translate],#languageControl');}
+function excluded(node){const parent=node.parentElement;return !parent||parent.closest('#messages,script,style,noscript,textarea,input,pre,code,[data-no-translate],#languageControl');}
 function translateNode(node){
  const current=node.nodeValue||'';
  if(lastText.has(node)&&current===lastText.get(node))return;
