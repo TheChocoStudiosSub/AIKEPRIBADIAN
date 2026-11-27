@@ -107,7 +107,7 @@ test("chat endpoint rejects bodies larger than 64 KB", async () => {
   assert.equal(response.status, 413);
 });
 
-function configureChatIntegration({ ownerVerified = false, publicDocuments = [], ownerDocuments = [] } = {}) {
+function configureChatIntegration({ ownerVerified = false, publicDocuments = [], ownerDocuments = [], groqReply = "Jawaban uji Choco AI." } = {}) {
   process.env.GROQ_API_KEY = "test-only-not-a-real-key";
   process.env.TCS_KNOWLEDGE_SUPABASE_URL = "https://knowledge.example.test";
   process.env.TCS_KNOWLEDGE_PUBLISHABLE_KEY = "publishable-test-key";
@@ -153,7 +153,7 @@ function configureChatIntegration({ ownerVerified = false, publicDocuments = [],
       return new Response(JSON.stringify({
         model: "openai/gpt-oss-20b",
         choices: [{
-          message: { content: "Jawaban uji Choco AI." },
+          message: { content: groqReply },
           finish_reason: "stop"
         }]
       }), { status: 200, headers: { "Content-Type": "application/json" } });
@@ -364,4 +364,99 @@ test.after(() => {
     else process.env[key] = originalEnv[key];
   }
   globalThis.fetch = originalFetch;
+});
+
+
+test("English TCS questions keep English response language despite Indonesian knowledge documents", async () => {
+  const integration = configureChatIntegration({
+    publicDocuments: [{
+      app_name: "Sara AI",
+      title: "Sara AI Help Center",
+      content: "Sara supports TCS users at https://choco-ai-help-center.vercel.app/."
+    }]
+  });
+
+  const response = await chatHandler(new Request("https://chocoai.test/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: "what a sara ai?",
+      history: [],
+      memories: [],
+      preferences: {},
+      modelMode: "standard",
+      client: "chatbot",
+      stream: false
+    })
+  }));
+
+  assert.equal(response.status, 200);
+  const languageRule = integration.groqPayload.messages.find(message =>
+    message.role === "system" && /FINAL RESPONSE LANGUAGE RULE/.test(message.content)
+  );
+  assert.ok(languageRule);
+  assert.match(languageRule.content, /entirely in English/i);
+  const knowledge = integration.groqPayload.messages.find(message =>
+    message.content.includes("TCS_KNOWLEDGE_HUB_PUBLIC_BEGIN")
+  );
+  assert.ok(knowledge);
+  assert.match(knowledge.content, /https:\/\/helpcenter\.thechocostudios\.bond\//);
+  assert.doesNotMatch(knowledge.content, /choco-ai-help-center\.vercel\.app/i);
+});
+
+test("Groq rate-limit errors are returned in the user's language", async () => {
+  configureChatIntegration();
+  const baseFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init = {}) => {
+    if (url === "https://api.groq.com/openai/v1/chat/completions") {
+      return new Response(JSON.stringify({ error: { message: "provider internal details" } }), {
+        status: 429,
+        headers: { "Content-Type": "application/json", "Retry-After": "2" }
+      });
+    }
+    return baseFetch(url, init);
+  };
+
+  const response = await chatHandler(new Request("https://chocoai.test/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: "what a sara ai?",
+      history: [],
+      memories: [],
+      preferences: {},
+      modelMode: "standard",
+      client: "chatbot",
+      stream: false
+    })
+  }));
+
+  assert.equal(response.status, 429);
+  const payload = await response.json();
+  assert.match(payload.error, /Groq is temporarily rate-limiting requests/i);
+  assert.match(payload.error, /2 seconds/i);
+  assert.doesNotMatch(payload.error, /provider internal details/i);
+});
+
+test("retired aliases in model-generated non-stream replies are canonicalized", async () => {
+  const legacyReply = "Sara is available at https://choco-ai-help-center.vercel.app/bot.html";
+  configureChatIntegration({ groqReply: legacyReply });
+
+  const response = await chatHandler(new Request("https://chocoai.test/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: "What is Sara AI?",
+      history: [],
+      memories: [],
+      preferences: {},
+      modelMode: "standard",
+      client: "chatbot",
+      stream: false
+    })
+  }));
+
+  assert.equal(response.status, 200);
+  const payload = await response.json();
+  assert.equal(payload.reply, "Sara is available at https://helpcenter.thechocostudios.bond/bot.html");
 });
