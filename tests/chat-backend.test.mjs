@@ -199,6 +199,8 @@ test("chat endpoint preserves the non-stream JSON contract and TCS-only system s
 
   assert.equal(response.status, 200);
   assert.match(response.headers.get("Content-Type"), /application\/json/i);
+  assert.match(response.headers.get("X-Choco-Diagnostic-ID") || "", /^[0-9a-f-]{36}$/i);
+  assert.match(response.headers.get("X-Choco-Conversation-ID") || "", /^[0-9a-f-]{36}$/i);
   const payload = await response.json();
   assert.deepEqual(payload, {
     reply: "Jawaban uji Choco AI.",
