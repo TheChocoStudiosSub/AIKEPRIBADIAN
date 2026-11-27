@@ -163,6 +163,11 @@ function diagnosticJson(payload, status, context, extraHeaders = {}) {
 }
 
 async function writeChatDiagnostic(env, context, stage, patch = {}) {
+  const serverKey = String(env.TCS_OWNER_AUTH_SERVER_KEY || "");
+  if (!env.TCS_KNOWLEDGE_SUPABASE_URL || !env.TCS_KNOWLEDGE_PUBLISHABLE_KEY ||
+      !/^[0-9a-f]{64}$/i.test(serverKey)) {
+    return { ok: false, unavailable: true };
+  }
   const result = await ownerRpc(env, "tcs_chat_write_diagnostic", {
     p_stage: stage,
     p_diagnostic_id: context.diagnosticId,
