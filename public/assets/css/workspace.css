@@ -559,3 +559,10 @@
 .workspace-note-link:hover {
   color: var(--gold-pale);
 }
+
+
+.language-control{display:inline-flex;align-items:center;gap:7px;min-height:36px;padding:4px 9px;border:1px solid rgba(200,169,106,.24);border-radius:9px;background:rgba(200,169,106,.045);color:var(--muted);font-size:11px}
+.language-control-label{color:var(--gold-pale);white-space:nowrap}
+.language-control select{max-width:132px;border:0;outline:0;background:transparent;color:var(--text);font:inherit;cursor:pointer}
+.language-control option{background:#11100d;color:#f4efe5}
+@media(max-width:760px){.language-control{min-height:34px;padding:3px 7px}.language-control-label{display:none}.language-control select{max-width:116px}}

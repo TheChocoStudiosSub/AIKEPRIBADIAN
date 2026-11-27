@@ -86,3 +86,10 @@ Tidak ada kontrak penyimpanan riwayat percakapan permanen untuk halaman web ini.
 - Jangan menyimpan access token/refresh token pada browser.
 - Jangan menganggap riwayat sesi browser sebagai chat history permanen.
 - Jangan menampilkan mock sebagai status produksi.
+
+
+## UI language
+
+The public interface supports three selectable languages: Indonesian (first-visit default), English, and Simplified Chinese (zh-CN). The selector is rendered in the workspace top bar, and the selected language is stored locally under choco-language-v1.
+
+The selector translates interface labels, accessible names, placeholders, and UI status text. The #messages conversation area is intentionally excluded from automatic interface translation so user prompts and assistant responses are not rewritten. Language of model-generated replies remains part of the chat/API language policy and is not guaranteed by this selector alone.

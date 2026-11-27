@@ -177,3 +177,8 @@ Server statis tersebut tidak menyediakan endpoint `/api/*`; pengujian integrasi 
 - [Kontrak API dan integrasi](docs/frontend/INTEGRATION-CONTRACTS.md)
 - [Developer handoff dan pembagian tanggung jawab](docs/frontend/DEVELOPER-HANDOFF.md)
 - [Panduan folder frontend](frontend/README.md)
+
+
+## Bahasa antarmuka
+
+Choco AI menyediakan pemilih bahasa Indonesia (utama/default), English, dan Mandarin Sederhana. Pilihan bahasa disimpan secara lokal di browser. Pemilih ini mengubah teks antarmuka, bukan mengubah atau menerjemahkan isi percakapan pengguna dan jawaban AI secara otomatis. Bahasa jawaban AI tetap mengikuti instruksi dan kebijakan pada alur chat/backend.
