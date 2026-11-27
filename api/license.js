@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       },
       cache: "no-store",
       body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(12000)
+      signal: AbortSignal.timeout(8000)
     });
     const result = await upstream.json().catch(() => ({}));
     if (!upstream.ok) {
