@@ -55,8 +55,8 @@ begin
   if coalesce(private._tcs_owner_check_server_key(p_server_key), false) is not true then
     return pg_catalog.jsonb_build_object('ok', false, 'error', 'unauthorized');
   end if;
-  if p_stage not in ('start', 'finish', 'client_report')
-     or p_diagnostic_id is null or p_visitor_id is null or p_conversation_id is null then
+  if p_stage is null or p_stage not in ('start', 'finish', 'client_report')
+     or p_diagnostic_id is null or p_visitor_id is null then
     return pg_catalog.jsonb_build_object('ok', false, 'error', 'invalid_arguments');
   end if;
 
@@ -221,4 +221,4 @@ $function$;
 revoke all on function public.tcs_chat_get_diagnostics(uuid, uuid, uuid, text, integer, text)
   from public, anon, authenticated, service_role;
 grant execute on function public.tcs_chat_get_diagnostics(uuid, uuid, uuid, text, integer, text)
-  to anon, authenticated, service_role;
+  to anon;
