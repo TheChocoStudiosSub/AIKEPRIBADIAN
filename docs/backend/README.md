@@ -30,7 +30,7 @@ Semua variabel harus dipasang di environment server Vercel, tidak di aset browse
 
 Default adalah 20 request per 10 menit per alamat klien. Production limiter menggunakan RPC `tcs_chat_consume_rate_limit` dan tabel privat `private.tcs_chat_rate_limits`. Sistem hanya menyimpan hash SHA-256 dari alamat klien, bukan alamat mentah, prompt, atau isi percakapan.
 
-Migration `20261127193000_choco_ai_distributed_chat_rate_limit.sql` harus diterapkan pada **project Supabase Choco AI Knowledge Hub** sebelum limiter terdistribusi aktif. Jangan menerapkannya ke project TCS Backend yang menjalankan `tcs-license`.
+Migration `20261127193000_choco_ai_distributed_chat_rate_limit.sql` harus diterapkan pada **project Supabase Choco AI Knowledge Hub** sebelum limiter terdistribusi aktif. Migration `20261127194000_harden_private_owner_auth_tables.sql` juga mengaktifkan RLS pada tabel autentikasi Owner yang berada di schema privat; fungsi internal yang dimiliki role `postgres` tetap dapat mengaksesnya melalui hak `BYPASSRLS`, sedangkan role browser tidak mendapat hak tabel langsung. Jangan menerapkannya ke project TCS Backend yang menjalankan `tcs-license`.
 
 Jika RPC rate limit belum tersedia atau sedang gagal, runtime memakai limiter lokal per-instance sebagai fallback sementara agar chat tidak langsung mati. Fallback ini bukan pengganti limiter terdistribusi dan tidak memberi batas global lintas instance. Periksa konfigurasi migration dan Owner server key sebelum menyatakan proteksi global aktif.
 
@@ -45,6 +45,7 @@ Jalankan:
 ```bash
 node --check netlify/functions/chat.js
 node --check netlify/functions/core/rate-limit.mjs
+node --check api/license.js
 node --test tests/*.test.mjs
 node scripts/validate-migrations.mjs
 ```
