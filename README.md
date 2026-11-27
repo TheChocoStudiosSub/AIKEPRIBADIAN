@@ -21,7 +21,7 @@ Choco AI adalah asisten AI utama dan representasi digital Choco dalam ekosistem 
 
 The Choco Studios adalah studio kreatif independen multisektor yang didirikan, dimiliki, dan dikelola secara mandiri oleh Hasby Prasetya Saprudin. TCS bukan kolektif kreator dan bukan marketplace. Fokus strategisnya adalah open-source, pengembangan teknologi, dokumentasi, pemeliharaan proyek, dan kolaborasi terstruktur.
 
-Choco AI ditujukan untuk membantu pertanyaan umum, penulisan, perencanaan, analisis, pemecahan masalah teknis, penjelasan proyek TCS, dan navigasi dokumentasi yang tersedia. Kapabilitas yang memerlukan integrasi atau tindakan eksternal tidak boleh diklaim aktif sebelum implementasi dan pengujiannya terbukti.
+Choco AI ditujukan untuk membantu kebutuhan yang berkaitan dengan TCS dan ekosistemnya, termasuk penjelasan proyek, dokumentasi, teknologi, kontribusi open-source, perencanaan, dan pemecahan masalah yang relevan. Pertanyaan di luar konteks TCS berada di luar cakupan. Fakta produk dan ekosistem harus bersumber dari korpus pengetahuan yang tersedia, bukan dikarang dari pengetahuan umum model. Kapabilitas yang memerlukan integrasi atau tindakan eksternal tidak boleh diklaim aktif sebelum implementasi dan pengujiannya terbukti.
 
 Situs publik: [https://chocoai.thechocostudios.bond/](https://chocoai.thechocostudios.bond/)
 
@@ -177,3 +177,4 @@ Server statis tersebut tidak menyediakan endpoint `/api/*`; pengujian integrasi 
 - [Kontrak API dan integrasi](docs/frontend/INTEGRATION-CONTRACTS.md)
 - [Developer handoff dan pembagian tanggung jawab](docs/frontend/DEVELOPER-HANDOFF.md)
 - [Panduan folder frontend](frontend/README.md)
+- [Arsitektur dan konfigurasi backend](docs/backend/README.md)
