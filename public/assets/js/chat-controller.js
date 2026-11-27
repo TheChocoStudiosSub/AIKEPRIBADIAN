@@ -77,7 +77,9 @@ const form = document.getElementById("form");
       cooldownTimer = setInterval(updateSendCooldown, 250);
     }
     try { cooldownUntil = Math.max(0, Number(localStorage.getItem("chocoNextAllowedAt") || 0)); } catch {}
-    if (cooldownUntil > Date.now()) { updateSendCooldown(); cooldownTimer = setInterval(updateSendCooldown, 250); }
+    if (cooldownUntil > Date.now()) cooldownTimer = setInterval(updateSendCooldown, 250);
+    else cooldownUntil = 0;
+    updateSendCooldown();
 
     document.addEventListener("keydown", event => { if (event.key === "Escape") document.querySelectorAll(".modal-backdrop").forEach(backdrop => backdrop.hidden = true); });
     loadPreferences();
