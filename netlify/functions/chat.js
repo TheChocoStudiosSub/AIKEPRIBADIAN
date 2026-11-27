@@ -159,11 +159,7 @@ function diagnosticHeaders(context, extra = {}) {
 }
 
 function diagnosticJson(payload, status, context, extraHeaders = {}) {
-  return json({
-    ...payload,
-    diagnosticId: context.diagnosticId,
-    conversationId: context.conversationId
-  }, status, diagnosticHeaders(context, extraHeaders));
+  return json(payload, status, diagnosticHeaders(context, extraHeaders));
 }
 
 async function writeChatDiagnostic(env, context, stage, patch = {}) {
