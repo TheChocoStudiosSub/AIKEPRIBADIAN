@@ -112,14 +112,17 @@
   {
     "id": "tcs-project-availability",
     "title": "Status proyek TCS yang telah diaudit",
-    "content": "Pada audit repositori dan deployment 21 November 2026, Choco AI, Help Center/Sara, TCS LinkGuard, TCS UploadFit, situs resmi TCS, situs informasi TCS, Sheeblink, dan Vornika+- (nama sebelumnya Prism Gaming Studios) memiliki deployment aktif yang terverifikasi atau domain terhubung. Vornika adalah unit khusus sekaligus pelopor pengembangan game TCS. Vornika berawal dari inisiatif independen dan secara sukarela bergabung setelah melihat luasnya gagasan TCS sebagai ruang untuk mengembangkan kreativitasnya. Proyek game pertama melalui Vornika adalah Flappy Bird, implementasi browser satu file HTML sebagai kontribusi awal. TCS Template deployment-nya masih terlindungi SSO, sehingga akses publik belum dapat dijanjikan. Learn with TCS dan TCS Engine adalah repositori pengembangan; Prism Ops masih berupa fondasi teknis. Admin Panel dan Security Engine bersifat internal/terbatas, bukan layanan publik. Repository demo, arsip, dan repositori kosong tidak dipromosikan sebagai produk aktif.",
+    "content": "Pada audit repositori dan deployment 21 November 2026, Choco AI, Help Center/Sara, TCS LinkGuard, TCS UploadFit, situs resmi TCS, situs informasi TCS, Sheeblink, dan Vornika+- (nama sebelumnya Prism Gaming Studios) memiliki deployment aktif yang terverifikasi atau domain terhubung. Vornika adalah unit khusus sekaligus pelopor pengembangan game TCS. Vornika berawal dari inisiatif independen dan secara sukarela bergabung setelah melihat luasnya gagasan TCS sebagai ruang untuk mengembangkan kreativitasnya. Proyek game pertama melalui Vornika adalah Flappy Bird, implementasi browser satu file HTML sebagai kontribusi awal. TCS Template deployment-nya masih terlindungi SSO, sehingga akses publik belum dapat dijanjikan. Learn with TCS dan TCS Engine adalah repositori pengembangan; Prism Ops masih berupa fondasi teknis. Admin Panel dan Security Engine bersifat internal/terbatas, bukan layanan publik. Repository demo, arsip, dan repositori kosong tidak dipromosikan sebagai produk aktif. Eji Design juga memiliki situs resmi aktif https://ejidesign.thechocostudios.bond/ dan merupakan brand desain visual independen yang dikelola mandiri oleh Eji dalam ekosistem TCS; layanan yang dipublikasikan mencakup poster, spanduk, feed Instagram, dan undangan digital.",
     "category": "products",
     "source": "tcs-prism-voluntary-integration-correction-2026-11-21",
     "tags": [
       "availability",
       "TCS projects",
       "deployment",
-      "status"
+      "status",
+      "Eji Design",
+      "visual design",
+      "TCS ecosystem brands"
     ]
   },
   {
@@ -139,7 +142,7 @@
   {
     "id": "tcs-website-routes",
     "title": "Alamat layanan dan produk TCS",
-    "content": "Situs resmi TCS: https://thechocostudios.bond/ ; Pusat Informasi TCS: https://information.thechocostudios.bond/ ; Choco AI: https://chocoai.thechocostudios.bond/ ; Help Center/Sara: https://helpcenter.thechocostudios.bond/ ; TCS LinkGuard: https://linkguard.thechocostudios.bond/ ; Sheeblink: https://sheeblink.thechocostudios.bond/ ; Vornika: https://vornika.thechocostudios.bond/ ; TCS Web Development: https://webdev.thechocostudios.bond/ ; TCS Game Store/top up: https://thechocostudiosgames.areno.id/ ; TCS UploadFit: https://apps.microsoft.com/detail/9MZ61KZF53LW . TCS Template pada audit terakhir masih SSO-protected dan belum memiliki alamat publik yang dapat dijamin bisa diakses. Gunakan URL kanonis, bukan alias Vercel/Netlify lama.",
+    "content": "Situs resmi TCS: https://thechocostudios.bond/ ; Pusat Informasi TCS: https://information.thechocostudios.bond/ ; Choco AI: https://chocoai.thechocostudios.bond/ ; Help Center/Sara: https://helpcenter.thechocostudios.bond/ ; TCS LinkGuard: https://linkguard.thechocostudios.bond/ ; Sheeblink: https://sheeblink.thechocostudios.bond/ ; Vornika: https://vornika.thechocostudios.bond/ ; TCS Web Development: https://webdev.thechocostudios.bond/ ; TCS Game Store/top up: https://thechocostudiosgames.areno.id/ ; TCS UploadFit: https://apps.microsoft.com/detail/9MZ61KZF53LW . TCS Template pada audit terakhir masih SSO-protected dan belum memiliki alamat publik yang dapat dijamin bisa diakses. Gunakan URL kanonis, bukan alias Vercel/Netlify lama. ; Eji Design: https://ejidesign.thechocostudios.bond/ ; Profil Eji Design pada situs resmi TCS: https://thechocostudios.bond/ecosystem/eji-design/ ; Instagram Eji Design: https://www.instagram.com/eji.vallegra/ .",
     "category": "brand-contact",
     "source": "tcs-prism-voluntary-integration-correction-2026-11-21",
     "tags": [
@@ -148,7 +151,10 @@
       "official",
       "Choco AI",
       "Sara",
-      "products"
+      "products",
+      "Eji Design",
+      "Eji",
+      "visual design"
     ]
   },
   {
@@ -180,6 +186,50 @@
       "TCS game development",
       "creative growth",
       "Prism Gaming Studios (nama sebelumnya)"
+    ]
+  },
+  {
+    "id": "eji-design-overview",
+    "title": "Eji Design: profil brand desain visual dalam ekosistem TCS",
+    "content": "Eji Design adalah brand desain visual independen yang dikelola secara mandiri oleh Eji dan menjadi bagian dari ekosistem The Choco Studios (TCS). Integrasi ini tidak menghilangkan nama, karakter, keputusan kreatif, maupun pengelolaan mandiri Eji Design. Eji Design bukan produk software milik TCS. Situs resmi: https://ejidesign.thechocostudios.bond/ . Profil pada situs TCS: https://thechocostudios.bond/ecosystem/eji-design/ . Instagram: https://www.instagram.com/eji.vallegra/ . Layanan publik meliputi desain poster untuk promosi/informasi/acara, spanduk, feed Instagram, dan undangan digital. Kisaran harga yang dipublikasikan adalah Rp20.000–Rp50.000 per desain bergantung tingkat kesulitan. Estimasi akhir dikonfirmasi sebelum pengerjaan. Tersedia hingga 5 kali revisi gratis sesuai brief awal; kebutuhan di luar brief perlu dibicarakan. Alur order: sampaikan jenis desain, tujuan, ukuran, teks, dan referensi; bahas kebutuhan serta estimasi; konfirmasi sebelum pengerjaan; tinjau hasil dan sampaikan revisi sesuai brief. Metode pembayaran yang tercantum: QRIS, DANA, dan SeaBank. Detail pembayaran diberikan saat pesanan dikonfirmasi; jangan menebak nomor rekening, nomor telepon, waktu pengerjaan, atau harga tetap tiap jenis desain.",
+    "category": "tcs-ecosystem",
+    "source": "official-eji-design-website-verified-2026-11-27",
+    "tags": [
+      "Eji",
+      "Eji Design",
+      "TCS brand",
+      "visual design",
+      "graphic design",
+      "poster",
+      "spanduk",
+      "banner",
+      "Instagram feed",
+      "digital invitation",
+      "undangan digital",
+      "price",
+      "revision",
+      "QRIS",
+      "DANA",
+      "SeaBank"
+    ]
+  },
+  {
+    "id": "tcs-ecosystem-brand-map",
+    "title": "Brand yang terhubung dengan ekosistem TCS dan pembedaan produk internal",
+    "content": "Brand/unit yang menjadi bagian dari ekosistem TCS saat ini perlu dibedakan dari produk internal yang dibuat oleh TCS. Sheeblink adalah brand handmade yang terintegrasi sambil mempertahankan identitas kreatifnya. Vornika+- adalah unit/brand pengembangan game TCS dengan identitasnya sendiri. Eji Design adalah brand desain visual independen yang dikelola mandiri oleh Eji; layanannya mencakup poster, spanduk, feed Instagram, dan undangan digital. Situs Eji Design: https://ejidesign.thechocostudios.bond/ . Profil pada situs TCS: https://thechocostudios.bond/ecosystem/eji-design/ . Brand-brand tersebut tidak boleh disamakan dengan produk internal buatan TCS, misalnya UniPlay. TCS bukan marketplace umum dan integrasi ekosistem tidak otomatis berarti TCS mengambil alih kepemilikan atau pengelolaan brand independen.",
+    "category": "tcs-ecosystem",
+    "source": "owner-provided-ecosystem-structure-and-official-sites-2026-11-27",
+    "tags": [
+      "TCS",
+      "ecosystem",
+      "brand",
+      "Sheeblink",
+      "Vornika",
+      "Vornika+-",
+      "Eji Design",
+      "UniPlay",
+      "independent brand",
+      "TCS internal product"
     ]
   }
 ]
