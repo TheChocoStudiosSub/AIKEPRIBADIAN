@@ -3,6 +3,12 @@ import FACTS from "../../data/knowledge/facts.json" with { type: "json" };
 import CONCEPTS from "../../data/knowledge/concepts.json" with { type: "json" };
 import EXPERIENCES from "../../data/knowledge/experiences.json" with { type: "json" };
 import { createHash, pbkdf2Sync, randomBytes, timingSafeEqual } from "node:crypto";
+import {
+  CHAT_RATE_LIMIT,
+  createInMemoryRateLimiter,
+  getClientAddress,
+  normalizeRateLimitResult
+} from "./core/rate-limit.mjs";
 
 const MODEL_ID = "openai/gpt-oss-20b";
 const MAX_MESSAGE_CHARS = 4000;
@@ -37,25 +43,30 @@ async function hash(value) {
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-const rateBuckets = new Map();
-async function checkRateLimit(request) {
-  const forwarded = request.headers.get("x-nf-client-connection-ip") ||
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const ipHash = await hash(forwarded);
-  const now = Date.now();
-  const windowMs = 10 * 60 * 1000;
-  const bucket = Math.floor(now / windowMs);
-  const key = ipHash + ":" + bucket;
-  for (const [entry, value] of rateBuckets) {
-    if (value.expiresAt <= now) rateBuckets.delete(entry);
+const fallbackChatRateLimiter = createInMemoryRateLimiter({
+  limit: CHAT_RATE_LIMIT.maxRequests,
+  windowSeconds: CHAT_RATE_LIMIT.windowSeconds
+});
+
+async function checkRateLimit(request, env) {
+  const clientAddress = getClientAddress(request.headers);
+  const subjectHash = await hash(clientAddress);
+  const rpc = await ownerRpc(env, "tcs_chat_consume_rate_limit", {
+    p_scope: CHAT_RATE_LIMIT.scope,
+    p_subject_hash: subjectHash,
+    p_window_seconds: CHAT_RATE_LIMIT.windowSeconds,
+    p_max_requests: CHAT_RATE_LIMIT.maxRequests
+  });
+
+  if (rpc.ok) {
+    const distributed = normalizeRateLimitResult(rpc.data);
+    if (distributed) return distributed;
+    console.error("Distributed chat rate-limit RPC returned an invalid response.");
   }
-  const current = rateBuckets.get(key) || { count: 0, expiresAt: (bucket + 1) * windowMs };
-  current.count += 1;
-  rateBuckets.set(key, current);
-  if (current.count > 20) {
-    return { ok: false, status: 429, error: "Batas sementara tercapai. Coba lagi beberapa menit." };
-  }
-  return { ok: true };
+
+  // Availability fallback while the database RPC is unavailable. This preserves
+  // the previous per-instance safeguard but is not a global cross-instance limit.
+  return fallbackChatRateLimiter(subjectHash);
 }
 
 function sanitizeHistory(raw) {
@@ -112,13 +123,17 @@ async function ownerRpc(env, action, payload) {
       signal: AbortSignal.timeout(5000)
     });
     if (!response.ok) {
-      const errorBody = (await response.text()).slice(0, 400);
-      console.error("Owner RPC HTTP failure", { action, status: response.status, body: errorBody });
+      // Do not log upstream response bodies: they may contain database details.
+      await response.text().catch(() => "");
+      console.error("Owner RPC HTTP failure", { action, status: response.status });
       return { ok: false, unavailable: true };
     }
     return { ok: true, data: await response.json() };
   } catch (error) {
-    console.error("Owner RPC network failure", { action, error: error?.message || String(error) });
+    console.error("Owner RPC network failure", {
+      action,
+      error: error?.name || "Error"
+    });
     return { ok: false, unavailable: true };
   }
 }
@@ -179,6 +194,38 @@ async function retrieveOwnerKnowledge(query, env) {
     content: String(document.content || "").slice(0, 2200)
   })).filter((document) => document.content.trim());
 }
+async function readJsonBody(request, maximumBytes = 64 * 1024) {
+  const reader = request.body?.getReader();
+  if (!reader) return { ok: false, tooLarge: false };
+
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  let bytesRead = 0;
+  let raw = "";
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytesRead += value.byteLength;
+      if (bytesRead > maximumBytes) {
+        await reader.cancel().catch(() => {});
+        return { ok: false, tooLarge: true };
+      }
+      raw += decoder.decode(value, { stream: true });
+    }
+    raw += decoder.decode();
+    const body = JSON.parse(raw);
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return { ok: false, tooLarge: false };
+    }
+    return { ok: true, body };
+  } catch {
+    return { ok: false, tooLarge: false };
+  } finally {
+    try { reader.releaseLock(); } catch {}
+  }
+}
+
 export default async (request) => {
     const env = process.env;
     if (request.method !== "POST") {
@@ -187,12 +234,15 @@ export default async (request) => {
     if (!env.GROQ_API_KEY && !env.GROQ_API_KEY_APP) {
       return json({ error: "Kunci API Groq belum dikonfigurasi di environment server." }, 503);
     }
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return json({ error: "Body request bukan JSON yang valid." }, 400);
+
+    const parsed = await readJsonBody(request);
+    if (!parsed.ok) {
+      if (parsed.tooLarge) {
+        return json({ error: "Body request terlalu besar. Maksimal 64 KB." }, 413);
+      }
+      return json({ error: "Body request harus berupa JSON object yang valid." }, 400);
     }
+    const body = parsed.body;
 
     const clientType = body.client === "app" ? "app" : "chatbot";
     const apiKey = clientType === "app" ? env.GROQ_API_KEY_APP : env.GROQ_API_KEY;
@@ -206,10 +256,9 @@ export default async (request) => {
 
     const ownerCredentialCandidate = /^[A-Za-z0-9._~-]{8,200}$/.test(message);
     if (ownerCredentialCandidate) {
-      const forwarded = request.headers.get("x-nf-client-connection-ip") ||
-        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+      const clientAddress = getClientAddress(request.headers);
       const verifierResult = await ownerRpc(env, "tcs_owner_get_verifier", {
-        p_client_hash: await hash(forwarded)
+        p_client_hash: await hash(clientAddress)
       });
       if (!verifierResult.ok) {
         return json({
@@ -276,11 +325,18 @@ export default async (request) => {
       }
     }
 
-    const limit = await checkRateLimit(request);
-    if (!limit.ok) return json({ error: limit.error }, limit.status);
+    const limit = await checkRateLimit(request, env);
+    if (!limit.allowed) {
+      return json(
+        { error: "Batas sementara tercapai. Coba lagi beberapa menit.", retryAfter: limit.retryAfterSeconds },
+        429,
+        { "Retry-After": String(limit.retryAfterSeconds) }
+      );
+    }
 
     const ownerVerified = await validateOwnerSession(request, env);
-    const preferences = body.preferences && typeof body.preferences === "object" ? body.preferences : {};
+    const preferences = body.preferences && typeof body.preferences === "object" && !Array.isArray(body.preferences)
+      ? body.preferences : {};
     const explicitlyRequestsDetail = /\b(detail|terperinci|lengkap|menyeluruh|mendalam|secara\s+detail|secara\s+lengkap|satu\s+per\s+satu|seluruh|semua\s+(?:produk|fitur|bagian|poin))\b/i.test(message);
     const preferredResponseLength = ["short", "balanced", "detailed"].includes(preferences.responseLength)
       ? preferences.responseLength : "balanced";
