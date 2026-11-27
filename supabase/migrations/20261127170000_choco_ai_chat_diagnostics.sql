@@ -148,7 +148,7 @@ revoke all on function public.tcs_chat_write_diagnostic(
 grant execute on function public.tcs_chat_write_diagnostic(
   text, uuid, uuid, uuid, text, text, text, text, text, text,
   integer, integer, text, boolean, integer, bigint, text, integer, boolean, text
-) to anon, authenticated, service_role;
+) to anon;
 
 create or replace function private._tcs_chat_get_diagnostics(
   p_diagnostic_id uuid, p_conversation_id uuid, p_visitor_id uuid,
