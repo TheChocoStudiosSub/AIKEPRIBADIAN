@@ -28,6 +28,8 @@ for (const filename of migrationFiles) {
 
 const base = sqlByFile.get("20261019010000_account_sync.sql") || "";
 const rag = sqlByFile.get("20261021010000_knowledge_rag.sql") || "";
+const chatRateLimit = sqlByFile.get("20261127193000_choco_ai_distributed_chat_rate_limit.sql") || "";
+const ownerAuthHardening = sqlByFile.get("20261127194000_harden_private_owner_auth_tables.sql") || "";
 
 for (const table of ["profiles", "conversations", "messages", "memories"]) {
   checks.push({
@@ -45,6 +47,14 @@ checks.push(
   { name: "search RPC uses invoker privileges", ok: rag.includes("security invoker") },
   { name: "search RPC caps result count", ok: rag.includes("least(coalesce(result_limit, 4), 8)") },
   { name: "knowledge updated_at trigger uses valid dollar quoting", ok: /returns trigger language plpgsql as \$\$[\s\S]*?end;\s*\$\$;/i.test(rag) },
+  { name: "distributed chat rate-limit migration exists", ok: Boolean(chatRateLimit) },
+  { name: "distributed chat rate-limit table is private and RLS-enabled", ok: chatRateLimit.includes("alter table private.tcs_chat_rate_limits enable row level security") },
+  { name: "distributed chat rate-limit table has no direct client grants", ok: chatRateLimit.includes("revoke all on table private.tcs_chat_rate_limits") && chatRateLimit.includes("from public, anon, authenticated, service_role") },
+  { name: "distributed chat rate-limit RPC is a server-key-gated definer", ok: chatRateLimit.includes("create or replace function public.tcs_chat_consume_rate_limit") && chatRateLimit.includes("security definer") && chatRateLimit.includes("private._tcs_owner_check_server_key(p_server_key)") },
+  { name: "private Owner auth hardening migration exists", ok: Boolean(ownerAuthHardening) },
+  { name: "Owner login attempts table enables RLS", ok: ownerAuthHardening.includes("alter table private.tcs_owner_auth_attempts enable row level security") },
+  { name: "Owner auth config table enables RLS", ok: ownerAuthHardening.includes("alter table private.tcs_owner_auth_config enable row level security") },
+  { name: "private Owner auth tables revoke client privileges", ok: ownerAuthHardening.includes("revoke all on table private.tcs_owner_auth_attempts") && ownerAuthHardening.includes("revoke all on table private.tcs_owner_auth_config") && ownerAuthHardening.includes("from public, anon, authenticated, service_role") },
   { name: "migrations do not embed credentials", ok: ![...sqlByFile.values()].some((sql) => /(supabase_service_role_key|supabase_access_token|groq_api_key|password\s*=\s*[\x27"][^\x27"]+)/i.test(sql)) }
 );
 

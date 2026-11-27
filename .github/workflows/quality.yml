@@ -2,9 +2,9 @@ name: AI Quality Checks
 
 on:
   push:
-    branches: [main]
+    branches: [main, backend/choco-ai-integration]
   pull_request:
-    branches: [main]
+    branches: [main, redesign/choco-ai-premium-workspace]
   workflow_dispatch:
 
 permissions:
@@ -24,12 +24,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
       - name: Check backend JavaScript syntax
         run: |
           node --check netlify/functions/chat.js
           node --check api/chat.js
+          node --check api/license.js
+          node --check api/_lib/netlify-adapter.js
           node --check netlify/functions/core/retrieval.mjs
+          node --check netlify/functions/core/rate-limit.mjs
       - name: Check inline and external frontend JavaScript
         run: node scripts/check-inline-scripts.mjs
       - name: Validate knowledge data
