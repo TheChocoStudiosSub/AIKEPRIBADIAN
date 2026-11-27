@@ -225,7 +225,7 @@
   {
     "id": "tcs-engine-status",
     "title": "Status TCS Engine",
-    "content": "TCS Engine adalah fondasi game engine JavaScript modular untuk browser, dengan rilis publik awal v0.1.0. Repositori mendokumentasikan ECS, render 2D Canvas, render 3D Three.js, input keyboard/mouse/sentuh, audio, pemuatan aset, pengelolaan scene/UI, dan fisika AABB dasar. TCS Engine belum menjadi editor game lengkap; visual editor, visual scripting, dan multiplayer tidak termasuk cakupan terverifikasi. Lisensi dan kebijakan kontribusi khusus perlu diperiksa langsung pada repositori sebelum digunakan.",
+    "content": "TCS Engine adalah fondasi game engine JavaScript modular untuk browser, dengan rilis publik awal v0.2.0. Repositori mendokumentasikan ECS, render 2D Canvas, render 3D Three.js, input keyboard/mouse/sentuh, audio, pemuatan aset, pengelolaan scene/UI, dan fisika AABB dasar. TCS Engine belum menjadi editor game lengkap; visual editor, visual scripting, dan multiplayer tidak termasuk cakupan terverifikasi. Lisensi dan kebijakan kontribusi khusus perlu diperiksa langsung pada repositori sebelum digunakan.",
     "category": "tcs-project",
     "source": "github-repository-audit-2026-11-21",
     "tags": [
@@ -233,7 +233,7 @@
       "game engine",
       "JavaScript",
       "ECS",
-      "v0.1.0"
+      "v0.2.0"
     ]
   },
   {
