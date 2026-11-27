@@ -85,17 +85,21 @@
   background: linear-gradient(120deg, rgba(200,169,106,.24), rgba(200,169,106,.11));
 }
 .new-chat-icon {
-  display: grid;
-  width: 27px;
-  height: 27px;
-  flex: 0 0 27px;
+  display: inline-grid;
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
   place-items: center;
+  padding: 0;
   border: 1px solid rgba(227,203,148,.18);
   border-radius: 8px;
-  font-size: 19px;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
   font-weight: 400;
   line-height: 1;
-  transform: translateY(-.5px);
+  text-align: center;
+  transform: none;
 }
 .new-chat-shortcut {
   margin-left: auto;
@@ -548,7 +552,6 @@
 .workspace-note-link {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
   margin-top: 10px;
   padding: 0;
   border: 0;

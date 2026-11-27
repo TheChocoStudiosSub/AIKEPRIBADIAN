@@ -9,6 +9,13 @@ const form = document.getElementById("form");
     const sidebarOverlay = document.getElementById("sidebarOverlay");
     const toast = document.getElementById("toast");
 
+    function getSelectedResponseLanguage() {
+      const selected = String(document.documentElement.lang || "id").toLowerCase();
+      if (selected.startsWith("en")) return "en";
+      if (selected.startsWith("zh")) return "zh";
+      return "id";
+    }
+
     const CONVERSATION_STORAGE_KEY = "chocoCurrentConversationV1";
     try { localStorage.removeItem(CONVERSATION_STORAGE_KEY); } catch {}
     let history = [];
@@ -550,6 +557,7 @@ const form = document.getElementById("form");
             history,
             memories: [],
             preferences,
+            responseLanguage: getSelectedResponseLanguage(),
             modelMode,
             client: "chatbot",
             stream: true

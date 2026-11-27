@@ -220,6 +220,35 @@ test("chat endpoint preserves the non-stream JSON contract and TCS-only system s
   assert.doesNotMatch(JSON.stringify(payload), /test-only-not-a-real-key|test-server-key-only/);
 });
 
+test("chat endpoint prioritizes the selected UI language over the user's message language", async () => {
+  const integration = configureChatIntegration();
+  const response = await chatHandler(new Request("https://chocoai.test/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: "Apa fungsi TCS LinkGuard?",
+      responseLanguage: "en",
+      history: [{ role: "user", content: "Jelaskan produk TCS." }],
+      memories: [],
+      preferences: {},
+      modelMode: "standard",
+      client: "chatbot",
+      stream: false
+    })
+  }));
+
+  assert.equal(response.status, 200);
+  const selectedLanguagePrompt = integration.groqPayload.messages.find(message =>
+    message.role === "system" && message.content.includes("Bahasa balasan wajib dari pemilih bahasa aplikasi: en.")
+  );
+  assert.ok(selectedLanguagePrompt);
+  assert.match(selectedLanguagePrompt.content, /selected English.*entirely in English/i);
+  const finalLanguageRule = integration.groqPayload.messages.find(message =>
+    message.role === "system" && message.content.includes("FINAL RESPONSE LANGUAGE RULE:")
+  );
+  assert.match(finalLanguageRule.content, /selected application language overrides/i);
+});
+
 test("chat endpoint preserves OpenAI-compatible SSE streaming", async () => {
   configureChatIntegration();
   const encoder = new TextEncoder();

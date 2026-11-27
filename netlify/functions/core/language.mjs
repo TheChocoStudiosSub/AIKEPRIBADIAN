@@ -134,12 +134,25 @@ export function formatChatMessage(key, language = "id", values = {}) {
   );
 }
 
+export function normalizeResponseLanguage(value) {
+  if (typeof value !== "string") return null;
+  const language = value.trim().toLowerCase();
+  if (language === "id" || language.startsWith("id-")) return "id";
+  if (language === "en" || language.startsWith("en-")) return "en";
+  if (language === "zh" || language.startsWith("zh-")) return "zh";
+  return null;
+}
+
+export function resolveResponseLanguage(preferredLanguage, message, history = []) {
+  return normalizeResponseLanguage(preferredLanguage) || detectResponseLanguage(message, history);
+}
+
 export function getLanguageInstruction(language) {
   if (language === "en") {
-    return "Reply entirely in English because the user's latest message is in English. Keep every explanation, heading, clarification, refusal, and status sentence in English. Do not switch to Indonesian because system notes or retrieved TCS documents are written in Indonesian. Preserve official TCS names and URLs.";
+    return "The user selected English in the application's language selector. Reply entirely in English. Keep every explanation, heading, clarification, refusal, and status sentence in English, even when the user's message, conversation history, or retrieved TCS documents use another language. Preserve official TCS names and URLs.";
   }
   if (language === "zh") {
-    return "请完全使用简体中文回复，因为用户最近一条消息使用中文。说明、标题、澄清、拒绝和状态提示都必须使用简体中文。不要因为系统说明或检索到的 TCS 文档使用其他语言而切换语言。保留 TCS 官方名称和 URL。";
+    return "用户在应用语言选择器中选择了简体中文。请完全使用简体中文回复。说明、标题、澄清、拒绝和状态提示都必须使用简体中文，即使用户消息、对话历史或检索到的 TCS 文档使用其他语言。保留 TCS 官方名称和 URL。";
   }
-  return "Balas sepenuhnya dalam bahasa Indonesia karena pesan terbaru pengguna menggunakan bahasa Indonesia. Jangan berpindah ke bahasa Inggris hanya karena catatan sistem atau dokumen TCS yang diambil menggunakan bahasa lain. Pertahankan nama resmi TCS dan URL.";
+  return "Pengguna memilih bahasa Indonesia pada pemilih bahasa aplikasi. Balas sepenuhnya dalam bahasa Indonesia, termasuk penjelasan, judul, klarifikasi, penolakan, dan status, meskipun pesan pengguna, riwayat percakapan, atau dokumen TCS menggunakan bahasa lain. Pertahankan nama resmi TCS dan URL.";
 }

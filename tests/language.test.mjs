@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   detectResponseLanguage,
+  resolveResponseLanguage,
+  normalizeResponseLanguage,
   formatChatMessage,
   getLanguageInstruction
 } from "../netlify/functions/core/language.mjs";
@@ -31,6 +33,21 @@ test("detects Simplified Chinese", () => {
   assert.equal(detectResponseLanguage("你是谁？"), "zh");
 });
 
+test("selected UI language overrides the language of the message and conversation history", () => {
+  const history = [{ role: "user", content: "Apa fungsi TCS LinkGuard?" }];
+  assert.equal(resolveResponseLanguage("en", "Apa fungsi TCS LinkGuard?", history), "en");
+  assert.equal(resolveResponseLanguage("zh-CN", "What does TCS LinkGuard do?", history), "zh");
+  assert.equal(resolveResponseLanguage("id", "Who created Choco AI?", []), "id");
+});
+
+test("validates language selector values and falls back safely for unsupported values", () => {
+  assert.equal(normalizeResponseLanguage("EN-us"), "en");
+  assert.equal(normalizeResponseLanguage("zh-Hans"), "zh");
+  assert.equal(normalizeResponseLanguage("fr"), null);
+  assert.equal(resolveResponseLanguage("fr", "Who created Choco AI?"), "en");
+  assert.equal(resolveResponseLanguage(null, "apa fungsi LinkGuard?"), "id");
+});
+
 test("localizes rate-limit and provider errors", () => {
   assert.match(formatChatMessage("groqRateLimitWait", "en", { seconds: 2 }), /wait about 2 seconds/i);
   assert.match(formatChatMessage("rateLimit", "zh", { seconds: 90 }), /90 秒/);
@@ -38,6 +55,6 @@ test("localizes rate-limit and provider errors", () => {
 });
 
 test("language instruction explicitly keeps model replies in the user's language", () => {
-  assert.match(getLanguageInstruction("en"), /entirely in English/);
-  assert.match(getLanguageInstruction("zh"), /简体中文/);
+  assert.match(getLanguageInstruction("en"), /selected English.*entirely in English/i);
+  assert.match(getLanguageInstruction("zh"), /选择了简体中文/);
 });
