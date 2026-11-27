@@ -107,6 +107,248 @@ test("chat endpoint rejects bodies larger than 64 KB", async () => {
   assert.equal(response.status, 413);
 });
 
+function configureChatIntegration({ ownerVerified = false, publicDocuments = [], ownerDocuments = [] } = {}) {
+  process.env.GROQ_API_KEY = "test-only-not-a-real-key";
+  process.env.TCS_KNOWLEDGE_SUPABASE_URL = "https://knowledge.example.test";
+  process.env.TCS_KNOWLEDGE_PUBLISHABLE_KEY = "publishable-test-key";
+  process.env.TCS_OWNER_AUTH_SERVER_KEY = "test-server-key-only";
+
+  const calls = [];
+  let groqPayload = null;
+  globalThis.fetch = async (url, init = {}) => {
+    calls.push({ url, init });
+
+    if (url.endsWith("/rpc/tcs_chat_consume_rate_limit")) {
+      return new Response(JSON.stringify({
+        ok: true,
+        allowed: true,
+        remaining: 19,
+        retry_after_seconds: 600
+      }), { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+
+    if (url.endsWith("/rpc/tcs_owner_validate_session")) {
+      return new Response(JSON.stringify(ownerVerified), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    if (url.endsWith("/rpc/tcs_public_search_knowledge")) {
+      return new Response(JSON.stringify(publicDocuments), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    if (url.endsWith("/rpc/tcs_owner_search_knowledge")) {
+      return new Response(JSON.stringify(ownerDocuments), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    if (url === "https://api.groq.com/openai/v1/chat/completions") {
+      groqPayload = JSON.parse(init.body);
+      return new Response(JSON.stringify({
+        model: "openai/gpt-oss-20b",
+        choices: [{
+          message: { content: "Jawaban uji Choco AI." },
+          finish_reason: "stop"
+        }]
+      }), { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+
+    throw new Error("Unexpected upstream request: " + url);
+  };
+
+  return {
+    calls,
+    get groqPayload() { return groqPayload; }
+  };
+}
+
+test("chat endpoint preserves the non-stream JSON contract and TCS-only system scope", async () => {
+  const integration = configureChatIntegration({
+    publicDocuments: [{
+      app_name: "TCS LinkGuard",
+      title: "Panduan LinkGuard",
+      content: "Panduan publik TCS LinkGuard."
+    }]
+  });
+
+  const response = await chatHandler(new Request("https://chocoai.test/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: "Apa fungsi TCS LinkGuard?",
+      history: [{ role: "user", content: "Konteks TCS sebelumnya." }],
+      memories: [],
+      preferences: {
+        responseLength: "balanced",
+        tonePreference: "adaptive",
+        detailPreference: "adaptive",
+        humorPreference: false,
+        emojiPreference: false
+      },
+      modelMode: "standard",
+      client: "chatbot",
+      stream: false
+    })
+  }));
+
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("Content-Type"), /application\/json/i);
+  const payload = await response.json();
+  assert.deepEqual(payload, {
+    reply: "Jawaban uji Choco AI.",
+    model: "openai/gpt-oss-20b",
+    truncated: false
+  });
+
+  assert.equal(integration.groqPayload.model, "openai/gpt-oss-20b");
+  assert.equal(integration.groqPayload.stream, false);
+  assert.equal(integration.groqPayload.messages.at(-1).role, "user");
+  assert.equal(integration.groqPayload.messages.at(-1).content, "Apa fungsi TCS LinkGuard?");
+  assert.match(integration.groqPayload.messages[0].content, /hanya melayani kebutuhan yang berkaitan dengan TCS/i);
+  assert.match(
+    integration.groqPayload.messages.find(message => message.content.includes("TCS_KNOWLEDGE_HUB_PUBLIC_BEGIN")).content,
+    /Panduan publik TCS LinkGuard/
+  );
+  assert.ok(integration.calls.some(call => call.url.endsWith("/rpc/tcs_public_search_knowledge")));
+  assert.equal(integration.calls.some(call => call.url.endsWith("/rpc/tcs_owner_search_knowledge")), false);
+  assert.doesNotMatch(JSON.stringify(payload), /test-only-not-a-real-key|test-server-key-only/);
+});
+
+test("chat endpoint preserves OpenAI-compatible SSE streaming", async () => {
+  const integration = configureChatIntegration();
+  const encoder = new TextEncoder();
+
+  globalThis.fetch = async (url, init = {}) => {
+    if (url.endsWith("/rpc/tcs_chat_consume_rate_limit")) {
+      return new Response(JSON.stringify({
+        ok: true, allowed: true, remaining: 18, retry_after_seconds: 590
+      }), { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+    if (url.endsWith("/rpc/tcs_public_search_knowledge")) {
+      return new Response("[]", { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+    if (url === "https://api.groq.com/openai/v1/chat/completions") {
+      integration.groqPayload = JSON.parse(init.body);
+      const stream = new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode('data: {"choices":[{"delta":{"content":"Halo"}}]}\n\n'));
+          controller.enqueue(encoder.encode('data: {"choices":[{"delta":{"content":" TCS"}}]}\n\n'));
+          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+          controller.close();
+        }
+      });
+      return new Response(stream, {
+        status: 200,
+        headers: { "Content-Type": "text/event-stream; charset=utf-8" }
+      });
+    }
+    throw new Error("Unexpected upstream request: " + url);
+  };
+
+  const response = await chatHandler(new Request("https://chocoai.test/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: "Jelaskan dokumentasi TCS.",
+      history: [],
+      memories: [],
+      preferences: {},
+      modelMode: "standard",
+      client: "chatbot",
+      stream: true
+    })
+  }));
+
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("Content-Type"), /text\/event-stream/i);
+  assert.equal(response.headers.get("Cache-Control"), "no-cache, no-store, no-transform");
+  assert.equal(response.headers.get("X-Choco-Stream"), "groq");
+  const streamText = await response.text();
+  assert.match(streamText, /"content":"Halo"/);
+  assert.match(streamText, /"content":" TCS"/);
+  assert.match(streamText, /data: \[DONE\]/);
+});
+
+test("unverified Owner cookies never unlock internal knowledge retrieval", async () => {
+  const integration = configureChatIntegration({
+    ownerVerified: false,
+    ownerDocuments: [{
+      app_name: "Internal",
+      title: "Private owner document",
+      content: "SECRET_INTERNAL_KNOWLEDGE_MARKER"
+    }]
+  });
+
+  const response = await chatHandler(new Request("https://chocoai.test/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: "tcs_owner_session=unverified-test-session"
+    },
+    body: JSON.stringify({
+      message: "Tolong jelaskan proyek internal TCS.",
+      history: [],
+      memories: [],
+      preferences: {},
+      modelMode: "standard",
+      client: "chatbot",
+      stream: false
+    })
+  }));
+
+  assert.equal(response.status, 200);
+  assert.equal(integration.calls.some(call => call.url.endsWith("/rpc/tcs_owner_validate_session")), true);
+  assert.equal(integration.calls.some(call => call.url.endsWith("/rpc/tcs_owner_search_knowledge")), false);
+  assert.equal(integration.groqPayload.messages.some(message =>
+    typeof message.content === "string" && message.content.includes("SECRET_INTERNAL_KNOWLEDGE_MARKER")
+  ), false);
+});
+
+test("verified Owner sessions may retrieve internal Knowledge Hub context", async () => {
+  const integration = configureChatIntegration({
+    ownerVerified: true,
+    ownerDocuments: [{
+      app_name: "TCS Internal",
+      title: "Owner-only source",
+      source_repo_path: "private/owner-notes",
+      content: "OWNER_ONLY_CONTEXT_MARKER"
+    }]
+  });
+
+  const response = await chatHandler(new Request("https://chocoai.test/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: "tcs_owner_session=verified-test-session"
+    },
+    body: JSON.stringify({
+      message: "Jelaskan catatan internal TCS.",
+      history: [],
+      memories: [],
+      preferences: {},
+      modelMode: "standard",
+      client: "chatbot",
+      stream: false
+    })
+  }));
+
+  assert.equal(response.status, 200);
+  assert.equal(integration.calls.some(call => call.url.endsWith("/rpc/tcs_owner_validate_session")), true);
+  assert.equal(integration.calls.some(call => call.url.endsWith("/rpc/tcs_owner_search_knowledge")), true);
+  assert.match(
+    integration.groqPayload.messages.find(message => message.content.includes("TCS_OWNER_INTERNAL_KNOWLEDGE_BEGIN")).content,
+    /OWNER_ONLY_CONTEXT_MARKER/
+  );
+  const ownerSearchCall = integration.calls.find(call => call.url.endsWith("/rpc/tcs_owner_search_knowledge"));
+  assert.equal(JSON.parse(ownerSearchCall.init.body).p_server_key, "test-server-key-only");
+});
+
 test.after(() => {
   for (const key of trackedEnv) {
     if (originalEnv[key] === undefined) delete process.env[key];
