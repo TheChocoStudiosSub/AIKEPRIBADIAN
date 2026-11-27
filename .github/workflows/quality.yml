@@ -29,6 +29,8 @@ jobs:
         run: |
           node --check netlify/functions/chat.js
           node --check api/chat.js
+          node --check api/license.js
+          node --check api/_lib/netlify-adapter.js
           node --check netlify/functions/core/retrieval.mjs
           node --check netlify/functions/core/rate-limit.mjs
       - name: Check inline and external frontend JavaScript
