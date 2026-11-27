@@ -16,6 +16,9 @@ create table if not exists private.tcs_chat_rate_limits (
 
 alter table private.tcs_chat_rate_limits enable row level security;
 
+create index if not exists idx_tcs_chat_rate_limits_updated_at
+  on private.tcs_chat_rate_limits (updated_at);
+
 revoke all on table private.tcs_chat_rate_limits
   from public, anon, authenticated, service_role;
 
