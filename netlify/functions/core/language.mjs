@@ -94,7 +94,7 @@ const MESSAGES = {
 };
 
 function languageScore(value) {
-  const words = String(value || "").normalize("NFKC").toLowerCase().match(/[\\p{L}]+/gu) || [];
+  const words = String(value || "").normalize("NFKC").toLowerCase().match(/[\p{L}]+/gu) || [];
   let en = 0;
   let id = 0;
   for (const word of words) {
@@ -105,7 +105,7 @@ function languageScore(value) {
 }
 
 function confidentLanguage(value) {
-  if (/[\\u3400-\\u9fff]/u.test(String(value || ""))) return "zh";
+  if (/[\u3400-\u9fff]/u.test(String(value || ""))) return "zh";
   const { en, id } = languageScore(value);
   if (en >= 1 && en > id) return "en";
   if (id >= 1 && id > en) return "id";
@@ -129,7 +129,7 @@ export function detectResponseLanguage(message, history = []) {
 export function formatChatMessage(key, language = "id", values = {}) {
   const locale = MESSAGES[language] ? language : "id";
   const template = MESSAGES[locale][key] || MESSAGES.id[key] || MESSAGES.id.blocked;
-  return template.replace(/\\{([a-zA-Z0-9_]+)\\}/g, (_match, name) =>
+  return template.replace(/\{([a-zA-Z0-9_]+)\}/g, (_match, name) =>
     Object.prototype.hasOwnProperty.call(values, name) ? String(values[name]) : ""
   );
 }
