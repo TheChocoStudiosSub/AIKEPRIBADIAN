@@ -86,3 +86,12 @@ Tidak ada kontrak penyimpanan riwayat percakapan permanen untuk halaman web ini.
 - Jangan menyimpan access token/refresh token pada browser.
 - Jangan menganggap riwayat sesi browser sebagai chat history permanen.
 - Jangan menampilkan mock sebagai status produksi.
+
+
+## Frontend workspace refinement
+
+The public workspace keeps response personalization and site-consent controls in one site-preferences dialog. The sidebar entry and the footer link open the same dialog; response tone, answer depth, humour, and emoji preferences are stored in the existing local browser preference record. The separate Personalization navigation item and duplicate right-rail information card are intentionally removed.
+
+The chat composer uses a progressively increasing client-side send cooldown after each completed request: 12 seconds, then 20 seconds, then 28 seconds, increasing by 8 seconds until a 60-second ceiling. The progression resets after 30 minutes without a send attempt and is stored locally so a page refresh does not reset an active pacing level. This is a browser-side pacing safeguard only. It does not replace Groq's account/model rate limits, backend request validation, or HTTP 429 handling and retry policy.
+
+The interface keeps the language selector for Indonesian (default), English, and Simplified Chinese. It translates public interface text only; user messages and model replies in the conversation stream remain untouched.

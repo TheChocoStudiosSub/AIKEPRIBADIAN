@@ -46,10 +46,6 @@
           <span class="nav-icon" aria-hidden="true">⌂</span>
           <span>Beranda</span>
         </button>
-        <button class="nav-item" type="button" data-open-panel="personality">
-          <span class="nav-icon" aria-hidden="true">◈</span>
-          <span>Personalisasi</span>
-        </button>
       </nav>
 
       <div class="recent-section">
@@ -59,14 +55,16 @@
         </div>
       </div>
 
+      <section class="workspace-note sidebar-workspace-note">
+        <div class="tip-title">Ruang kerja yang terarah</div>
+        <p class="tip-text">Atur gaya dan kedalaman respons melalui preferensi situs.</p>
+        <button class="workspace-note-link" type="button" data-open-site-preferences>Atur preferensi <span aria-hidden="true">↗</span></button>
+      </section>
+
       <div class="sidebar-bottom">
-        <button class="sidebar-preferences" type="button" data-open-panel="personality">
-          <span class="sidebar-preferences-icon" aria-hidden="true">✧</span>
-          <span class="sidebar-preferences-copy">
-            <strong>Preferensi respons</strong>
-            <small>Disimpan di browser ini</small>
-          </span>
-          <span class="sidebar-preferences-arrow" aria-hidden="true">↗</span>
+        <button class="sidebar-preferences" type="button" data-open-site-preferences>
+          <img class="sidebar-preferences-icon" src="/assets/choco-app-icon.png?v=20261121" alt="" width="38" height="38">
+          <span class="sidebar-preferences-copy"><strong>Preferensi respons</strong></span>
         </button>
       </div>
 
@@ -81,11 +79,9 @@
             aria-label="Buka menu" aria-expanded="false">☰</button>
           <div class="topbar-title-group">
             <div class="page-title">Percakapan</div>
-            <span class="topbar-context">CHOCO AI · THE CHOCO STUDIOS</span>
           </div>
         </div>
         <div class="topbar-right">
-          <span class="workspace-status"><span class="workspace-status-dot"></span> INTELLIGENCE WORKSPACE</span>
           <button class="topbar-new-chat" type="button" data-new-chat>
             <span aria-hidden="true">+</span> Percakapan baru
           </button>
@@ -97,10 +93,9 @@
 
           <section class="welcome" id="welcome">
             <div class="welcome-line">
-              <span class="welcome-mark-wrap" aria-label="Logo Choco AI" role="img"><span class="welcome-ripple" aria-hidden="true"></span><span class="welcome-ripple" aria-hidden="true"></span><span class="welcome-ripple" aria-hidden="true"></span><span class="welcome-ripple" aria-hidden="true"></span><span class="welcome-ripple" aria-hidden="true"></span><img class="welcome-mark" src="/assets/choco-app-icon.png?v=20261121" alt="" width="70" height="70"></span>
+              <span class="welcome-mark-wrap" aria-label="Logo Choco AI" role="img"><img class="welcome-mark" src="/assets/choco-app-icon.png?v=20261121" alt="" width="70" height="70"></span>
               <h1 id="welcomeHeading">Selamat datang di <span class="gradient-text">Choco AI</span></h1>
-              <p class="welcome-description">Tempat untuk berpikir, menyusun ide, dan menyelesaikan persoalan bersama asisten AI utama The Choco Studios.</p>
-              <div class="welcome-caption"><span></span> YOUR INTELLIGENCE WORKSPACE</div>
+              <p class="welcome-description">Tempat untuk berpikir, menyusun ide, dan menyelesaikan persoalan bersama Choco AI.</p>
             </div>
           </section>
 
@@ -121,14 +116,13 @@
             ></textarea>
 
             <div class="input-actions">
-              <span class="composer-hint">Enter untuk mengirim · Shift + Enter untuk baris baru</span>
               <button class="send-button" id="send" type="submit"
-                aria-label="Kirim pesan" title="Kirim pesan">↑</button>
+                aria-label="Kirim pesan" title="Kirim pesan"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 11.6 19.1 4.8c.7-.3 1.4.4 1.1 1.1l-6.8 14.6c-.3.7-1.3.6-1.5-.2l-1.5-6.1-6.1-1.5c-.8-.2-.9-1.2-.3-1.5Z"></path><path d="m10.4 13.6 9.3-8.9"></path></svg></button>
             </div>
           </form>
 
           <p class="disclaimer">
-            Choco AI dapat melakukan kesalahan. ·
+            Choco AI dapat melakukan kesalahan.
             <button type="button" id="openSitePreferences" class="preference-link">Preferensi situs</button>
           </p>
         </div>
@@ -137,47 +131,20 @@
 
     <aside class="right-panel" aria-label="Informasi Choco AI">
       <section class="assistant-profile-card">
-        <div class="panel-heading">ASSISTANT PROFILE</div>
         <div class="identity-logo"><img src="/assets/choco-app-icon.png?v=20261121" alt="Logo Choco AI" width="44" height="44"></div>
         <div class="identity-title">Choco AI</div>
         <p class="identity-description">Asisten AI utama dan representasi digital Choco dalam ekosistem The Choco Studios.</p>
-        <div class="assistant-role-tag">THE CHOCO STUDIOS</div>
       </section>
 
-      <div class="divider"></div>
-
-      <section class="capabilities-panel" aria-label="Kapabilitas produk">
-        <div class="panel-heading">CAPABILITIES</div>
-        <div class="feature-list">
-          <div class="feature">
-            <div class="feature-icon" aria-hidden="true">✦</div>
-            <div><div class="feature-name">Asisten serbaguna</div><div class="feature-status">Menulis, analisis, dan pemecahan masalah</div></div>
-          </div>
-          <div class="feature">
-            <div class="feature-icon" aria-hidden="true">⌘</div>
-            <div><div class="feature-name">TCS Knowledge Hub</div><div class="feature-status">Dokumentasi publik yang relevan</div></div>
-          </div>
-          <div class="feature">
-            <div class="feature-icon" aria-hidden="true">◇</div>
-            <div><div class="feature-name">Konteks Owner</div><div class="feature-status">Akses internal memerlukan verifikasi server</div></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="workspace-note">
-        <div class="tip-title">Ruang kerja yang terarah</div>
-        <p class="tip-text">Atur gaya dan kedalaman respons melalui menu Personalisasi. Preferensi disimpan secara lokal pada browser ini.</p>
-        <button class="workspace-note-link" type="button" data-open-panel="personality">Atur preferensi <span aria-hidden="true">↗</span></button>
-      </section>
 
       <section class="ad-rail" aria-label="Area iklan dan sponsor">
         <div class="ad-rail-heading">SPONSOR</div>
         <div class="native-ad-slot ad-placement" id="nativeAdPlacement" aria-label="Iklan banner native" hidden>
-          <div class="native-ad-label">IKLAN · NATIVE BANNER</div>
+          <div class="native-ad-label">IKLAN NATIVE BANNER</div>
           <div class="native-ad-content"><div id="container-4c7148c2e2f23b913be9dd10ba77ad61"></div></div>
         </div>
         <div class="sponsor-link-slot ad-placement" id="sponsorLinkSlot" hidden>
-          <span class="sponsor-link-label">SMARTLINK · SPONSOR</span>
+          <span class="sponsor-link-label">SMARTLINK SPONSOR</span>
           <a href="https://araplhn.org/4/22bd18620139869f854d3a0c3845e378" target="_blank" rel="sponsored noopener noreferrer">Lihat penawaran sponsor <span aria-hidden="true">↗</span></a>
         </div>
       </section>
@@ -191,18 +158,36 @@
       <footer class="settings-footer"></footer>
     </section>
   </div>
-  <div class="modal-backdrop" id="personalityBackdrop" hidden>
-    <section class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="personalityTitle">
-      <header class="settings-header"><div><div class="panel-heading">CARA CHOCO MENJAWAB</div><h2 id="personalityTitle">Personalisasi</h2></div><button class="icon-button" type="button" data-close-panel aria-label="Tutup">×</button></header>
-      <div class="settings-body">
-        <label class="setting-field">Gaya bahasa<select id="tonePreference"><option value="adaptive">Menyesuaikan lawan bicara</option><option value="formal">Formal</option><option value="casual">Santai</option></select></label>
-        <label class="setting-field">Kedalaman penjelasan<select id="detailPreference"><option value="adaptive">Menyesuaikan pertanyaan</option><option value="concise">Langsung ke inti</option><option value="stepwise">Bertahap dan terstruktur</option></select></label>
-        <label class="setting-toggle"><span><strong>Humor</strong><small>Gunakan humor jika konteksnya sesuai.</small></span><input id="humorPreference" type="checkbox" checked></label>
-        <label class="setting-toggle"><span><strong>Emoji</strong><small>Gunakan emoji secukupnya.</small></span><input id="emojiPreference" type="checkbox"></label>
+  <section class="modal-backdrop" id="sitePreferenceBackdrop" hidden>
+    <div class="settings-modal site-preferences-modal" role="dialog" aria-modal="true" aria-labelledby="sitePreferenceTitle" aria-describedby="sitePreferenceDescription">
+      <header class="settings-header">
+        <div><div class="eyebrow">PREFERENSI SITUS</div><h2 id="sitePreferenceTitle">Preferensi situs</h2></div>
+        <button class="icon-button" type="button" data-close-panel aria-label="Tutup">×</button>
+      </header>
+      <div class="settings-body site-preferences-body">
+        <section class="site-preferences-section" aria-labelledby="responsePreferencesTitle">
+          <div class="preference-section-title" id="responsePreferencesTitle">PERSONALISASI RESPONS</div>
+          <label class="setting-field">Gaya bahasa<select id="tonePreference"><option value="adaptive">Menyesuaikan lawan bicara</option><option value="formal">Formal</option><option value="casual">Santai</option></select></label>
+          <label class="setting-field">Kedalaman penjelasan<select id="detailPreference"><option value="adaptive">Menyesuaikan pertanyaan</option><option value="concise">Langsung ke inti</option><option value="stepwise">Bertahap dan terstruktur</option></select></label>
+          <label class="setting-toggle"><span><strong>Humor</strong><small>Gunakan humor jika konteksnya sesuai.</small></span><input id="humorPreference" type="checkbox" checked></label>
+          <label class="setting-toggle"><span><strong>Emoji</strong><small>Gunakan emoji secukupnya.</small></span><input id="emojiPreference" type="checkbox"></label>
+        </section>
+        <div class="site-preferences-divider"></div>
+        <section class="site-preferences-section" aria-labelledby="advertisingPreferencesTitle">
+          <div class="preference-section-title" id="advertisingPreferencesTitle">Preferensi iklan</div>
+          <p id="sitePreferenceDescription" class="site-preferences-description">Choco AI dapat memuat konten dari penyedia iklan pihak ketiga jika kamu mengizinkannya. Pilihanmu disimpan di browser agar kamu tidak ditanya setiap kali membuka situs. Jika menolak, skrip iklan tidak akan dimuat oleh Choco AI.</p>
+          <p class="site-preferences-footnote">Preferensi iklan disimpan di browser ini. Choco AI dapat digunakan tanpa membuat akun.</p>
+        </section>
       </div>
-      <footer class="settings-footer"><button class="auth-button primary" id="savePersonality" type="button">Simpan personalisasi</button></footer>
-    </section>
-  </div>
+      <footer class="settings-footer site-preferences-footer">
+        <button class="auth-button primary" id="savePersonality" type="button">Simpan preferensi</button>
+        <div class="site-preferences-actions">
+          <button class="tool-button" id="sitePreferenceReject" type="button">Tolak iklan</button>
+          <button class="tool-button" id="sitePreferenceAccept" type="button">Izinkan konten</button>
+        </div>
+      </footer>
+    </div>
+  </section>
   <div class="toast" id="toast" role="status"></div>
 
   <script src="/assets/js/chat-keyboard.js"></script>
@@ -210,24 +195,11 @@
   <script src="/assets/js/chat-controller.js"></script>
 
 
-  <section class="modal-backdrop" id="sitePreferenceBackdrop" hidden>
-    <div class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="sitePreferenceTitle" aria-describedby="sitePreferenceDescription">
-      <div class="settings-header">
-        <div><div class="eyebrow">PREFERENSI SITUS</div><h2 id="sitePreferenceTitle">Kendalikan pengalamanmu</h2></div>
-      </div>
-      <div class="settings-body">
-        <p id="sitePreferenceDescription" style="margin:0;color:#aab4ce;font-size:13px;line-height:1.8">Choco AI dapat memuat konten dari penyedia iklan pihak ketiga jika kamu mengizinkannya. Pilihanmu disimpan di browser agar kamu tidak ditanya setiap kali membuka situs. Jika menolak, skrip iklan tidak akan dimuat oleh Choco AI.</p>
-        <p style="margin:0;color:#8590aa;font-size:11px;line-height:1.7">Preferensi iklan disimpan di browser ini. Choco AI dapat digunakan tanpa membuat akun.</p>
-      </div>
-      <div class="settings-footer" style="justify-content:space-between;gap:10px;flex-wrap:wrap">
-        <button class="tool-button" id="sitePreferenceReject" type="button" style="border:1px solid var(--border)">Tolak</button>
-        <button class="tool-button" id="sitePreferenceAccept" type="button" style="background:var(--gradient);color:white">Izinkan konten</button>
-      </div>
-    </div>
-  </section>
   <script src="/assets/js/site-preferences.js"></script>
-<div id="mobileAdPopup" class="mobile-ad-popup" hidden role="dialog" aria-modal="true" aria-label="Iklan sponsor"><div class="mobile-ad-popup-panel"><div class="mobile-ad-popup-head"><span>IKLAN · SPONSOR</span><button id="mobileAdClose" type="button" disabled aria-label="Tutup iklan">X <span id="mobileAdCountdown">5</span></button></div><div id="mobileAdPopupContent" class="mobile-ad-popup-content"><p>Iklan sedang dimuat…</p></div></div></div>
-<script src="/assets/js/mobile-sponsor-popup.js"></script>\n
+<div id="mobileAdPopup" class="mobile-ad-popup" hidden role="dialog" aria-modal="true" aria-label="Iklan sponsor"><div class="mobile-ad-popup-panel"><div class="mobile-ad-popup-head"><span>IKLAN SPONSOR</span><button id="mobileAdClose" type="button" disabled aria-label="Tutup iklan">X <span id="mobileAdCountdown">5</span></button></div><div id="mobileAdPopupContent" class="mobile-ad-popup-content"><p>Iklan sedang dimuat…</p></div></div></div>
+<script src="/assets/js/mobile-sponsor-popup.js"></script>
+<script src="/assets/js/language.js"></script>
+
 <script defer src="/tcs-analytics.js" data-site="choco-ai"></script>
 <script defer src="/tcs-community-widget.js" data-theme="chocoai"></script>
 </body>

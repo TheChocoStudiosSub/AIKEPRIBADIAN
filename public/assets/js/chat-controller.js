@@ -17,6 +17,20 @@ const form = document.getElementById("form");
     let cooldownUntil = 0;
     let cooldownTimer = null;
     let toastTimer;
+    const COOLDOWN_STATE_KEY = "chocoSendPacingV1";
+    const COOLDOWN_IDLE_RESET_MS = 30 * 60 * 1000;
+    let cooldownLevel = 0;
+    let cooldownLastSentAt = 0;
+    try {
+      const pacingState = JSON.parse(localStorage.getItem(COOLDOWN_STATE_KEY) || "null");
+      const lastSentAt = Number(pacingState && pacingState.lastSentAt);
+      if (Number.isFinite(lastSentAt) && lastSentAt > 0 && Date.now() - lastSentAt <= COOLDOWN_IDLE_RESET_MS) {
+        cooldownLevel = Math.min(6, Math.max(0, Math.floor(Number(pacingState.level) || 0)));
+        cooldownLastSentAt = lastSentAt;
+      } else {
+        localStorage.removeItem(COOLDOWN_STATE_KEY);
+      }
+    } catch {}
     let conversationTitle = "";
     let conversationStarted = false;
     const defaultPreferences = { ageGroup: "unset", responseLength: "balanced", typingEffect: true, timeGreeting: true, tonePreference: "adaptive", detailPreference: "adaptive", humorPreference: true, emojiPreference: false };
@@ -27,7 +41,7 @@ const form = document.getElementById("form");
     }
     function savePreferenceFields(keys) {
       keys.forEach(key => { const el = document.getElementById(key); if (el) preferences[key] = el.type === "checkbox" ? el.checked : el.value; });
-      try { localStorage.setItem("chocoPreferences", JSON.stringify(preferences)); showToast("Pengaturan tersimpan di browser ini."); } catch { showToast("Pengaturan tidak bisa disimpan di browser."); }
+      try { localStorage.setItem("chocoPreferences", JSON.stringify(preferences)); showToast("Preferensi berhasil disimpan."); } catch { showToast("Preferensi tidak bisa disimpan di browser."); }
     }
     function openPanel(name) { document.getElementById(name + "Backdrop").hidden = false; }
     document.querySelectorAll("[data-open-panel]").forEach(button => button.addEventListener("click", () => openPanel(button.dataset.openPanel)));
@@ -35,23 +49,37 @@ const form = document.getElementById("form");
     document.querySelectorAll(".modal-backdrop").forEach(backdrop => backdrop.addEventListener("click", event => { if (event.target === backdrop) backdrop.hidden = true; }));
     const saveSettingsButton = document.getElementById("saveSettings");
     if (saveSettingsButton) saveSettingsButton.addEventListener("click", () => { document.getElementById("settingsBackdrop").hidden = true; });
-    document.getElementById("savePersonality").addEventListener("click", () => { savePreferenceFields(["tonePreference","detailPreference","humorPreference","emojiPreference"]); document.getElementById("personalityBackdrop").hidden = true; });
+    document.getElementById("savePersonality").addEventListener("click", () => { savePreferenceFields(["tonePreference","detailPreference","humorPreference","emojiPreference"]); document.getElementById("sitePreferenceBackdrop").hidden = true; });
     function updateSendCooldown() {
       const remaining = Math.max(0, Math.ceil((cooldownUntil - Date.now()) / 1000));
       if (!busy) send.disabled = remaining > 0;
-      send.textContent = remaining > 0 ? String(remaining) : "↑";
+      send.innerHTML = remaining > 0 ? String(remaining) : '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 11.6 19.1 4.8c.7-.3 1.4.4 1.1 1.1l-6.8 14.6c-.3.7-1.3.6-1.5-.2l-1.5-6.1-6.1-1.5c-.8-.2-.9-1.2-.3-1.5Z"></path><path d="m10.4 13.6 9.3-8.9"></path></svg>';
       send.title = remaining > 0 ? "Tunggu " + remaining + " detik sebelum mengirim pesan berikutnya." : "Kirim pesan";
       send.setAttribute("aria-label", remaining > 0 ? "Tunggu " + remaining + " detik" : "Kirim pesan");
       if (remaining <= 0 && cooldownTimer) { clearInterval(cooldownTimer); cooldownTimer = null; }
     }
     function startSendCooldown() {
-      cooldownUntil = Date.now() + 10000;
-      try { localStorage.setItem("chocoNextAllowedAt", String(cooldownUntil)); } catch {}
+      const now = Date.now();
+      if (cooldownLastSentAt && now - cooldownLastSentAt > COOLDOWN_IDLE_RESET_MS) cooldownLevel = 0;
+
+      const cooldownMs = Math.min(12000 + cooldownLevel * 8000, 60000);
+      cooldownLevel = Math.min(cooldownLevel + 1, 6);
+      cooldownLastSentAt = now;
+      cooldownUntil = now + cooldownMs;
+
+      try {
+        localStorage.setItem("chocoNextAllowedAt", String(cooldownUntil));
+        localStorage.setItem(COOLDOWN_STATE_KEY, JSON.stringify({ level: cooldownLevel, lastSentAt: cooldownLastSentAt }));
+      } catch {}
+
       if (cooldownTimer) clearInterval(cooldownTimer);
-      updateSendCooldown(); cooldownTimer = setInterval(updateSendCooldown, 250);
+      updateSendCooldown();
+      cooldownTimer = setInterval(updateSendCooldown, 250);
     }
     try { cooldownUntil = Math.max(0, Number(localStorage.getItem("chocoNextAllowedAt") || 0)); } catch {}
-    if (cooldownUntil > Date.now()) { updateSendCooldown(); cooldownTimer = setInterval(updateSendCooldown, 250); }
+    if (cooldownUntil > Date.now()) cooldownTimer = setInterval(updateSendCooldown, 250);
+    else cooldownUntil = 0;
+    updateSendCooldown();
 
     document.addEventListener("keydown", event => { if (event.key === "Escape") document.querySelectorAll(".modal-backdrop").forEach(backdrop => backdrop.hidden = true); });
     loadPreferences();
@@ -321,7 +349,7 @@ const form = document.getElementById("form");
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => {
         toast.classList.remove("show");
-      }, 2600);
+      }, 5000);
     }
 
     function scrollToBottom() {
@@ -484,7 +512,18 @@ const form = document.getElementById("form");
       const message = input.value.trim();
 
       if (!message || busy) return;
-      if (Date.now() < cooldownUntil) { updateSendCooldown(); showToast("Tunggu jeda 10 detik sebelum mengirim pesan berikutnya."); return; }
+      if (Date.now() < cooldownUntil) {
+        updateSendCooldown();
+        const remaining = Math.max(1, Math.ceil((cooldownUntil - Date.now()) / 1000));
+        const language = document.documentElement.lang || "id";
+        const notice = language.startsWith("zh")
+          ? `请再等待 ${remaining} 秒后发送下一条消息。`
+          : language.startsWith("en")
+            ? `Please wait ${remaining} more seconds before sending another message.`
+            : `Tunggu ${remaining} detik lagi sebelum mengirim pesan berikutnya.`;
+        showToast(notice);
+        return;
+      }
 
       const isOwnerCredentialCandidate = /^[A-Za-z0-9._~-]{8,200}$/.test(message);
       busy = true;
