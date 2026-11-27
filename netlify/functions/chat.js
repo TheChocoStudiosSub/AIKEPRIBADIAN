@@ -295,7 +295,6 @@ export default async (request) => {
     const responseLanguage = resolveResponseLanguage(body.responseLanguage, message, body.history);
     const clientType = body.client === "app" ? "app" : "chatbot";
     const apiKey = clientType === "app" ? env.GROQ_API_KEY_APP : env.GROQ_API_KEY;
-    if (!apiKey) return json({ error: formatChatMessage("missingApiKey", responseLanguage) }, 503);
     if (!message) return json({ error: formatChatMessage("emptyMessage", responseLanguage) }, 400);
     if (message.length > MAX_MESSAGE_CHARS) {
       return json({ error: formatChatMessage("messageTooLong", responseLanguage, { limit: MAX_MESSAGE_CHARS }) }, 400);
