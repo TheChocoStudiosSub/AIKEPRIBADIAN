@@ -10,7 +10,9 @@ const LEGACY_URLS = [
   ["https://sheeblink.vercel.app", "https://sheeblink.thechocostudios.bond"],
   ["https://vornika-games.vercel.app", "https://vornika.thechocostudios.bond"],
   ["https://tcs-uploadfit.vercel.app", "https://apps.microsoft.com/detail/9MZ61KZF53LW"],
-  ["https://tcs-template.vercel.app", "TCS Template is currently SSO-protected; no verified public access URL is available"]
+  ["https://tcs-template.vercel.app", "TCS Template is currently SSO-protected; no verified public access URL is available"],
+  ["https://choco-ai-sara.vercel.app", "[retired Sara runtime endpoint]"],
+  ["choco-ai-sara.vercel.app", "[retired Sara runtime endpoint]"]
 ];
 
 const MAX_LEGACY_URL_LENGTH = Math.max(...LEGACY_URLS.map(([url]) => url.length));
@@ -43,7 +45,8 @@ export function canonicalizeTcsStream(stream) {
           const { done, value } = await reader.read();
           if (done) break;
           const combined = carry + decoder.decode(value, { stream: true });
-          const safeLength = Math.max(0, combined.length - MAX_LEGACY_URL_LENGTH);
+          let safeLength = Math.max(0, combined.length - MAX_LEGACY_URL_LENGTH);
+          if (safeLength > 0 && /[\uD800-\uDBFF]/.test(combined.charAt(safeLength - 1))) safeLength -= 1;
           if (safeLength > 0) {
             controller.enqueue(encoder.encode(canonicalizeTcsUrls(combined.slice(0, safeLength))));
             carry = combined.slice(safeLength);
