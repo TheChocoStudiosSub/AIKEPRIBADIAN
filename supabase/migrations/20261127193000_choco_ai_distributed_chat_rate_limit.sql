@@ -109,9 +109,7 @@ end;
 $function$;
 
 revoke all on function private._tcs_chat_consume_rate_limit(text, text, integer, integer, text)
-  from public;
-grant execute on function private._tcs_chat_consume_rate_limit(text, text, integer, integer, text)
-  to anon, authenticated, service_role;
+  from public, anon, authenticated, service_role;
 
 create or replace function public.tcs_chat_consume_rate_limit(
   p_scope text,
@@ -122,7 +120,7 @@ create or replace function public.tcs_chat_consume_rate_limit(
 )
 returns jsonb
 language sql
-security invoker
+security definer
 set search_path to ''
 as $function$
   select private._tcs_chat_consume_rate_limit(
