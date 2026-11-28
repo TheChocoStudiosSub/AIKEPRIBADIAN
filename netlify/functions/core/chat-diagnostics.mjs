@@ -46,22 +46,26 @@ export function verifyChatIdentityCookie(request, secret) {
 }
 
 function normalizeTitle(value) {
-  const title = String(value || "").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim();
-  return (title || "Percakapan baru").slice(0, 36);
+  let title = String(value || "")
+    .replace(/[\u0000-\u001f\u007f]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  title = title
+    .replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, "[email]")
+    .replace(/\b(?:https?:\/\/|www\.)\S+/gi, "[link]")
+    .replace(/\+?\d[\d\s().-]{7,}\d/g, "[phone]")
+    .replace(/\s+/g, " ")
+    .trim();
+  return (title || "Percakapan").slice(0, 36);
 }
 
 export function resolveChatDiagnosticIdentity(request, body, message, secret) {
-  const history = Array.isArray(body?.history) ? body.history : [];
-  const firstUserMessage = history.find((item) =>
-    item && item.role === "user" && typeof item.content === "string" && item.content.trim()
-  )?.content || message;
-  const title = normalizeTitle(typeof body?.conversationTitle === "string" ? body.conversationTitle : firstUserMessage);
+  const title = normalizeTitle(body?.conversationTitle);
   const existing = verifyChatIdentityCookie(request, secret);
   const visitorId = existing?.visitorId || randomUUID();
   const providedConversationId = typeof body?.conversationId === "string" && UUID_RE.test(body.conversationId)
     ? body.conversationId.toLowerCase() : null;
-  const conversationId = providedConversationId ||
-    (history.length > 0 && existing ? existing.conversationId : randomUUID());
+  const conversationId = providedConversationId || existing?.conversationId || randomUUID();
 
   const address = getClientAddress(request?.headers);
   const ipAddress = isIP(address) ? address : null;
@@ -84,20 +88,21 @@ export function inspectSseFrame(frame) {
   const payload = String(frame || "").split(/\r?\n/)
     .filter((line) => line.startsWith("data:"))
     .map((line) => line.slice(5).trim()).join("\n");
-  if (!payload) return { characters: 0, finishReason: null, done: false, error: false };
-  if (payload === "[DONE]") return { characters: 0, finishReason: null, done: true, error: false };
+  if (!payload) return { characters: 0, bytes: 0, finishReason: null, done: false, error: false };
+  if (payload === "[DONE]") return { characters: 0, bytes: 0, finishReason: null, done: true, error: false };
   try {
     const data = JSON.parse(payload);
     const choice = data?.choices?.[0];
     const delta = choice?.delta?.content;
     return {
       characters: typeof delta === "string" ? delta.length : 0,
+      bytes: typeof delta === "string" ? Buffer.byteLength(delta, "utf8") : 0,
       finishReason: typeof choice?.finish_reason === "string" ? choice.finish_reason : null,
       done: false,
       error: Boolean(data?.error)
     };
   } catch {
-    return { characters: 0, finishReason: null, done: false, error: false };
+    return { characters: 0, bytes: 0, finishReason: null, done: false, error: false };
   }
 }
 
@@ -113,6 +118,7 @@ export function observeChatStream(stream, onFinish) {
   const inspect = (frame) => {
     const result = inspectSseFrame(frame);
     state.responseCharacters += result.characters;
+    state.responseBytes += result.bytes;
     if (result.finishReason) state.finishReason = result.finishReason;
     if (result.done) state.streamDoneReceived = true;
     if (result.error) state.errorCode = "upstream_stream_error";
@@ -138,7 +144,6 @@ export function observeChatStream(stream, onFinish) {
           controller.close();
           return;
         }
-        state.responseBytes += result.value.byteLength;
         buffer += decoder.decode(result.value, { stream: true });
         const frames = buffer.split(/\r?\n\r?\n/);
         buffer = frames.pop() || "";
