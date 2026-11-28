@@ -70,7 +70,9 @@ test("chat endpoint enforces the distributed rate-limit response contract", asyn
   process.env.TCS_OWNER_AUTH_SERVER_KEY = "test-server-key-only";
 
   let forwardedPayload;
+  const rpcCalls = [];
   globalThis.fetch = async (url, init) => {
+    rpcCalls.push(url);
     assert.equal(url, "https://knowledge.example.test/rest/v1/rpc/tcs_chat_consume_rate_limit");
     forwardedPayload = JSON.parse(init.body);
     return new Response(JSON.stringify({
@@ -95,7 +97,7 @@ test("chat endpoint enforces the distributed rate-limit response contract", asyn
   assert.equal(forwardedPayload.p_window_seconds, 600);
   assert.equal(forwardedPayload.p_max_requests, 20);
   assert.equal(forwardedPayload.p_server_key, "test-server-key-only");
-  assert.equal(globalThis.fetch.mockCalls?.some?.(() => false) || false, false);
+  assert.deepEqual(rpcCalls, ["https://knowledge.example.test/rest/v1/rpc/tcs_chat_consume_rate_limit"]);
 });
 
 test("chat endpoint rejects bodies larger than 64 KB", async () => {
