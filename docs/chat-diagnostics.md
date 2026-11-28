@@ -2,13 +2,13 @@
 
 ## What is recorded
 
-Each valid non-Owner chat request is linked to:
+Each chat request that passes the distributed rate limit and is not from a verified Owner session is linked to:
 - a server-issued anonymous visitor ID stored in a signed, HttpOnly cookie;
-- a conversation ID and the title shown in the current chat UI (the first user message, limited to 36 characters);
+- a conversation ID and the title supplied by the current chat UI (limited to 36 characters; common email addresses, phone numbers, and URLs are masked before storage);
 - the client IP address read from trusted hosting request headers;
 - request mode, model, upstream status, response finish reason, stream [DONE] receipt, response character/byte counts, and error state.
 
-Full prompts, full assistant replies, cookies, and API credentials are not stored. Raw IP addresses and short conversation titles are stored in the private Supabase schema and expire after 30 days. Only server-key-gated RPCs can write or read these records. The Owner lookup endpoint also requires a valid Choco AI Owner session.
+Full prompts, full assistant replies, cookies, and API credentials are not stored. Raw IP addresses, user agents, visitor/conversation IDs, and short UI titles are stored in the private Supabase schema. Common email addresses, phone numbers, and URLs in titles are masked, but a title can still contain other user-provided text; do not put secrets in conversation titles. Records are deleted by an internal Supabase Cron job every 15 minutes once they expire (30-day retention). Only server-key-gated RPCs can write or read these records. The Owner lookup endpoint also requires a valid Choco AI Owner session. Verified Owner requests and requests rejected by the chat rate limiter are not recorded.
 
 The visitor ID identifies a browser profile, not a verified human. Clearing cookies or switching browsers creates a new visitor ID. A shared network can have multiple visitor IDs even when the IP address is the same.
 
@@ -47,7 +47,7 @@ Include these fields in the existing POST request to `/api/chat`:
 
 Keep the existing chat payload and history fields. Add these two fields rather than replacing the existing request body.
 
-Use the same title the user sees in the chat/recent-conversation UI. If the title is generated or edited after the first message, send the updated title on subsequent requests. The backend truncates the stored title to 36 characters.
+Use the same title the user sees in the chat/recent-conversation UI. If the title is generated or edited after the first message, send the updated title on subsequent requests. The backend sanitizes the title, masks common email/phone/URL patterns, and limits it to 36 characters. If no title is supplied, it stores the generic label `Percakapan`; it never copies the message body into the title as a fallback. Titles are still metadata and may contain other user-provided wording.
 
 ### 3. Read the diagnostic response headers
 
@@ -81,7 +81,7 @@ For a non-streamed JSON response:
 - Count the assistant text actually received and displayed.
 - Set `receivedDone` to `true` only after the response body has been fully read and parsed successfully. Do not treat an HTTP error or an incomplete response as successful completion.
 
-Use `credentials: "same-origin"` and JSON content type when calling the receipt endpoint. The browser must not send an IP address, visitor ID, or conversation ID to this endpoint; the backend verifies the signed visitor cookie and binds the report to the diagnostic record.
+Use `credentials: "same-origin"` and JSON content type when calling the receipt endpoint. The browser must not send an IP address, visitor ID, or conversation ID to this endpoint; the backend verifies the signed visitor cookie and binds the report to the diagnostic record. Receipt submissions are rate-limited to 40 per visitor per 10 minutes, and each diagnostic record accepts only its first client receipt. A rejected or unavailable receipt never changes the chat response.
 
 ### 5. Keep diagnostic failures out of the chat experience
 
@@ -91,7 +91,9 @@ Use `credentials: "same-origin"` and JSON content type when calling the receipt 
 
 ## Backend fallback behavior
 
-The current frontend sends the first user message and conversation history. If the frontend does not send an explicit conversation ID, the backend can fall back to a signed cookie. That fallback is not sufficient for reliably separating multiple simultaneous tabs, so the explicit per-conversation ID described above is required for tab-safe correlation.
+The frontend sends an explicit UUID for the active conversation. If a client omits it, the backend reuses the conversation ID in the valid signed cookie even when the request history is empty, which keeps a failed first-turn retry in the same group. The cookie fallback is browser-wide and therefore is not sufficient to separate simultaneous tabs; explicit per-conversation IDs remain required for tab-safe correlation.
+
+Server-side `response_bytes` means UTF-8 bytes of assistant text content only, consistently for streamed and non-streamed requests. It does not include SSE framing or metadata.
 
 The browser must not send an IP address or visitor ID; both are derived or issued by the server.
 
