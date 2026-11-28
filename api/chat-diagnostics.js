@@ -130,7 +130,7 @@ export default async function handler(req, res) {
   if (!identity) return send(res, 401, { ok: false, error: "visitor_identity_required" });
 
   const receiptLimit = await consumeReceiptRateLimit(identity.visitorId);
-  if (!receiptLimit.ok) {
+  if (!receiptLimit.ok || !receiptLimit.allowed) {
     return send(res, receiptLimit.status, {
       ok: false, error: receiptLimit.status === 429 ? "diagnostic_report_rate_limited" : "diagnostic_report_unavailable"
     });
