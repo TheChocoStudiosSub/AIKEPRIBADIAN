@@ -399,7 +399,7 @@ test("verified Owner sessions may retrieve internal Knowledge Hub context", asyn
     /OWNER_ONLY_CONTEXT_MARKER/
   );
   const ownerSearchCall = integration.calls.find(call => call.url.endsWith("/rpc/tcs_owner_search_knowledge"));
-  assert.equal(JSON.parse(ownerSearchCall.init.body).p_server_key, "test-server-key-only");
+  assert.equal(JSON.parse(ownerSearchCall.init.body).p_server_key, "a".repeat(64));
 });
 
 test.after(() => {
