@@ -16,8 +16,25 @@ const form = document.getElementById("form");
       return "id";
     }
 
-    const CONVERSATION_STORAGE_KEY = "chocoCurrentConversationV1";
-    try { localStorage.removeItem(CONVERSATION_STORAGE_KEY); } catch {}
+    const chatDiagnostics = window.ChocoChatDiagnostics || null;
+    function createConversationId() {
+      try {
+        if (chatDiagnostics && typeof chatDiagnostics.createConversationId === "function") {
+          return chatDiagnostics.createConversationId();
+        }
+        return window.crypto && typeof window.crypto.randomUUID === "function"
+          ? window.crypto.randomUUID()
+          : "";
+      } catch { return ""; }
+    }
+    function reportChatDiagnostics(diagnosticId, receivedCharacters, receivedDone) {
+      if (!diagnosticId || !chatDiagnostics || typeof chatDiagnostics.sendClientReceipt !== "function") return;
+      try {
+        const pendingReport = chatDiagnostics.sendClientReceipt(diagnosticId, receivedCharacters, receivedDone);
+        if (pendingReport && typeof pendingReport.catch === "function") void pendingReport.catch(() => {});
+      } catch {}
+    }
+    let conversationId = createConversationId();
     let history = [];
     const modelMode = "standard";
     let busy = false;
@@ -547,6 +564,15 @@ const form = document.getElementById("form");
       const waiting = addMessage("", "assistant", { typing: true });
       let streamedWrapper = null;
       let streamedContent = null;
+      let requestDiagnosticId = "";
+      let requestReceivedCharacters = 0;
+      let requestReceivedDone = false;
+      let requestReceiptSent = false;
+      const reportReceipt = () => {
+        if (!requestDiagnosticId || requestReceiptSent) return;
+        requestReceiptSent = true;
+        reportChatDiagnostics(requestDiagnosticId, requestReceivedCharacters, requestReceivedDone);
+      };
 
       try {
         const response = await fetch("/api/chat", {
@@ -554,6 +580,8 @@ const form = document.getElementById("form");
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             message,
+            conversationId,
+            conversationTitle: conversationTitle || "Percakapan baru",
             history,
             memories: [],
             preferences,
@@ -563,6 +591,14 @@ const form = document.getElementById("form");
             stream: true
           })
         });
+
+        const responseDiagnostics = chatDiagnostics && typeof chatDiagnostics.readResponseHeaders === "function"
+          ? chatDiagnostics.readResponseHeaders(response.headers)
+          : null;
+        requestDiagnosticId = responseDiagnostics && responseDiagnostics.diagnosticId || "";
+        if (responseDiagnostics && responseDiagnostics.conversationId) {
+          conversationId = responseDiagnostics.conversationId;
+        }
 
         let data;
         if ((response.headers.get("content-type") || "").includes("text/event-stream")) {
@@ -576,6 +612,18 @@ const form = document.getElementById("form");
           let reply = "";
           let streamDone = false;
           const consumeFrame = frame => {
+            if (chatDiagnostics && typeof chatDiagnostics.parseSseFrame === "function") {
+              const parsed = chatDiagnostics.parseSseFrame(frame);
+              if (parsed.done) { streamDone = true; return; }
+              if (parsed.error) throw new Error(parsed.error);
+              if (parsed.content) {
+                reply += parsed.content;
+                requestReceivedCharacters = reply.length;
+                renderAssistantText(streamedContent, reply);
+                scrollToBottom();
+              }
+              return;
+            }
             const payload = frame.split(/\r?\n/).filter(line => line.startsWith("data:")).map(line => line.slice(5).trim()).join("\n");
             if (!payload) return;
             if (payload === "[DONE]") { streamDone = true; return; }
@@ -583,7 +631,12 @@ const form = document.getElementById("form");
             try { eventData = JSON.parse(payload); } catch { return; }
             if (eventData && eventData.error) throw new Error(eventData.error.message || String(eventData.error));
             const delta = eventData && eventData.choices && eventData.choices[0] && eventData.choices[0].delta && eventData.choices[0].delta.content;
-            if (typeof delta === "string" && delta) { reply += delta; renderAssistantText(streamedContent, reply); scrollToBottom(); }
+            if (typeof delta === "string" && delta) {
+              reply += delta;
+              requestReceivedCharacters = reply.length;
+              renderAssistantText(streamedContent, reply);
+              scrollToBottom();
+            }
           };
           try {
             while (!streamDone) {
@@ -597,20 +650,26 @@ const form = document.getElementById("form");
             buffer += decoder.decode();
             if (buffer.trim()) consumeFrame(buffer);
           } finally { reader.releaseLock(); }
+          requestReceivedDone = Boolean(response.ok && streamDone);
+          reportReceipt();
           if (!response.ok) throw new Error("Permintaan streaming gagal (HTTP " + response.status + ").");
           if (!reply.trim()) throw new Error("Groq tidak mengirimkan isi jawaban.");
           data = { reply };
         } else {
           try { data = await response.json(); }
           catch { throw new Error("Respons backend bukan JSON yang valid."); }
+          requestReceivedCharacters = response.ok && typeof data.reply === "string" ? data.reply.length : 0;
+          requestReceivedDone = Boolean(response.ok && typeof data.reply === "string");
           waiting.remove();
         }
         if (data.authAttempt === true) {
+          reportReceipt();
           await revealReply(typeof data.reply === "string" ? data.reply : "Verifikasi Owner selesai.");
           return;
         }
 
         if (!response.ok) {
+          reportReceipt();
           addMessage(
             data.error || "Permintaan gagal. Periksa konfigurasi backend.",
             "assistant",
@@ -624,6 +683,7 @@ const form = document.getElementById("form");
           : "";
 
         if (!reply.trim()) {
+          reportReceipt();
           addMessage(
             "Model mengembalikan jawaban kosong. Coba kirim ulang pesan lu.",
             "assistant",
@@ -634,6 +694,7 @@ const form = document.getElementById("form");
 
         if (streamedWrapper) renderAssistantText(streamedContent, reply);
         else await revealReply(reply);
+        reportReceipt();
 
         history.push(
           { role: "user", content: message },
@@ -643,6 +704,7 @@ const form = document.getElementById("form");
         // Riwayat hanya tersimpan sementara di memori halaman.
 
       } catch (error) {
+        reportReceipt();
         waiting.remove();
         if (streamedWrapper) streamedWrapper.remove();
 
@@ -667,6 +729,7 @@ function startNewConversation() {
   }
 
   history = [];
+  conversationId = createConversationId();
   conversationTitle = "";
   conversationStarted = false;
   messages.querySelectorAll(".message:not(.license-request-message)").forEach(message => message.remove());

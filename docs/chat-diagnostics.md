@@ -16,6 +16,16 @@ The visitor ID identifies a browser profile, not a verified human. Clearing cook
 
 The frontend owns the identity of each visible conversation. The backend owns the visitor identity, trusted client IP detection, diagnostic record, and validation.
 
+## Frontend integration status on this PR branch
+
+The browser integration is now included in this PR branch:
+- `public/assets/js/chat-diagnostics-client.js` provides secure conversation UUID generation, response-header validation, SSE frame parsing, and best-effort receipt submission.
+- `public/assets/js/chat-controller.js` sends the active conversation ID and visible title, reads the diagnostic headers, counts assistant content received, and reports completion or partial delivery.
+- `public/index.html` loads the diagnostics helper before the chat controller.
+- `tests/chat-diagnostics-client.test.mjs` covers UUID generation, response headers, SSE parsing, receipt payloads, and failure isolation.
+
+The current chat UI keeps the active conversation and message history in page memory. A page refresh starts a fresh in-memory conversation; this integration does not add persistent chat history or restore old conversations from the recent list. Each open tab starts with its own conversation UUID, and pressing **Percakapan baru** rotates that UUID.
+
 ### 1. Keep a separate conversation ID for each conversation
 
 - Generate a UUID when a new conversation is created.
