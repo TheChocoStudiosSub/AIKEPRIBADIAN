@@ -33,6 +33,9 @@ jobs:
           node --check api/_lib/netlify-adapter.js
           node --check netlify/functions/core/retrieval.mjs
           node --check netlify/functions/core/rate-limit.mjs
+          node --check netlify/functions/core/chat-diagnostics.mjs
+          node --check api/chat-diagnostics.js
+          node --check api/owner/chat-diagnostics.js
       - name: Check inline and external frontend JavaScript
         run: node scripts/check-inline-scripts.mjs
       - name: Validate knowledge data

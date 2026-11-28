@@ -20,6 +20,7 @@ const requiredFiles = [
   "public/assets/css/responsive.css",
   "public/assets/js/chat-keyboard.js",
   "public/assets/js/ads-loader.js",
+  "public/assets/js/chat-diagnostics-client.js",
   "public/assets/js/chat-controller.js",
   "public/assets/js/site-preferences.js",
   "public/assets/js/mobile-sponsor-popup.js",
@@ -33,6 +34,7 @@ const requiredFiles = [
   "supabase/migrations/20261127134852_harden_private_owner_auth_tables.sql",
   "tests/rate-limit.test.mjs",
   "tests/chat-backend.test.mjs",
+  "tests/chat-diagnostics-client.test.mjs",
   "tests/license-api.test.mjs"
 ];
 

@@ -2,7 +2,7 @@ import CREATOR_KNOWLEDGE from "../../data/knowledge/creator-profile.json" with {
 import FACTS from "../../data/knowledge/facts.json" with { type: "json" };
 import CONCEPTS from "../../data/knowledge/concepts.json" with { type: "json" };
 import EXPERIENCES from "../../data/knowledge/experiences.json" with { type: "json" };
-import { createHash, pbkdf2Sync, randomBytes, timingSafeEqual } from "node:crypto";
+import { createHash, pbkdf2Sync, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 import {
   CHAT_RATE_LIMIT,
   createInMemoryRateLimiter,
@@ -11,6 +11,7 @@ import {
 } from "./core/rate-limit.mjs";
 import { resolveResponseLanguage, formatChatMessage, getLanguageInstruction } from "./core/language.mjs";
 import { canonicalizeTcsUrls, canonicalizeTcsStream } from "./core/canonical-urls.mjs";
+import { resolveChatDiagnosticIdentity, observeChatStream } from "./core/chat-diagnostics.mjs";
 
 const MODEL_ID = "openai/gpt-oss-20b";
 const MAX_MESSAGE_CHARS = 4000;
@@ -147,6 +148,54 @@ async function validateOwnerSession(request, env) {
   return result.ok && result.data === true;
 }
 
+
+function diagnosticHeaders(context, extra = {}) {
+  return {
+    "X-Choco-Diagnostic-ID": context.diagnosticId,
+    "X-Choco-Conversation-ID": context.conversationId,
+    ...(context.setCookie ? { "Set-Cookie": context.setCookie } : {}),
+    ...extra
+  };
+}
+
+function diagnosticJson(payload, status, context, extraHeaders = {}) {
+  return json(payload, status, diagnosticHeaders(context, extraHeaders));
+}
+
+async function writeChatDiagnostic(env, context, stage, patch = {}) {
+  const serverKey = String(env.TCS_OWNER_AUTH_SERVER_KEY || "");
+  if (!env.TCS_KNOWLEDGE_SUPABASE_URL || !env.TCS_KNOWLEDGE_PUBLISHABLE_KEY ||
+      !/^[0-9a-f]{64}$/i.test(serverKey)) {
+    return { ok: false, unavailable: true };
+  }
+  const result = await ownerRpc(env, "tcs_chat_write_diagnostic", {
+    p_stage: stage,
+    p_diagnostic_id: context.diagnosticId,
+    p_visitor_id: context.visitorId,
+    p_conversation_id: context.conversationId,
+    p_conversation_title: stage === "start" ? context.conversationTitle : null,
+    p_ip_address: stage === "start" ? context.ipAddress : null,
+    p_user_agent: stage === "start" ? context.userAgent : null,
+    p_request_mode: stage === "start" ? context.requestMode : null,
+    p_model_name: stage === "start" ? context.modelName : null,
+    p_request_status: patch.requestStatus ?? null,
+    p_http_status: patch.httpStatus ?? null,
+    p_upstream_status: patch.upstreamStatus ?? null,
+    p_finish_reason: patch.finishReason ?? null,
+    p_stream_done_received: patch.streamDoneReceived ?? null,
+    p_response_characters: patch.responseCharacters ?? null,
+    p_response_bytes: patch.responseBytes ?? null,
+    p_error_code: patch.errorCode ?? null,
+    p_client_received_characters: patch.clientReceivedCharacters ?? null,
+    p_client_received_done: patch.clientReceivedDone ?? null
+  }, 1200);
+
+  if (!result.ok || result.data?.ok !== true) {
+    console.error("Chat diagnostic write failed", { stage, diagnosticId: context.diagnosticId });
+  }
+  return result;
+}
+
 async function retrieveTcsKnowledge(query, env) {
   const baseUrl = String(env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
   const publishableKey = String(env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "");
@@ -245,13 +294,8 @@ export default async (request) => {
     const streamRequested = body.stream === true;
     const message = typeof body.message === "string" ? body.message.trim() : "";
     const responseLanguage = resolveResponseLanguage(body.responseLanguage, message, body.history);
-    if (!env.GROQ_API_KEY && !env.GROQ_API_KEY_APP) {
-      return json({ error: formatChatMessage("missingApiKey", responseLanguage) }, 503);
-    }
-
     const clientType = body.client === "app" ? "app" : "chatbot";
     const apiKey = clientType === "app" ? env.GROQ_API_KEY_APP : env.GROQ_API_KEY;
-    if (!apiKey) return json({ error: formatChatMessage("missingApiKey", responseLanguage) }, 503);
     if (!message) return json({ error: formatChatMessage("emptyMessage", responseLanguage) }, 400);
     if (message.length > MAX_MESSAGE_CHARS) {
       return json({ error: formatChatMessage("messageTooLong", responseLanguage, { limit: MAX_MESSAGE_CHARS }) }, 400);
@@ -321,13 +365,6 @@ export default async (request) => {
       });
     }
 
-    const normalizedMessage = message.toLowerCase().normalize("NFKC");
-    for (const filter of INPUT_FILTERS) {
-      if (filter.regex.test(normalizedMessage)) {
-        return json({ reply: formatChatMessage(filter.reaction, responseLanguage) });
-      }
-    }
-
     const limit = await checkRateLimit(request, env);
     if (!limit.allowed) {
       return json(
@@ -338,6 +375,39 @@ export default async (request) => {
     }
 
     const ownerVerified = await validateOwnerSession(request, env);
+    const diagnostic = ownerVerified ? null : {
+      diagnosticId: randomUUID(),
+      ...resolveChatDiagnosticIdentity(request, body, message, env.TCS_OWNER_AUTH_SERVER_KEY),
+      requestMode: streamRequested ? "stream" : "json",
+      modelName: env.GROQ_MODEL || MODEL_ID
+    };
+    const finishDiagnostic = (patch) => diagnostic
+      ? writeChatDiagnostic(env, diagnostic, "finish", patch)
+      : Promise.resolve({ ok: true, skipped: true });
+    const respond = (payload, status, extraHeaders = {}) => diagnostic
+      ? diagnosticJson(payload, status, diagnostic, extraHeaders)
+      : json(payload, status, extraHeaders);
+
+    if (diagnostic) await writeChatDiagnostic(env, diagnostic, "start");
+
+    if (!apiKey) {
+      await finishDiagnostic({
+        requestStatus: "failed", httpStatus: 503, errorCode: "missing_api_key"
+      });
+      return respond({ error: formatChatMessage("missingApiKey", responseLanguage) }, 503);
+    }
+
+    const normalizedMessage = message.toLowerCase().normalize("NFKC");
+    for (const filter of INPUT_FILTERS) {
+      if (filter.regex.test(normalizedMessage)) {
+        const reply = formatChatMessage(filter.reaction, responseLanguage);
+        await finishDiagnostic({
+          requestStatus: "completed", httpStatus: 200,
+          responseCharacters: reply.length, responseBytes: Buffer.byteLength(reply, "utf8")
+        });
+        return respond({ reply }, 200);
+      }
+    }
     const preferences = body.preferences && typeof body.preferences === "object" && !Array.isArray(body.preferences)
       ? body.preferences : {};
     const explicitlyRequestsDetail = /\b(detail|terperinci|lengkap|menyeluruh|mendalam|secara\s+detail|secara\s+lengkap|satu\s+per\s+satu|seluruh|semua\s+(?:produk|fitur|bagian|poin))\b/i.test(message);
@@ -450,15 +520,34 @@ export default async (request) => {
           const errorMessage = retryAfter > 0
             ? formatChatMessage("groqRateLimitWait", responseLanguage, { seconds: retryAfter })
             : formatChatMessage("groqRateLimit", responseLanguage);
-          return json({ error: errorMessage, retryAfter }, 429);
+          await finishDiagnostic({
+            requestStatus: "failed", httpStatus: 429, upstreamStatus: 429, errorCode: "groq_rate_limited"
+          });
+          return respond({ error: errorMessage, retryAfter }, 429, diagnostic);
         }
-        return json({ error: formatChatMessage("groqHttp", responseLanguage, { status: response.status }) }, response.status >= 400 && response.status < 600 ? response.status : 502);
+        const status = response.status >= 400 && response.status < 600 ? response.status : 502;
+        await finishDiagnostic({
+          requestStatus: "failed", httpStatus: status, upstreamStatus: response.status, errorCode: "groq_http_error"
+        });
+        return respond({ error: formatChatMessage("groqHttp", responseLanguage, { status: response.status }) }, status, diagnostic);
       }
       if (streamRequested) {
-        if (!response.body) return json({ error: formatChatMessage("groqNoStream", responseLanguage) }, 502);
-        return new Response(canonicalizeTcsStream(response.body), {
+        if (!response.body) {
+          await finishDiagnostic({
+            requestStatus: "failed", httpStatus: 502, upstreamStatus: 200, errorCode: "groq_empty_stream"
+          });
+          return respond({ error: formatChatMessage("groqNoStream", responseLanguage) }, 502, diagnostic);
+        }
+        const outgoingStream = canonicalizeTcsStream(response.body);
+        const observedStream = diagnostic
+          ? observeChatStream(outgoingStream, (stats) => finishDiagnostic({
+              ...stats, httpStatus: 200, upstreamStatus: 200
+            }))
+          : outgoingStream;
+        return new Response(observedStream, {
           status: 200,
           headers: {
+            ...(diagnostic ? diagnosticHeaders(diagnostic) : {}),
             "Content-Type": "text/event-stream; charset=utf-8",
             "Cache-Control": "no-cache, no-store, no-transform",
             "Connection": "keep-alive",
@@ -500,9 +589,24 @@ export default async (request) => {
           // Jawaban pertama tetap dikembalikan jika permintaan lanjutan gagal.
         }
       }
-      return json({ reply: canonicalizeTcsUrls(reply), model: data?.model || env.GROQ_MODEL || MODEL_ID, truncated: finishReason === "length" });
+      const normalizedReply = canonicalizeTcsUrls(reply);
+      await finishDiagnostic({
+        requestStatus: finishReason === "length" ? "truncated" : "completed",
+        httpStatus: 200, upstreamStatus: 200, finishReason,
+        responseCharacters: normalizedReply.length,
+        responseBytes: Buffer.byteLength(normalizedReply, "utf8"),
+        errorCode: finishReason === "length" ? "output_token_limit" : null
+      });
+      return respond({
+        reply: normalizedReply,
+        model: data?.model || env.GROQ_MODEL || MODEL_ID,
+        truncated: finishReason === "length"
+      }, 200, diagnostic);
     } catch (error) {
       console.error("Groq request failed:", error?.name || "Error");
-      return json({ error: formatChatMessage("groqUnavailable", responseLanguage) }, 502);
+      await finishDiagnostic({
+        requestStatus: "failed", httpStatus: 502, errorCode: error?.name === "TimeoutError" ? "groq_timeout" : "groq_unavailable"
+      });
+      return respond({ error: formatChatMessage("groqUnavailable", responseLanguage) }, 502, diagnostic);
     }
 };
