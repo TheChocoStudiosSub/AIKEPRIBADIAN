@@ -31,7 +31,7 @@ const rag = sqlByFile.get("20261021010000_knowledge_rag.sql") || "";
 const chatRateLimit = sqlByFile.get("20261127134844_choco_ai_distributed_chat_rate_limit.sql") || "";
 const ownerAuthHardening = sqlByFile.get("20261127134852_harden_private_owner_auth_tables.sql") || "";
 const chatDiagnostics = sqlByFile.get("20261127170000_choco_ai_chat_diagnostics.sql") || "";
-const chatDiagnosticsHardening = sqlByFile.get("20261128090000_harden_choco_ai_chat_diagnostics.sql") || "";
+const chatDiagnosticsHardening = sqlByFile.get("20261128032155_harden_choco_ai_chat_diagnostics.sql") || "";
 
 for (const table of ["profiles", "conversations", "messages", "memories"]) {
   checks.push({
