@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import { verifyChatIdentityCookie } from "../netlify/functions/core/chat-diagnostics.mjs";
 
 function send(res, status, payload) {
@@ -29,6 +30,43 @@ async function readBody(req) {
     req.on("end", () => { try { resolve(raw ? JSON.parse(raw) : {}); } catch { resolve(null); } });
     req.on("error", () => resolve(null));
   });
+}
+
+export async function consumeReceiptRateLimit(visitorId) {
+  const base = String(process.env.TCS_KNOWLEDGE_SUPABASE_URL || "").replace(/\/+$/, "");
+  const key = String(process.env.TCS_KNOWLEDGE_PUBLISHABLE_KEY || "");
+  const serverKey = String(process.env.TCS_OWNER_AUTH_SERVER_KEY || "");
+  if (!base || !key || !/^[0-9a-f]{64}$/i.test(serverKey) ||
+      !/^[0-9a-f-]{36}$/i.test(String(visitorId || ""))) {
+    return { ok: false, allowed: false, status: 503 };
+  }
+
+  const subjectHash = createHmac("sha256", Buffer.from(serverKey, "hex"))
+    .update("choco-chat-diagnostic-receipt:v1:" + String(visitorId).toLowerCase(), "utf8")
+    .digest("hex");
+
+  try {
+    const response = await fetch(base + "/rest/v1/rpc/tcs_chat_consume_rate_limit", {
+      method: "POST",
+      headers: { apikey: key, "Content-Type": "application/json" },
+      cache: "no-store",
+      body: JSON.stringify({
+        p_scope: "chat_diag_receipt",
+        p_subject_hash: subjectHash,
+        p_window_seconds: 600,
+        p_max_requests: 40,
+        p_server_key: serverKey
+      }),
+      signal: AbortSignal.timeout(1500)
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok || data?.ok !== true || typeof data.allowed !== "boolean") {
+      return { ok: false, allowed: false, status: 503 };
+    }
+    return { ok: true, allowed: data.allowed, status: data.allowed ? 200 : 429 };
+  } catch {
+    return { ok: false, allowed: false, status: 503 };
+  }
 }
 
 async function writeClientReport(payload) {
@@ -90,6 +128,13 @@ export default async function handler(req, res) {
   });
   const identity = verifyChatIdentityCookie(identityRequest, process.env.TCS_OWNER_AUTH_SERVER_KEY || "");
   if (!identity) return send(res, 401, { ok: false, error: "visitor_identity_required" });
+
+  const receiptLimit = await consumeReceiptRateLimit(identity.visitorId);
+  if (!receiptLimit.ok) {
+    return send(res, receiptLimit.status, {
+      ok: false, error: receiptLimit.status === 429 ? "diagnostic_report_rate_limited" : "diagnostic_report_unavailable"
+    });
+  }
 
   const result = await writeClientReport({
     diagnosticId: body.diagnosticId,
