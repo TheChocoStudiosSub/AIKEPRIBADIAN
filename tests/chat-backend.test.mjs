@@ -95,6 +95,7 @@ test("chat endpoint enforces the distributed rate-limit response contract", asyn
   assert.equal(forwardedPayload.p_window_seconds, 600);
   assert.equal(forwardedPayload.p_max_requests, 20);
   assert.equal(forwardedPayload.p_server_key, "test-server-key-only");
+  assert.equal(globalThis.fetch.mockCalls?.some?.(() => false) || false, false);
 });
 
 test("chat endpoint rejects bodies larger than 64 KB", async () => {
@@ -111,7 +112,7 @@ function configureChatIntegration({ ownerVerified = false, publicDocuments = [],
   process.env.GROQ_API_KEY = "test-only-not-a-real-key";
   process.env.TCS_KNOWLEDGE_SUPABASE_URL = "https://knowledge.example.test";
   process.env.TCS_KNOWLEDGE_PUBLISHABLE_KEY = "publishable-test-key";
-  process.env.TCS_OWNER_AUTH_SERVER_KEY = "test-server-key-only";
+  process.env.TCS_OWNER_AUTH_SERVER_KEY = "a".repeat(64);
 
   const calls = [];
   let groqPayload = null;
@@ -125,6 +126,12 @@ function configureChatIntegration({ ownerVerified = false, publicDocuments = [],
         remaining: 19,
         retry_after_seconds: 600
       }), { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+
+    if (url.endsWith("/rpc/tcs_chat_write_diagnostic")) {
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200, headers: { "Content-Type": "application/json" }
+      });
     }
 
     if (url.endsWith("/rpc/tcs_owner_validate_session")) {
@@ -219,6 +226,7 @@ test("chat endpoint preserves the non-stream JSON contract and TCS-only system s
   );
   assert.ok(integration.calls.some(call => call.url.endsWith("/rpc/tcs_public_search_knowledge")));
   assert.equal(integration.calls.some(call => call.url.endsWith("/rpc/tcs_owner_search_knowledge")), false);
+  assert.equal(integration.calls.some(call => call.url.endsWith("/rpc/tcs_chat_write_diagnostic")), true);
   assert.doesNotMatch(JSON.stringify(payload), /test-only-not-a-real-key|test-server-key-only/);
 });
 
@@ -381,6 +389,9 @@ test("verified Owner sessions may retrieve internal Knowledge Hub context", asyn
   assert.equal(response.status, 200);
   assert.equal(integration.calls.some(call => call.url.endsWith("/rpc/tcs_owner_validate_session")), true);
   assert.equal(integration.calls.some(call => call.url.endsWith("/rpc/tcs_owner_search_knowledge")), true);
+  assert.equal(integration.calls.some(call => call.url.endsWith("/rpc/tcs_chat_write_diagnostic")), false);
+  assert.equal(response.headers.get("X-Choco-Diagnostic-ID"), null);
+  assert.equal(response.headers.get("X-Choco-Conversation-ID"), null);
   assert.match(
     integration.groqPayload.messages.find(message => message.content.includes("TCS_OWNER_INTERNAL_KNOWLEDGE_BEGIN")).content,
     /OWNER_ONLY_CONTEXT_MARKER/
